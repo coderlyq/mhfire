@@ -1,136 +1,132 @@
 <!--  -->
 <template>
-<div class=''>
-	<el-row class="tac">
+
   <el-col :span="12">
-    <h5>默认颜色</h5>
     <el-menu
-      default-active="2"
-      class="el-menu-vertical-demo"
-      @open="handleOpen"
-      @close="handleClose">
-      <el-submenu index="1">
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>导航一</span>
-        </template>
-        <el-menu-item-group>
-          <template slot="title">分组一</template>
-          <el-menu-item index="1-1">选项1</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="分组2">
-          <el-menu-item index="1-3">选项3</el-menu-item>
-        </el-menu-item-group>
-        <el-submenu index="1-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="1-4-1">选项1</el-menu-item>
-        </el-submenu>
-      </el-submenu>
-      <el-menu-item index="2">
-        <i class="el-icon-menu"></i>
-        <span slot="title">导航二</span>
-      </el-menu-item>
-      <el-menu-item index="3" disabled>
-        <i class="el-icon-document"></i>
-        <span slot="title">导航三</span>
-      </el-menu-item>
-      <el-menu-item index="4">
-        <i class="el-icon-setting"></i>
-        <span slot="title">导航四</span>
-      </el-menu-item>
-    </el-menu>
-  </el-col>
-  <el-col :span="12">
-    <h5>自定义颜色</h5>
-    <el-menu
-      default-active="2"
+      default-active="1"
       class="el-menu-vertical-demo"
       @open="handleOpen"
       @close="handleClose"
-      background-color="#545c64"
-      text-color="#fff"
-      active-text-color="#ffd04b">
-      <el-submenu index="1">
-        <template slot="title">
-          <i class="el-icon-location"></i>
-          <span>导航一</span>
-        </template>
-        <el-menu-item-group>
-          <template slot="title">分组一</template>
-          <el-menu-item index="1-1">选项1</el-menu-item>
-          <el-menu-item index="1-2">选项2</el-menu-item>
-        </el-menu-item-group>
-        <el-menu-item-group title="分组2">
-          <el-menu-item index="1-3">选项3</el-menu-item>
-        </el-menu-item-group>
-        <el-submenu index="1-4">
-          <template slot="title">选项4</template>
-          <el-menu-item index="1-4-1">选项1</el-menu-item>
-        </el-submenu>
-      </el-submenu>
-      <el-menu-item index="2">
-        <i class="el-icon-menu"></i>
-        <span slot="title">导航二</span>
+      background-color="#081d61"
+      text-color="#4159a6"
+      active-text-color="#fff">
+      <el-menu-item index="1" @click="switchImg('list')" :class="{activeColor:activelist}">
+        <img src="~@/assets/images/TopBar/list.png" alt="" v-show="listimgshow">
+				<img src="~@/assets/images/TopBar/listed.png" alt="" v-show="listimgedshow">
+        <span solt="title">项目列表</span>
       </el-menu-item>
-      <el-menu-item index="3" disabled>
-        <i class="el-icon-document"></i>
-        <span slot="title">导航三</span>
+			<el-menu-item index="2" @click="switchImg('control')" :class="{activeColor:activecontrol}">
+        <img src="~@/assets/images/TopBar/control.png" alt="" v-show="controlimgshow">
+				<img src="~@/assets/images/TopBar/controled.png" alt="" v-show="controlimgedshow">
+        <span solt="jiankong">监控控制台</span>
       </el-menu-item>
-      <el-menu-item index="4">
-        <i class="el-icon-setting"></i>
-        <span slot="title">导航四</span>
+			<el-menu-item index="3" @click="switchImg('person')" :class="{activeColor:activeperson}">
+        <img src="~@/assets/images/TopBar/person.png" alt="" v-show="personimgshow">
+				<img src="~@/assets/images/TopBar/personed.png" alt="" v-show="personimgedshow">
+        <span solt="element">公司人员管理</span>
+      </el-menu-item>
+			<el-menu-item index="4" @click="switchImg('search')" :class="{activeColor:activesearch}">
+        <img src="~@/assets/images/TopBar/search.png" alt="" v-show="searchimgshow">
+				<img src="~@/assets/images/TopBar/searched.png" alt="" v-show="searchimgedshow">
+        <span solt="event">事件历史查询</span>
+      </el-menu-item>
+			<el-menu-item index="5" @click="switchImg('check')" :class="{activeColor:activecheck}">
+        <img src="~@/assets/images/TopBar/check.png" alt="" v-show="checkimgshow">
+				<img src="~@/assets/images/TopBar/checked.png" alt="" v-show="checkimgedshow">
+        <span solt="check">员工申请审核 (<span></span>)</span>
       </el-menu-item>
     </el-menu>
   </el-col>
-</el-row>
-</div>
+
 </template>
 
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
 export default {
-//import引入的组件需要注入到对象中才能使用
-name: 'SideBar',
-components: {},
-data() {
-//这里存放数据
-return {
-
-};
-},
-//监听属性 类似于data概念
-computed: {},
-//监控data中的数据变化
-watch: {},
-//方法集合
-methods: {
-	handleOpen(key, keyPath) {
-		console.log(key, keyPath);
+	//import引入的组件需要注入到对象中才能使用
+	name: 'SideBar',
+	components: {},
+	data() {
+		//这里存放数据
+		return {
+			activeColor: 'activeColor',
+			activelist: true,
+			activecontrol: false,
+			activeperson: false,
+			activesearch: false,
+			activecheck: false,
+			listimgshow:false,
+			listimgedshow:true,
+			controlimgshow:true,
+			controlimgedshow:false,
+			personimgshow:true,
+			personimgedshow:false,
+			searchimgshow:true,
+			searchimgedshow:false,
+			checkimgshow:true,
+			checkimgedshow:false
+		};
 	},
-	handleClose(key, keyPath) {
-		console.log(key, keyPath);
-	}
-},
-//生命周期 - 创建完成（可以访问当前this实例）
-created() {
-
-},
-//生命周期 - 挂载完成（可以访问DOM元素）
-mounted() {
-
-},
-beforeCreate() {}, //生命周期 - 创建之前
-beforeMount() {}, //生命周期 - 挂载之前
-beforeUpdate() {}, //生命周期 - 更新之前
-updated() {}, //生命周期 - 更新之后
-beforeDestroy() {}, //生命周期 - 销毁之前
-destroyed() {}, //生命周期 - 销毁完成
-activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
+	//方法集合
+	methods: {
+		handleOpen(key, keyPath) {
+			console.log(key, keyPath);
+		},
+		handleClose(key, keyPath) {
+			console.log(key, keyPath);
+		},
+		switchImg(index){
+			this.listimgshow = true;this.controlimgshow = true;this.personimgshow = true;this.searchimgshow = true;this.checkimgshow = true;
+			this.listimgedshow = false;this.controlimgedshow = false;this.personimgedshow = false;this.searchimgedshow = false;this.checkimgedshow = false;
+			this.activelist = false;this.activecontrol = false;this.activeperson = false;this.activesearch = false;this.activecheck = false;
+			switch(index){
+				case 'list':
+					this.listimgshow = !this.listimgshow;
+					this.listimgedshow = !this.listimgedshow;
+					this.activelist = true;
+				break;
+				case 'control':
+					this.controlimgshow = !this.controlimgshow;
+					this.controlimgedshow = !this.controlimgedshow;
+					this.activecontrol = true;
+				break;
+				case 'person':
+					this.personimgshow = !this.personimgshow;
+					this.personimgedshow = !this.personimgedshow;
+					this.activeperson = true;
+				break;
+				case 'search':
+					this.searchimgshow = !this.searchimgshow;
+					this.searchimgedshow = !this.searchimgedshow;
+					this.activesearch = true;
+				break;
+				case 'check':
+					this.checkimgshow = !this.checkimgshow;
+					this.checkimgedshow = !this.checkimgedshow;
+					this.activecheck = true;
+				break;
+			}
+		}
+	},
 }
 </script>
-<style scoped>
-
+<style>
+	.el-col{
+		background-color: #081d61;
+		border-right: #081d61;
+	}
+	.el-menu{
+		border:none;
+		color: #4159a6;
+	}
+	li{
+		text-align: left;
+	}
+	.el-menu .el-menu-item.is-active i{
+		color:#fff;
+	}
+	.activeColor{
+		background-color: #1c4ded !important;
+	}
 </style>

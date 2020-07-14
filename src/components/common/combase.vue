@@ -3,10 +3,10 @@
 <div class=''>
 
 	<el-container>
-		<el-header><TopBar /></el-header>
-		<el-container>
-			<el-aside width="200px"><SideBar /></el-aside>
-			<el-main>Main</el-main>
+		<el-header style="height:70px;line-height:70px;"><TopBar /></el-header>
+		<el-container style="min-height:939px;">
+			<el-aside style="width:220px;min-height:939px;" ><SideBar style="width:220px;min-height:939px;" /></el-aside>
+			<el-main></el-main>
 		</el-container>
 	</el-container>
 
@@ -39,34 +39,22 @@ watch: {},
 //方法集合
 methods: {
 
-},
-//生命周期 - 创建完成（可以访问当前this实例）
-created() {
-
-},
-//生命周期 - 挂载完成（可以访问DOM元素）
-mounted() {
-
-},
-beforeCreate() {}, //生命周期 - 创建之前
-beforeMount() {}, //生命周期 - 挂载之前
-beforeUpdate() {}, //生命周期 - 更新之前
-updated() {}, //生命周期 - 更新之后
-beforeDestroy() {}, //生命周期 - 销毁之前
-destroyed() {}, //生命周期 - 销毁完成
-activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
+}
 }
 </script>
-<style scoped>
-.el-header, .el-footer {
+<style>
+	.el-header, .el-footer {
     background-color: #B3C0D1;
     color: #333;
     text-align: center;
     line-height: 60px;
   }
-  
+  .el-header{
+		height: 70px;
+		line-height: 70px;
+	}
   .el-aside {
-    background-color: #D3DCE6;
+    background-color: #081d61;
     color: #333;
     text-align: center;
     line-height: 200px;
@@ -81,6 +69,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
   
   body > .el-container {
     margin-bottom: 40px;
+		height: 100vh;
   }
   
   .el-container:nth-child(5) .el-aside,
