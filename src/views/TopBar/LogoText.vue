@@ -1,9 +1,15 @@
 <!--  -->
 <template>
-<div class=''>
-	<div>
-		<img src="~@/assets/images/TopBar/logo.png" alt=""><span>FCLOUD门海消防云平台</span><span>奇勤达科技发展有限公司</span>
-	</div>
+<div id='logotext'>
+	<img src="~@/assets/images/TopBar/logo.png" alt="">
+	<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
+	<span v-if="issuper">奇勤达科技发展有限公司</span>
+	<ol v-else id="logoList">
+		<li @click="topclick()">所有公司(10)</li>
+		<li @click="topclick()">监控控制台(10)</li>
+		<li @click="topclick()">认证申请(10)</li>
+		<li @click="topclick()">二级超管设置</li>
+	</ol>
 </div>
 </template>
 
@@ -18,6 +24,7 @@ components: {},
 data() {
 	//这里存放数据
 	return {
+		issuper: true
 	};
 },
 //监听属性 类似于data概念
@@ -44,6 +51,28 @@ destroyed() {}, //生命周期 - 销毁完成
 activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
-<style scoped>
-
+<style>
+#logotext{
+	height: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center
+}
+#logotext img{
+	width: 41px;
+	height: 36px;
+}
+#logoList{
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start
+}
+#topbarpre{
+ margin-right:23px;
+ display:inline-block;
+ width:2px;
+ height:30px;
+ background-color:#fff;
+}
 </style>

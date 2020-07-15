@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" style="height: 100vh;background-color: #f2f4fa;">
 		<ComBase />
   </div>
 </template>

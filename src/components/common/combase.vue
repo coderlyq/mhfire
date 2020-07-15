@@ -3,10 +3,10 @@
 <div class=''>
 
 	<el-container>
-		<el-header style="height:70px;line-height:70px;"><TopBar /></el-header>
-		<el-container style="min-height:939px;">
-			<el-aside style="width:220px;min-height:939px;" ><SideBar style="width:220px;min-height:939px;" /></el-aside>
-			<el-main></el-main>
+		<el-header style="height: 6.45vh;line-height: 6.45vh;"><TopBar /></el-header>
+		<el-container>
+			<el-aside style="width: 220px;background-color: #081d61;height: 93.55vh;"><SideBar/></el-aside>
+			<el-main style="height: 93.55vh;padding:0;"><router-view></router-view></el-main>
 		</el-container>
 	</el-container>
 
@@ -43,6 +43,10 @@ methods: {
 }
 </script>
 <style>
+	@font-face{
+     font-family: 'PF'; 
+     src:url('~@/assets/font/苹方黑体-极细-简.ttf') format('truetype');
+	}
 	.el-header, .el-footer {
     background-color: #B3C0D1;
     color: #333;
@@ -50,34 +54,9 @@ methods: {
     line-height: 60px;
   }
   .el-header{
-		height: 70px;
-		line-height: 70px;
+		background-color: #081d61;
+		font-family: "PF";
+		font-weight: bold;
+		font-size: 16px;
 	}
-  .el-aside {
-    background-color: #081d61;
-    color: #333;
-    text-align: center;
-    line-height: 200px;
-  }
-  
-  .el-main {
-    background-color: #E9EEF3;
-    color: #333;
-    text-align: center;
-    line-height: 160px;
-  }
-  
-  body > .el-container {
-    margin-bottom: 40px;
-		height: 100vh;
-  }
-  
-  .el-container:nth-child(5) .el-aside,
-  .el-container:nth-child(6) .el-aside {
-    line-height: 260px;
-  }
-  
-  .el-container:nth-child(7) .el-aside {
-    line-height: 320px;
-  }
 </style>

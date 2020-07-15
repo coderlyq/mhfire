@@ -1,6 +1,6 @@
 <!--  -->
 <template>
-<div class=''>
+<div id="topbar">
 	<LogoText />
 </div>
 </template>
@@ -16,10 +16,10 @@ components: {
 	LogoText
 },
 data() {
-//这里存放数据
-return {
-
-};
+	//这里存放数据
+	return {
+		
+	};
 },
 //监听属性 类似于data概念
 computed: {},
@@ -47,5 +47,8 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 }
 </script>
 <style scoped>
-
+#topbar{
+	height: 100%;
+	color: #ffffff;
+}
 </style>
