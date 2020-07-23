@@ -6,6 +6,9 @@ const Control = ()=> import('@/views/control/Control')
 const Person = ()=> import('@/views/person/Person')
 const Search = ()=> import('@/views/search/Search')
 const Check = ()=> import('@/views/check/Check')
+const ProjectList = ()=> import('@/views/ProjectList/ProjectList')
+const ProjectControl = ()=> import('@/views/ProjectControl/ProjectControl')
+const ProjectPerson = ()=> import('@/views/ProjectPerson/ProjectPerson')
 
 // 安装插件
 Vue.use(VueRouter)
@@ -34,6 +37,18 @@ const routes = [
 	{
 		path: '/Check',
 		component: Check
+	},
+	{
+		path: '/ProjectList',
+		component: ProjectList
+	},
+	{
+		path: '/ProjectControl',
+		component: ProjectControl
+	},
+	{
+		path: '/ProjectPerson',
+		component: ProjectPerson
 	}
 ]
 

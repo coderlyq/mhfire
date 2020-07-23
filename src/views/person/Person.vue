@@ -36,7 +36,18 @@
 						<img src="~@/assets/images/Person/warnImg.png" alt="">
 						修改人员类型为普通员工人员等级将下降，并且会移除所有负责项目的权限
 					</span>
-					<el-button class="personBarBut" type="danger" plain>删除员工</el-button>
+
+					<el-popconfirm
+						confirmButtonText='好的'
+						cancelButtonText='不用了'
+						icon="el-icon-info"
+						iconColor="red"
+						title="删除员工将会彻底把该员工的所有平台信息移除？"
+						class="personBarBut" 
+					>
+						<el-button type="danger" slot="reference" plain>删除员工</el-button>
+					</el-popconfirm>
+					
 				</el-header>
 				<el-main class="personContMain">
 					<el-container  v-show="true">
@@ -158,10 +169,8 @@
 							width="175"
 							border=true
 							>
-							<template slot-scope="scope">
-								<el-button type="primary" @click="handleClick(scope.row)" plain>添加负责项目</el-button>
-								<!-- <el-button @click="handleClick(scope.row)" type="button" size="big">查看</el-button> -->
-							</template>
+							<el-button type="primary" @click="handleClick(scope.row)" plain>添加负责项目</el-button>
+							<!-- <el-button @click="handleClick(scope.row)" type="button" size="big">查看</el-button> -->
 						</el-table-column>
 					</el-table>
 				</el-dialog>
@@ -240,13 +249,22 @@
 		margin-right: 20px;
 	}
 	.personBarBut{
-		position: absolute;
-		right: 25px;
+
 		font-weight:bold;
+
+
+		padding:0;
+	}
+	.personBarBut .el-button{
 		width:100px;
 		height:30px;
-		line-height:30px;
-		padding:0;
+		line-height:5px;
+		position: absolute;
+		top: 15px;
+		right: 25px;
+	}
+	.personBarBut .el-button span{
+		/* text-align: center; */
 	}
 	.personContMain{
 		margin: 20px 20px 0 20px;
@@ -325,7 +343,7 @@
 		border-bottom: 20px solid #ffffff;
 	}
 	.personDialog .el-table__row td:first-child div{
-		/* margin-left: 20px; */
+		margin-left: 20px;
 	}
 	/* .personDialog .el-dialog__header{
 		position: relative;

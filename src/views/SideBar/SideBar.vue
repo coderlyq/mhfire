@@ -1,34 +1,56 @@
 <!--  -->
 <template>
-
   <div>
-      <el-menu-item path="/List">
-        <img slot="item-icon" src="~@/assets/images/TopBar/list.png" alt="">
+		<div>
+			<el-menu-item path="/List">
+				<img slot="item-icon" src="~@/assets/images/TopBar/list.png" alt="">
 				<img slot="item-icon-active" src="~@/assets/images/TopBar/listed.png" alt="">
-        <span slot="item-text">项目列表</span>
-      </el-menu-item>
+				<span slot="item-text">项目列表</span>
+			</el-menu-item>
 			<el-menu-item path="/Control">
-        <img slot="item-icon" src="~@/assets/images/TopBar/control.png" alt="">
+				<img slot="item-icon" src="~@/assets/images/TopBar/control.png" alt="">
 				<img slot="item-icon-active" src="~@/assets/images/TopBar/controled.png" alt="">
-        <span slot="item-text">监控控制台</span>
-      </el-menu-item>
+				<span slot="item-text">监控控制台</span>
+			</el-menu-item>
 			<el-menu-item path="/Person">
-        <img slot="item-icon" src="~@/assets/images/TopBar/person.png" alt="">
+				<img slot="item-icon" src="~@/assets/images/TopBar/person.png" alt="">
 				<img slot="item-icon-active" src="~@/assets/images/TopBar/personed.png" alt="">
-        <span slot="item-text">公司人员管理</span>
-      </el-menu-item>
+				<span slot="item-text">公司人员管理</span>
+			</el-menu-item>
 			<el-menu-item path="/Search">
-        <img slot="item-icon" src="~@/assets/images/TopBar/search.png" alt="">
+				<img slot="item-icon" src="~@/assets/images/TopBar/search.png" alt="">
 				<img slot="item-icon-active" src="~@/assets/images/TopBar/searched.png" alt="">
-        <span slot="item-text">事件历史查询</span>
-      </el-menu-item>
+				<span slot="item-text">事件历史查询</span>
+			</el-menu-item>
 			<el-menu-item path="/Check">
-        <img slot="item-icon" src="~@/assets/images/TopBar/check.png" alt="">
+				<img slot="item-icon" src="~@/assets/images/TopBar/check.png" alt="">
 				<img slot="item-icon-active" src="~@/assets/images/TopBar/checked.png" alt="">
-        <span slot="item-text">员工申请审核 (<span></span>)</span>
-      </el-menu-item>
+				<span slot="item-text">员工申请审核 (<span></span>)</span>
+			</el-menu-item>
+		</div>
+		<div>
+			<el-menu-item path="/ProjectList">
+				<img slot="item-icon" src="~@/assets/images/SiderBar/listdefault.png" alt="">
+				<img slot="item-icon-active" src="~@/assets/images/SiderBar/listchecked.png" alt="">
+				<span slot="item-text">项目信息管理</span>
+			</el-menu-item>
+			<el-menu-item path="/ProjectControl">
+				<img slot="item-icon" src="~@/assets/images/SiderBar/settingdefault.png" alt="">
+				<img slot="item-icon-active" src="~@/assets/images/SiderBar/settingChecked.png" alt="">
+				<span slot="item-text">项目功能管理</span>
+			</el-menu-item>
+			<el-menu-item path="/ProjectPerson">
+				<img slot="item-icon" src="~@/assets/images/TopBar/person.png" alt="">
+				<img slot="item-icon-active" src="~@/assets/images/TopBar/personed.png" alt="">
+				<span slot="item-text">项目人员管理</span>
+			</el-menu-item>
+			<el-menu-item path="/Search">
+				<img slot="item-icon" src="~@/assets/images/TopBar/search.png" alt="">
+				<img slot="item-icon-active" src="~@/assets/images/TopBar/searched.png" alt="">
+				<span slot="item-text">事件历史查询</span>
+			</el-menu-item>
+		</div>
   </div>
-
 </template>
 
 <script>
@@ -45,7 +67,7 @@ export default {
 	data() {
 		//这里存放数据
 		return {
-
+			isProject: false
 		};
 	},
 	//方法集合
@@ -60,5 +82,8 @@ export default {
 	}
 .el-menu-item:hover{
 	background-color:"#1c4ded"!important;
+}
+.el-menu-item span{
+	margin-left: 10px;
 }
 </style>

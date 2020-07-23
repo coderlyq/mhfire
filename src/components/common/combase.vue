@@ -47,6 +47,26 @@ methods: {
      font-family: 'PF'; 
      src:url('~@/assets/font/苹方黑体-极细-简.ttf') format('truetype');
 	}
+	@font-face{
+     font-family: 'PFxi'; 
+     src:url('~@/assets/font/苹方黑体-细-简.ttf') format('truetype');
+	}
+	@font-face{
+     font-family: 'PFqxi'; 
+     src:url('~@/assets/font/苹方黑体-纤细-简.ttf') format('truetype');
+	}
+	@font-face{
+     font-family: 'PFzc'; 
+     src:url('~@/assets/font/苹方黑体-中粗-简.ttf') format('truetype');
+	}
+	@font-face{
+     font-family: 'PFzh'; 
+     src:url('~@/assets/font/苹方黑体-中黑-简.ttf') format('truetype');
+	}
+	@font-face{
+     font-family: 'PFz'; 
+     src:url('~@/assets/font/苹方黑体-准-简.ttf') format('truetype');
+	}
 	.el-header, .el-footer {
     background-color: #B3C0D1;
     color: #333;
@@ -58,5 +78,8 @@ methods: {
 		font-family: "PF";
 		font-weight: bold;
 		font-size: 16px;
+	}
+	.el-main{
+		padding: 0;
 	}
 </style>
