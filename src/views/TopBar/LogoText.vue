@@ -5,10 +5,13 @@
 	<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
 	<span v-if="issuper">奇勤达科技发展有限公司</span>
 	<ol v-else id="logoList">
-		<li @click="topclick()">所有公司(10)</li>
+		<li v-for="(item,index) in logoList" @click="topclick(index)" :key="item" :class="{clickBackColor:index===currendIndex}">
+			{{item.name}} <span v-show="item.isshow">({{item.cont}})</span>
+		</li>
+		<!-- <li @click="topclick()">所有公司(10)</li>
 		<li @click="topclick()">监控控制台(10)</li>
 		<li @click="topclick()">认证申请(10)</li>
-		<li @click="topclick()">二级超管设置</li>
+		<li @click="topclick()">二级超管设置</li> -->
 	</ol>
 </div>
 </template>
@@ -24,7 +27,29 @@ components: {},
 data() {
 	//这里存放数据
 	return {
-		issuper: true
+		currendIndex: 0,
+		issuper: false,
+		logoList:[{
+			name: '所有公司',
+			path: '/',
+			cont: 0,
+			isshow:true
+		},{
+			name: '监控控制台',
+			path: '/',
+			cont: 0,
+			isshow:true
+		},{
+			name: '认证申请',
+			path: '/',
+			cont: 0,
+			isshow:true
+		},{
+			name: '二级超管设置',
+			path: '/',
+			cont: 0,
+			isshow:false
+		}]
 	};
 },
 //监听属性 类似于data概念
@@ -33,6 +58,10 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+	topclick(index) {
+		this.currendIndex = index;
+		console.log(index);
+	}
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -66,7 +95,20 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 #logoList{
 	display: flex;
 	flex-direction: row;
-	justify-content: flex-start
+	justify-content: flex-start;
+	list-style-type: none;
+	padding-left: 0;
+}
+#logoList li{
+	width: 141px;
+	height: 70px;
+}
+#logoList li:hover{
+	background-color: #1c4ded;
+	cursor: pointer;
+}
+.clickBackColor{
+	background-color: #1c4ded;
 }
 #topbarpre{
  margin-right:23px;

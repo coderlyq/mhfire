@@ -3,7 +3,7 @@
 <div class=''>
 	<el-container>
 		<el-header style="background-color:#fff;" class="ProjectControlBarHead">
-			<span class="ProjectControlTopTitle">项目人员管理</span>
+			<span class="ProjectControlTopTitle">项目功能管理</span>
 			<el-select style="font-family:'Microsoft YaHei';font-size:12px;color:#666;font-weight:bold;" v-model="value" placeholder="全部项目">
 				<el-option
 					v-for="item in options"
