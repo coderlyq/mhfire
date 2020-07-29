@@ -5,7 +5,7 @@
 	<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
 	<span v-if="issuper">奇勤达科技发展有限公司</span>
 	<ol v-else id="logoList">
-		<li v-for="(item,index) in logoList" @click="topclick(index)" :key="item" :class="{clickBackColor:index===currendIndex}">
+		<li v-for="(item,index) in logoList" @click="topclick(index)" :key="item.name" :class="{clickBackColor:index===currendIndex}">
 			{{item.name}} <span v-show="item.isshow">({{item.cont}})</span>
 		</li>
 		<!-- <li @click="topclick()">所有公司(10)</li>
@@ -31,22 +31,22 @@ data() {
 		issuper: false,
 		logoList:[{
 			name: '所有公司',
-			path: '/',
+			path: '/AllProject',
 			cont: 0,
 			isshow:true
 		},{
 			name: '监控控制台',
-			path: '/',
+			path: '/ProjectPerson',
 			cont: 0,
 			isshow:true
 		},{
 			name: '认证申请',
-			path: '/',
+			path: '/Attestation',
 			cont: 0,
 			isshow:true
 		},{
 			name: '二级超管设置',
-			path: '/',
+			path: '/SupperManager',
 			cont: 0,
 			isshow:false
 		}]
@@ -60,6 +60,7 @@ watch: {},
 methods: {
 	topclick(index) {
 		this.currendIndex = index;
+		this.$router.push(this.logoList[index].path)
 		console.log(index);
 	}
 },

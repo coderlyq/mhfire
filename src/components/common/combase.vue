@@ -5,7 +5,7 @@
 	<el-container>
 		<el-header style="height: 6.45vh;line-height: 6.45vh;"><TopBar /></el-header>
 		<el-container>
-			<el-aside style="width: 220px;background-color: #081d61;height: 93.55vh;"><SideBar/></el-aside>
+			<el-aside v-show="asideBoolean" style="width: 220px;background-color: #081d61;height: 93.55vh;"><SideBar/></el-aside>
 			<el-main style="height: 93.55vh;padding:0;"><router-view></router-view></el-main>
 		</el-container>
 	</el-container>
@@ -27,10 +27,10 @@ components: {
 	SideBar
 },
 data() {
-//这里存放数据
-return {
-
-};
+	//这里存放数据
+	return {
+		asideBoolean: true
+	};
 },
 //监听属性 类似于data概念
 computed: {},

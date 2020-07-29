@@ -9,6 +9,9 @@ const Check = ()=> import('@/views/check/Check')
 const ProjectList = ()=> import('@/views/ProjectList/ProjectList')
 const ProjectControl = ()=> import('@/views/ProjectControl/ProjectControl')
 const ProjectPerson = ()=> import('@/views/ProjectPerson/ProjectPerson')
+const AllProject = ()=> import('@/views/Manager/AllProject')
+const Attestation = ()=> import('@/views/Attestation/attestation')
+const SupperManager = ()=> import("@/views/SupperManager/SupperManager");
 
 // 安装插件
 Vue.use(VueRouter)
@@ -49,6 +52,18 @@ const routes = [
 	{
 		path: '/ProjectPerson',
 		component: ProjectPerson
+	},
+	{
+		path: '/AllProject',
+		component: AllProject
+	},
+	{
+		path: '/Attestation',
+		component: Attestation
+	},
+	{
+		path: '/SupperManager',
+		component: SupperManager
 	}
 ]
 
