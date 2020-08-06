@@ -36,7 +36,7 @@ data() {
 			isshow:true
 		},{
 			name: '监控控制台',
-			path: '/ProjectPerson',
+			path: '/TopController',
 			cont: 0,
 			isshow:true
 		},{

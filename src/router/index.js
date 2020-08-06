@@ -12,6 +12,7 @@ const ProjectPerson = ()=> import('@/views/ProjectPerson/ProjectPerson')
 const AllProject = ()=> import('@/views/Manager/AllProject')
 const Attestation = ()=> import('@/views/Attestation/attestation')
 const SupperManager = ()=> import("@/views/SupperManager/SupperManager");
+const TopController = ()=> import('@/views/Controller/topController');
 
 // 安装插件
 Vue.use(VueRouter)
@@ -64,6 +65,10 @@ const routes = [
 	{
 		path: '/SupperManager',
 		component: SupperManager
+	},
+	{
+		path: '/TopController',
+		component: TopController
 	}
 ]
 
