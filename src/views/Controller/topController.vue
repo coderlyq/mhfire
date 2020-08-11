@@ -2,14 +2,14 @@
 <template>
 <div class=''>
 	<el-container>
-		<el-header>
+		<el-header class="controllerTop">
 			<div class="controllerAreaCont">
-				<div class="controllerTopleft"></div>
+				<div class="controllerTopleft">
 					事件概览
 					<el-button plain>查看地图监控</el-button>
 				</div>
 				<div class="controllerTopRight">
-					<el-select v-model="value" placeholder="请选择">
+					<el-select v-model="value" placeholder="全部项目">
 							<el-option
 								v-for="item in options"
 								:key="item.value"
@@ -18,11 +18,27 @@
 							</el-option>
 						</el-select>
 				</div>
+			</div>
 		</el-header>
-		<el-main>Main</el-main>
+		<el-main>
+			<div class="controllerAreaCont">
+				<div class="chartLineArea">
+					<div class="chartLineText"></div>
+					<ol>
+						<li v-for="item in chartLineDatas" :key="item.dlname" :style="{backgroundImage:item.liBackImg}">
+							<img src="" alt="">
+							<dl>
+								<dt></dt>
+								<dd>{{item.dlcount}}</dd>
+							</dl>
+						</li>
+					</ol>
+				</div>
+				<div id="myCharts" ref="myCharts"></div>
+				<div id="myChartsPie" ref="myChartsPie"></div>
+			</div>
+		</el-main>
 	</el-container>
-	<div id="myCharts" ref="myCharts"></div>
-	<div id="myChartsPie" ref="myChartsPie"></div>
 </div>
 </template>
 
@@ -37,6 +53,27 @@ export default {
 	data() {
 		//这里存放数据
 		return {
+			chartLineDatas:[{
+				liBackImg:"url("+require("../../assets/images/Controller/supperFire.png")+")",
+				contImg:'~@/assets/images/Controller/supperFire.png',
+				dlname:'火警总数',
+				dlcount:1
+			},{
+				liBackImg:'~@/assets/images/Controller/supperFire.png',
+				contImg:'~@/assets/images/Controller/supperFire.png',
+				dlname:'火警总数',
+				dlcount:2
+			},{
+				liBackImg:'~@/assets/images/Controller/supperFire.png',
+				contImg:'~@/assets/images/Controller/supperFire.png',
+				dlname:'火警总数',
+				dlcount:3
+			},{
+				liBackImg:'~@/assets/images/Controller/supperFire.png',
+				contImg:'~@/assets/images/Controller/supperFire.png',
+				dlname:'火警总数',
+				dlcount:4
+			}],
 			options: [{
 				value: '选项1',
 				label: '黄金糕'
@@ -81,7 +118,10 @@ export default {
               trigger: 'axis'
             },
           legend: {
-            data:['最高气温','最低气温']
+            data:['最高气温','最低气温'],
+						// icon: 'circle',
+						itemHeight  :8,//改变圆圈大小
+						bottom: 20
           },
           xAxis : [{  //x轴坐标数据
             type : 'category',
@@ -169,6 +209,53 @@ export default {
 }
 </script>
 <style>
+	.controllerTop{
+		background-color: #ffffff;
+		background-color: #ffffff;
+		font-family: "PFz";
+		color: #333;
+	}
+	.controllerAreaCont{
+		width: 1200px;
+		margin: 0 auto;
+		overflow: hidden;
+	}
+	.controllerTopleft{
+		float: left;
+	}
+	.controllerTopleft .el-button{
+		box-sizing: border-box;
+		width: 150px;
+		height: 30px;
+		background: url('~@/assets/images/Controller/inputicon.png') 125px center no-repeat;
+		text-align: left;
+		padding: 0;
+		padding-left: 10px;
+		margin-left: 15px;
+				font-family: "PFxi";
+	}
+	.controllerTopleft .el-button span{
+		font-size: 12px;
+		/* color: #666666; */
+	}
+	.el-button.is-plain:focus, .el-button.is-plain:hover{
+		background: url('~@/assets/images/Controller/inputiconselect.png') 125px center no-repeat;
+	}
+	.controllerTopRight{
+		float: right;
+	}
+	.controllerTopRight .el-input__inner{
+		width: 272px;
+		height: 30px;
+		text-align: center;
+		font-family: "PFxi";
+		font-size: 12px;
+		color: #999999;
+	}
+	.chartLineArea li{
+		width: 246px;
+		height: 90px;
+	}
 	#myCharts{
 		width: 832px;
 		height: 320px;
