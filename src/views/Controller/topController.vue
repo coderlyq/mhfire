@@ -23,18 +23,18 @@
 		<el-main>
 			<div class="controllerAreaCont">
 				<div class="chartLineArea">
-					<div class="chartLineText"></div>
+					<div class="chartLineText">火灾自动报警系统</div>
 					<ol>
 						<li v-for="item in chartLineDatas" :key="item.dlname" :style="{backgroundImage:item.liBackImg}">
-							<img src="" alt="">
+							<img :src="item.contImg" alt="">
 							<dl>
-								<dt></dt>
+								<dt>{{item.dlname}}</dt>
 								<dd>{{item.dlcount}}</dd>
 							</dl>
 						</li>
 					</ol>
+					<div id="myCharts" ref="myCharts" style="width:832px;height:410px;margin-left:-45px;"></div>
 				</div>
-				<div id="myCharts" ref="myCharts"></div>
 				<div id="myChartsPie" ref="myChartsPie"></div>
 			</div>
 		</el-main>
@@ -55,22 +55,22 @@ export default {
 		return {
 			chartLineDatas:[{
 				liBackImg:"url("+require("../../assets/images/Controller/supperFire.png")+")",
-				contImg:'~@/assets/images/Controller/supperFire.png',
+				contImg:require("../../assets/images/Controller/fireIcon.png"),
 				dlname:'火警总数',
 				dlcount:1
 			},{
-				liBackImg:'~@/assets/images/Controller/supperFire.png',
-				contImg:'~@/assets/images/Controller/supperFire.png',
+				liBackImg:"url("+require("../../assets/images/Controller/supperTrouble.png")+")",
+				contImg:require("../../assets/images/Controller/troubleIcon.png"),
 				dlname:'火警总数',
 				dlcount:2
 			},{
-				liBackImg:'~@/assets/images/Controller/supperFire.png',
-				contImg:'~@/assets/images/Controller/supperFire.png',
+				liBackImg:"url("+require("../../assets/images/Controller/supperStart.png")+")",
+				contImg:require("../../assets/images/Controller/startIcon.png"),
 				dlname:'火警总数',
 				dlcount:3
 			},{
-				liBackImg:'~@/assets/images/Controller/supperFire.png',
-				contImg:'~@/assets/images/Controller/supperFire.png',
+				liBackImg:"url("+require("../../assets/images/Controller/supperFeback.png")+")",
+				contImg:require("../../assets/images/Controller/febackIcon.png"),
 				dlname:'火警总数',
 				dlcount:4
 			}],
@@ -111,35 +111,49 @@ export default {
    const  myCharts = this.$echarts.init(this.$refs.myCharts);
    let options = {
           title: { 
-             text: '趋势图',   //图表顶部的标题 
-             subtext: '纯属虚构'    //副标题
+						text: '趋势图',//图表顶部的标题 
+						left: 10
+             //subtext: '纯属虚构'    //副标题
           },
           tooltip: {   //鼠标悬浮框的提示文字
               trigger: 'axis'
             },
           legend: {
             data:['最高气温','最低气温'],
-						// icon: 'circle',
-						itemHeight  :8,//改变圆圈大小
-						bottom: 20
+						// icon: 'triangle',
+						itemHeight  :10,//改变圆圈大小
+						// bottom: 20,
+						top: 390,
+						symbol:'circle',
+						itemWidth:20
           },
-          xAxis : [{  //x轴坐标数据
+					xAxis : [{  //x轴坐标数据
             type : 'category',
             boundaryGap : false,
-						data : ['周一','周二','周三','周四','周五','周六','周日'],
+						data : ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
 						axisTick:{       //y轴刻度线
-							"show":false
+							"show":false,
+						},
+						axisLine: {
+							lineStyle: {
+								color: '#999999'
+							}
+						},
+						splitLine: {     //网格线
+							"show": false,
 						}
             }],
 					yAxis : [{   //y轴坐标数据
-						name: "时间",
+						name: "单位/个",
 						type : 'value',
 						axisLabel : {
 							formatter: '{value} °C'
 						},
 						axisLine:{       //y轴
-							"show":false
-
+							"show":false,
+							lineStyle: {
+								color: '#999999'
+							}
 						},
 						axisTick:{       //y轴刻度线
 							"show":false
@@ -153,12 +167,14 @@ export default {
             {
               name:"最高气温",
               type: "line",  //pie->饼状图  line->折线图  bar->柱状图
-              data:[11, 11, 15, 13, 12, 13, 10], 
+							data:[11, 11, 15, 13, 12, 13, 10,11, 11, 15, 13, 12, 13,],
+							symbol:'circle'
               },
             {
               name:"最低气温",
               type: "line",  //pie->饼状图  line->折线图  bar->柱状图
-              data:[1, -2, 2, 5, 3, 2, 0],
+							data:[1, -2, 2, 5, 3, 2, 0,1, -2, 2, 5, 3, 2, 0],
+							symbol:'circle'
               }
           ]}
 
@@ -232,7 +248,7 @@ export default {
 		padding: 0;
 		padding-left: 10px;
 		margin-left: 15px;
-				font-family: "PFxi";
+		font-family: "PFxi";
 	}
 	.controllerTopleft .el-button span{
 		font-size: 12px;
@@ -252,9 +268,47 @@ export default {
 		font-size: 12px;
 		color: #999999;
 	}
+	.chartLineArea{
+		background-color: #ffffff;
+		margin-top: 20px;
+		padding-left: 40px;
+		padding-top: 30px;
+	}
+	.chartLineArea .chartLineText{
+		font-family: "PFzc";
+		color: #333;
+		letter-spacing: 1px;
+		font-size: 18px;
+	}
+	.chartLineArea ol{
+		margin: 0;
+		list-style: none;
+		margin-top: 20px;
+		overflow: hidden;
+		padding-left: 0;
+	}
 	.chartLineArea li{
+		vertical-align: middle;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+		box-sizing: border-box;
 		width: 246px;
 		height: 90px;
+		float: left;
+		margin-right: 24px;
+		padding-left: 30px;
+	}
+	.chartLineArea li dl{
+		font-family: "PFxi";
+		color: #ffffff;
+		font-size: 14px;
+		margin-left: 15px;
+	}
+	.chartLineArea li dl dd{
+		margin: 0;
+		margin-top: 10px;
 	}
 	#myCharts{
 		width: 832px;
