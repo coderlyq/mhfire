@@ -6,7 +6,7 @@
 			<div class="controllerAreaCont">
 				<div class="controllerTopleft">
 					事件概览
-					<el-button plain>查看地图监控</el-button>
+					<el-button plain >查看地图监控</el-button>
 				</div>
 				<div class="controllerTopRight">
 					<el-select v-model="value" placeholder="全部项目">
@@ -33,9 +33,24 @@
 							</dl>
 						</li>
 					</ol>
-					<div id="myCharts" ref="myCharts" style="width:832px;height:410px;margin-left:-45px;"></div>
+					<div id="myCharts" ref="myCharts" style="width:932px;height:430px;margin-left:-45px;margin-top:30px;"></div>
 				</div>
-				<div id="myChartsPie" ref="myChartsPie"></div>
+				<div class="chartPieArea">
+					<div id="myChartsPie" ref="myChartsPie" style="height:390px;"></div>
+				</div>
+				<div class="chartWaterLineArea">
+					<div class="chartLineText">火灾自动报警系统</div>
+					<ol>
+						<li v-for="item in chartWaterLineDatas" :key="item.dlname" :style="{backgroundImage:item.liBackImg}">
+							<img :src="item.contImg" alt="">
+							<dl>
+								<dt>{{item.dlname}}</dt>
+								<dd>{{item.dlcount}}</dd>
+							</dl>
+						</li>
+					</ol>
+					<div id="myWaterCharts" ref="myWaterCharts" style="width:932px;height:430px;margin-left:-45px;margin-top:30px;"></div>
+				</div>	
 			</div>
 		</el-main>
 	</el-container>
@@ -61,17 +76,38 @@ export default {
 			},{
 				liBackImg:"url("+require("../../assets/images/Controller/supperTrouble.png")+")",
 				contImg:require("../../assets/images/Controller/troubleIcon.png"),
-				dlname:'火警总数',
+				dlname:'故障总数',
 				dlcount:2
 			},{
 				liBackImg:"url("+require("../../assets/images/Controller/supperStart.png")+")",
 				contImg:require("../../assets/images/Controller/startIcon.png"),
-				dlname:'火警总数',
+				dlname:'启动总数',
 				dlcount:3
 			},{
 				liBackImg:"url("+require("../../assets/images/Controller/supperFeback.png")+")",
 				contImg:require("../../assets/images/Controller/febackIcon.png"),
-				dlname:'火警总数',
+				dlname:'反馈总数',
+				dlcount:4
+			}],
+			chartWaterLineDatas:[{
+				liBackImg:"url("+require("../../assets/images/Controller/supperFire.png")+")",
+				contImg:require("../../assets/images/Controller/fireIcon.png"),
+				dlname:'水压报警数',
+				dlcount:1
+			},{
+				liBackImg:"url("+require("../../assets/images/Controller/supperTrouble.png")+")",
+				contImg:require("../../assets/images/Controller/troubleIcon.png"),
+				dlname:'水压故障数',
+				dlcount:2
+			},{
+				liBackImg:"url("+require("../../assets/images/Controller/supperStart.png")+")",
+				contImg:require("../../assets/images/Controller/fireIcon.png"),
+				dlname:'水位报警数',
+				dlcount:3
+			},{
+				liBackImg:"url("+require("../../assets/images/Controller/supperFeback.png")+")",
+				contImg:require("../../assets/images/Controller/troubleIcon.png"),
+				dlname:'水位故障数',
 				dlcount:4
 			}],
 			options: [{
@@ -112,7 +148,8 @@ export default {
    let options = {
           title: { 
 						text: '趋势图',//图表顶部的标题 
-						left: 10
+						// left: 40,
+						padding:[0,0,20,50]
              //subtext: '纯属虚构'    //副标题
           },
           tooltip: {   //鼠标悬浮框的提示文字
@@ -168,32 +205,43 @@ export default {
               name:"最高气温",
               type: "line",  //pie->饼状图  line->折线图  bar->柱状图
 							data:[11, 11, 15, 13, 12, 13, 10,11, 11, 15, 13, 12, 13,],
-							symbol:'circle'
+							symbol:'circle',
+							lineStyle:{
+								width: 1
+							}
               },
             {
               name:"最低气温",
               type: "line",  //pie->饼状图  line->折线图  bar->柱状图
 							data:[1, -2, 2, 5, 3, 2, 0,1, -2, 2, 5, 3, 2, 0],
-							symbol:'circle'
+							symbol:'circle',
+							lineStyle:{
+								width: 1
+							}
               }
           ]}
 
 		myCharts.setOption(options);
 		let optionsPie = {
 							title: {
-									text: '某站点用户访问来源',
-									subtext: '纯属虚构',
-									left: 'center'
+									text: '饼状图',
+									// subtext: '纯属虚构',
+									left: 40
 							},
 							tooltip: {
 									trigger: 'item',
 									formatter: '{a} <br/>{b} : {c} ({d}%)'
 							},
+							color: ['#f76262','#f99339','#2bcec8','#2bcc72'],
 							legend: {
-									orient: 'vertical',
-									x: 'right',
-									y: 'center',
-									data: ['直接访问', '邮件营销', '联盟广告', '视频广告', '搜索引擎']
+								orient: 'vertical',
+								height  :100,//改变圆圈大小
+								width:20,
+								x: 'right',
+								y: 'center',
+								itemWidth: 18,
+								itemHeight: 8,//图例标记的图形宽度
+								data: ['火警','故障','启动','反馈']
 							},
 							series: [
 									{
@@ -202,11 +250,10 @@ export default {
 											radius: '55%',
 											center: ['50%', '60%'],
 											data: [
-													{value: 335, name: '直接访问'},
-													{value: 310, name: '邮件营销'},
-													{value: 234, name: '联盟广告'},
-													{value: 135, name: '视频广告'},
-													{value: 1548, name: '搜索引擎'}
+													{value: 335, name: '火警'},
+													{value: 310, name: '故障'},
+													{value: 234, name: '启动'},
+													{value: 135, name: '反馈'}
 											],
 											emphasis: {
 													itemStyle: {
@@ -221,6 +268,87 @@ export default {
 
 		const  myChartsPie = this.$echarts.init(this.$refs.myChartsPie);
 		myChartsPie.setOption(optionsPie);
+
+
+	const  myWaterCharts = this.$echarts.init(this.$refs.myWaterCharts);
+  let optionsWater = {
+          title: { 
+						text: '趋势图',//图表顶部的标题 
+												// left: 40,
+						padding:[0,0,20,50]
+             //subtext: '纯属虚构'    //副标题
+          },
+          tooltip: {   //鼠标悬浮框的提示文字
+              trigger: 'axis'
+            },
+          legend: {
+            data:['最高气温','最低气温'],
+						// icon: 'triangle',
+						itemHeight  :10,//改变圆圈大小
+						// bottom: 20,
+						top: 390,
+						symbol:'circle',
+						itemWidth:20
+          },
+					xAxis : [{  //x轴坐标数据
+            type : 'category',
+            boundaryGap : false,
+						data : ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+						axisTick:{       //y轴刻度线
+							"show":false,
+						},
+						axisLine: {
+							lineStyle: {
+								color: '#999999'
+							}
+						},
+						splitLine: {     //网格线
+							"show": false,
+						}
+            }],
+					yAxis : [{   //y轴坐标数据
+						name: "单位/个",
+						type : 'value',
+						axisLabel : {
+							formatter: '{value} °C'
+						},
+						axisLine:{       //y轴
+							"show":false,
+							lineStyle: {
+								color: '#999999'
+							}
+						},
+						axisTick:{       //y轴刻度线
+							"show":false
+						}
+						// ,
+						// splitLine: {     //网格线
+						// 	"show": false
+						// }
+					}],
+          series: [  //驱动图表生成的数据内容数组，几条折现，数组中就会有几个对应对象，来表示对应的折线
+            {
+              name:"最高气温",
+              type: "line",  //pie->饼状图  line->折线图  bar->柱状图
+							data:[11, 11, 15, 13, 12, 13, 10,11, 11, 15, 13, 12, 13,],
+							symbol:'circle',
+							symbolSize: 2,
+							lineStyle:{
+								width: 1
+							}
+              },
+            {
+              name:"最低气温",
+              type: "line",  //pie->饼状图  line->折线图  bar->柱状图
+							data:[1, -2, 2, 5, 3, 2, 0,1, -2, 2, 5, 3, 2, 0],
+							symbol:'circle',
+							lineStyle:{
+								width: 1
+							}
+              }
+          ]}
+
+		myWaterCharts.setOption(optionsWater);
 	}
 }
 </script>
@@ -273,6 +401,9 @@ export default {
 		margin-top: 20px;
 		padding-left: 40px;
 		padding-top: 30px;
+		padding-bottom: 30px;
+		border-top-left-radius: 10px;
+		border-top-right-radius: 10px;
 	}
 	.chartLineArea .chartLineText{
 		font-family: "PFzc";
@@ -310,12 +441,65 @@ export default {
 		margin: 0;
 		margin-top: 10px;
 	}
-	#myCharts{
+	.chartPieArea{
+		width: 1200px;
+		background-color: #ffffff;
+		border-bottom-right-radius: 10px;
+		border-bottom-left-radius: 10px;
+	}
+	.chartWaterLineArea{
+		margin-top: 20px;
+		background-color: #ffffff;
+		border-radius: 10px;
+		padding-left: 40px;
+		padding-top: 30px;
+		padding-bottom: 30px;
+	}
+	.chartWaterLineArea .chartLineText{
+		font-family: "PFzc";
+		color: #333;
+		letter-spacing: 1px;
+		font-size: 18px;
+	}
+	.chartWaterLineArea ol{
+		margin: 0;
+		list-style: none;
+		margin-top: 20px;
+		overflow: hidden;
+		padding-left: 0;
+	}
+	.chartWaterLineArea li{
+		vertical-align: middle;
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+		box-sizing: border-box;
+		width: 246px;
+		height: 90px;
+		float: left;
+		margin-right: 24px;
+		padding-left: 30px;
+	}
+	.chartWaterLineArea li dl{
+		font-family: "PFxi";
+		color: #ffffff;
+		font-size: 14px;
+		margin-left: 15px;
+	}
+	.chartWaterLineArea li dl dd{
+		margin: 0;
+		margin-top: 10px;
+	}
+	#myChartsPie{
+		width: 632px;
+		height: 320px;
+	}
+	/* #myCharts{
 		width: 832px;
 		height: 320px;
 	}
 	#myChartsPie{
-		width: 832px;
-		height: 320px;
-	}
+		
+	} */
 </style>
