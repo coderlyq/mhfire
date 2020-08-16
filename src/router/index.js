@@ -13,6 +13,7 @@ const AllProject = ()=> import('@/views/Manager/AllProject')
 const Attestation = ()=> import('@/views/Attestation/attestation')
 const SupperManager = ()=> import("@/views/SupperManager/SupperManager");
 const TopController = ()=> import('@/views/Controller/topController');
+const Map = ()=> import('@/views/Controller/map');
 
 // 安装插件
 Vue.use(VueRouter)
@@ -69,6 +70,10 @@ const routes = [
 	{
 		path: '/TopController',
 		component: TopController
+	},
+	{
+		path: '/Map',
+		component: Map
 	}
 ]
 
