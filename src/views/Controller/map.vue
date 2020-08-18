@@ -10,10 +10,46 @@ export default {
 		return {
 			listArr:[{
 				id:"1",
-				name:'aaa'
+				name:'深圳市奇勤达科技发展有限公司',
+				fire:{
+					flag:true,
+					fireName:'火灾自动报警系统',
+						conts:{
+							"火警":2,
+							"故障":132,
+							"启动":3,
+							"反馈":3
+						}
+				},
+				water:{
+					flag:true,
+					waterName:'水系统',
+					conts:{
+						"报警":2,
+						"故障":132
+					}
+				}
 				},{
 					id:'2',
-					name: 'bbb'
+					name:'深圳门海安全技术有限公司',
+					fire:{
+						flag:true,
+						fireName:'火灾自动报警系统',
+						conts:{
+							"火警":2,
+							"故障":132,
+							"启动":3,
+							"反馈":3
+						}
+					},
+					water:{
+						flag:true,
+						waterName:'水系统',
+						conts:{
+							"报警":2,
+							"故障":132
+						}
+					}
 				}
 			]
 		}
@@ -65,8 +101,6 @@ export default {
 				map.openInfoWindow(infoWindow,point); //开启信息窗口
 			}
 
-
-
 			// 定义一个控件类,即function
 			function ZoomControl(){
 				// 默认停靠位置和偏移量
@@ -82,14 +116,70 @@ export default {
 			ZoomControl.prototype.initialize = function(map){
 				// 创建一个DOM元素
 				var div = document.createElement("div");
-				for(var i = 0;i<lent.length;i++){
-					var node = document.createElement("div");
-					node.innerText = lent[i].name;
-					div.appendChild(node);
-				}
+				div.style.fontSize = '14px';
 				var inputSearch = document.createElement("input");
+				inputSearch.style.display = "block";
+				inputSearch.style.width = "328px";
+				inputSearch.style.height = "40px";
+				inputSearch.style.margin = "0 auto";
+				inputSearch.style.marginTop = "20px";
+				inputSearch.style.border = "none";
+				inputSearch.style.borderRadius = "10px";
 				inputSearch.style.backgroundImage = "url("+require("../../assets/images/Controller/inputSearch.png")+")";
+				inputSearch.style.backgroundPosition = "292px center";
+				inputSearch.style.backgroundRepeat = "no-repeat";
 				div.appendChild(inputSearch);
+
+
+				// nodeEle.innerText = lent[i].name;
+				for(var i = 0;i<lent.length;i++){
+					var nodeEles = document.createElement('div');
+					nodeEles.dataset.id = lent.id;
+					nodeEles.style.backgroundColor = "#fff";
+					nodeEles.style.boxSizing = "border-box"
+					nodeEles.style.width = "328px";
+					nodeEles.style.margin = "0 auto";
+					nodeEles.style.marginTop = "10px";
+					nodeEles.style.marginBottom = "10px";
+					nodeEles.style.paddingTop = "20px";
+					nodeEles.style.paddingLeft = "20px";
+					nodeEles.style.borderRadius = "10px";
+					// 列表标题
+					var nodeTitle = document.createElement("h2");
+					nodeTitle.style.fontFamily = "PFxi";
+					nodeTitle.style.color = "#000";
+					nodeTitle.style.fontSize = "14px";
+					// nodeEle.style.fontWeight = 'bolder';
+					nodeTitle.innerText = lent[i].name;
+					//警情详情
+					if(lent[i].fire.flag){
+						var nodeDL = document.createElement('dl');
+						var nodeDT = document.createElement('dt');
+						nodeDL.appendChild(nodeDT);
+						nodeDT.innerText = lent[i].fire.fireName;
+						for (const key in lent[i].fire.conts) {
+							var nodeDD = document.createElement('dd');
+							nodeDD.style.display = "inline-block";
+							nodeDD.style.marginLeft = 0;
+							nodeDD.innerText = key+lent[i].fire.conts[key];
+							nodeDL.appendChild(nodeDD);
+						}
+						// for(var j = 0;j<lent[i].fire.conts.length;j++){
+						// 	var nodeDD = document.createElement('dd');
+						// 	nodeDD.innerText = "火警"+lent[i].fire.fireWarn;
+						// 	nodeDD.innerText = "故障"+lent[i].fire.fireTrouble;
+						// 	nodeDD.innerText = "启动"+lent[i].fire.fireStart;
+						// 	nodeDD.innerText = "反馈"+lent[i].fire.fireFeback;
+						// }
+						
+					}
+
+					div.appendChild(nodeEles);
+					nodeEles.appendChild(nodeTitle);
+					nodeEles.appendChild(nodeDL);
+				}
+
+
 				// 添加文字说明
 				// div.appendChild(document.createTextNode(lent));
 				// 设置样式
