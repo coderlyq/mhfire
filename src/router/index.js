@@ -14,6 +14,7 @@ const Attestation = ()=> import('@/views/Attestation/attestation')
 const SupperManager = ()=> import("@/views/SupperManager/SupperManager");
 const TopController = ()=> import('@/views/Controller/topController');
 const Map = ()=> import('@/views/Controller/map');
+const Lay = ()=> import('@/views/Lay/lay');
 
 // 安装插件
 Vue.use(VueRouter)
@@ -21,7 +22,11 @@ Vue.use(VueRouter)
 const routes = [
 	{
 		path: '',
-		redirect: '/List'
+		redirect: '/Lay'
+	},
+	{
+		path: '/Lay',
+		component: Lay
 	},
 	{
 		path: '/List',

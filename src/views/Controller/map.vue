@@ -136,6 +136,7 @@ export default {
 				// nodeEle.innerText = lent[i].name;
 				for(var i = 0;i<lent.length;i++){
 					var nodeEles = document.createElement('div');
+					nodeEles.className = 'nodeEles';
 					nodeEles.style.position = 'relative';
 					nodeEles.dataset.id = lent[i].id;
 					nodeEles.style.backgroundColor = "#fff";
@@ -270,7 +271,22 @@ export default {
 				topRightDiv.style.position = 'absolute';
 				topRightDiv.style.right = "24px";
 				topRightDiv.style.top = "125px";
+				topRightDiv.addEventListener('click',function(){
+					document.getElementById('navContsNum').innerText = 100;
+				});
 
+				var topRightNavConts = document.createElement('div');
+				topRightNavConts.style.margin = "0 auto";
+				topRightNavConts.style.width = "318px";
+				topRightNavConts.style.height = "40px";
+				topRightNavConts.style.textAlign = "center";
+				topRightNavConts.style.lineHeight = "40px";
+				topRightNavConts.style.marginTop = "20px";
+				topRightNavConts.style.marginBottom = "20px";
+				topRightNavConts.style.backgroundColor = "#ffffff";
+				topRightNavConts.innerHTML = "火警故障事件<span id='navContsNum'>10</span>条";
+
+				topRightDiv.appendChild(topRightNavConts);
 				var topRightAlert = document.createElement('div');
 				topRightAlert.style.width = "358px";
 				topRightAlert.style.height = "196px";
