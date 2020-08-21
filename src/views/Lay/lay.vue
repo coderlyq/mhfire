@@ -1,26 +1,46 @@
 <!--  -->
 <template>
 <div class='lay'>
-<img src="~@/assets/images/Lay/bottomRight.png" alt="" class="bottomRight">
-<img src="~@/assets/images/Lay/topRightImg.png" alt="" class="topRightImg">
-<div class="layConts">
-	<ol class="layContsOl"><li>登录</li><li>注册</li></ol>
-	<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm">
-		<el-form-item label="密码" prop="pass">
-			<el-input type="password" v-model="ruleForm.pass" autocomplete="off" clearable show-password></el-input>
-		</el-form-item>
-		<el-form-item label="确认密码" prop="checkPass">
-			<el-input type="password" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
-		</el-form-item>
-		<el-form-item label="年龄" prop="age">
-			<el-input v-model.number="ruleForm.age"></el-input>
-		</el-form-item>
-		<el-form-item>
-			<el-button type="primary" @click="submitForm('ruleForm')">提交</el-button>
-			<el-button @click="resetForm('ruleForm')">重置</el-button>
-		</el-form-item>
-	</el-form>
-</div>
+	<img src="~@/assets/images/Lay/bottomRight.png" alt="" class="bottomRight">
+	<img src="~@/assets/images/Lay/topRightImg.png" alt="" class="topRightImg">
+	<div class="layConts">
+		<div class="layContsCenter">
+			<ol class="layContsOl"><li @click="lay" :class="{checkTopBar:isLay}">登录</li><li :class="{checkTopBar:!isLay}" @click="layIn">注册</li></ol>
+			<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" v-show="isLay">
+				<el-form-item prop="pass">
+					<el-input type="text" v-model="ruleForm.pass" placeholder="手机号" autocomplete="on" clearable></el-input>
+				</el-form-item>
+				<el-form-item prop="checkPass">
+					<el-input type="password" v-model="ruleForm.checkPass" placeholder="请输入密码" autocomplete="off" clearable show-password></el-input>
+				</el-form-item>
+				<el-form-item prop="checkCode">
+					<el-input v-model.number="ruleForm.checkCode" placeholder="请输入验证码" class="checkCode"></el-input><img src="" alt="" class="checkImg">
+				</el-form-item>
+				<el-form-item>
+					<el-button type="primary" @click="submitForm('ruleForm')" class="submitBtn">提交</el-button>
+				</el-form-item>
+				<!-- `checked` 为 true 或 false -->
+				<el-checkbox v-model="checked">下次自动登录</el-checkbox>
+			</el-form>
+			<el-form :model="ruleForm" status-icon :rules="rules" ref="ruleForm" label-width="100px" class="demo-ruleForm" v-show="!isLay">
+				<el-form-item prop="text">
+					<el-input type="text" v-model="ruleForm.pass" placeholder="手机号" autocomplete="on" clearable></el-input>
+				</el-form-item>
+				<el-form-item prop="pass">
+					<el-input type="password" placeholder="请设置密码（8到16位，英文加数字组合）" v-model="ruleForm.pass" autocomplete="off"></el-input>
+				</el-form-item>
+				<el-form-item prop="checkPass">
+					<el-input type="password" placeholder="再次确认密码" v-model="ruleForm.checkPass" autocomplete="off"></el-input>
+				</el-form-item>
+				<el-form-item prop="checkCode">
+					<el-input v-model.number="ruleForm.checkCode" placeholder="请输入手机验证码" class="checkCode"></el-input><img src="" alt="" class="checkImg">
+				</el-form-item>
+				<el-form-item>
+					<el-button type="primary" @click="submitForm('ruleForm')" class="submitBtn">提交</el-button>
+				</el-form-item>
+			</el-form>
+		</div>
+	</div>
 </div>
 </template>
 
@@ -69,6 +89,7 @@ data() {
         }
       };
       return {
+				isLay:true,
         ruleForm: {
           pass: '',
           checkPass: '',
@@ -100,7 +121,13 @@ data() {
       },
       resetForm(formName) {
         this.$refs[formName].resetFields();
-      }
+			},
+			lay(){
+				return this.isLay = true;
+			},
+			layIn(){
+				return this.isLay = false;
+			}
     }
   }
 </script>
@@ -125,13 +152,47 @@ data() {
 	position: absolute;
 	left: 50%;
 	margin-left: -235px;
+	background-color: #ffffff;
+	border-radius: 10px;
+	padding-bottom: 40px;
+}
+.layContsCenter{
+	width: 392px;
+	margin: 0 auto;
 }
 .layContsOl{
 	list-style-type: none;
+	margin: 0;
+	margin-top: 40px;
+	margin-bottom: 20px;
+	font-family: "PFzc";
+	font-size: 18px;
+	color: #999;
 }
 .layContsOl li{
 	display: inline-block;
 	width: 50%;
 	text-align: center;
+	cursor: pointer;
+}
+.checkTopBar{
+	color: #2f8cdb;
+}
+.layConts .el-form-item{
+	width: 390px;
+	height: 40px;
+}
+.layContsCenter .el-form-item__content{
+	margin-left: 0 !important;
+}
+.checkCode{
+	width: 250px;
+}
+.checkImg{
+	width: 120px;
+	margin-left: 20px;
+}
+.submitBtn{
+	width: 390px;
 }
 </style>
