@@ -51,7 +51,10 @@ export default {
 						}
 					}
 				}
-			]
+			],
+			eventList:[{
+				
+			}]
 		}
 	},
 	mounted () {

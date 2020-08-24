@@ -3,10 +3,11 @@
 <div class=''>
 
 	<el-container>
-		<el-header style="height: 6.45vh;line-height: 6.45vh;"><TopBar /></el-header>
+		<el-header style="height: 6.45vh;line-height: 6.45vh;" v-show="topBarBoolean"><TopBar /></el-header>
 		<el-container>
 			<el-aside v-show="asideBoolean" style="width: 220px;background-color: #081d61;height: 93.55vh;"><SideBar/></el-aside>
-			<el-main style="height: 93.55vh;padding:0;"><router-view></router-view></el-main>
+			<el-main ><router-view></router-view></el-main>
+			<!-- style="height: 93.55vh;padding:0;" -->
 		</el-container>
 	</el-container>
 
@@ -29,6 +30,7 @@ components: {
 data() {
 	//这里存放数据
 	return {
+		topBarBoolean: false,
 		asideBoolean: false
 	};
 },
