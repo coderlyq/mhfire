@@ -161,48 +161,65 @@ data() {
 				}
 			});
 		},
-		submitLay(formName){
-			this.$refs[formName].validate((valid) => {
-				console.log(valid);
-				if (valid) {
-					// 参数1：phone(表示手机号)，string类型，必填
-					// 参数2：password(表示密码)，string类型，必填
-					// 参数4：code(手机验证码)，int类型，必填
-					var checkNum = 0;
-					if(this.checked === true){
-						checkNum = 1;
-						localStorage.setItem('telLay', this.ruleFormLay.telLay);
-						localStorage.setItem('passLay', this.ruleFormLay.passLay);
-					}else{
-						sessionStorage.setItem('telLay', this.ruleFormLay.telLay);
-						sessionStorage.setItem('passLay', this.ruleFormLay.passLay);
-						if(localStorage.getItem('telLay')){
-							localStorage.removeItem('telLay');
-						}
-						if(localStorage.getItem('passLay')){
-							localStorage.removeItem('passLay');
-						}
-					}
-					let postData = {
-							phone: this.ruleFormLay.telLay,
-							password: this.ruleFormLay.passLay,
-							code: this.imgCode,
-							login_status:checkNum
-					}
-					axios.post('http://test.mhfire.cn/mhApi/User/login',Qs.stringify(postData),{
-						headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
-					})
-					.then(function(response){
-							console.log(response);
-					})
-					.catch(function(error){
-							console.log(error);
-					});
-				} else {
-					console.log('error submit!!');
-					return false;
-				}
-			});
+		submitLay(){
+				this.$router.push({
+							path: '/AllProject',
+							name: 'AllProject',
+							params: {
+								topBarBoolean: true,
+								asideBoolean: true
+							}
+						})
+			// this.$refs[formName].validate((valid) => {
+			// 	console.log(valid);
+			// 	if (valid) {
+			// 		// 参数1：phone(表示手机号)，string类型，必填
+			// 		// 参数2：password(表示密码)，string类型，必填
+			// 		// 参数4：code(手机验证码)，int类型，必填
+			// 		var checkNum = 0;
+			// 		if(this.checked === true){
+			// 			checkNum = 1;
+			// 			localStorage.setItem('telLay', this.ruleFormLay.telLay);
+			// 			localStorage.setItem('passLay', this.ruleFormLay.passLay);
+			// 		}else{
+			// 			sessionStorage.setItem('telLay', this.ruleFormLay.telLay);
+			// 			sessionStorage.setItem('passLay', this.ruleFormLay.passLay);
+			// 			if(localStorage.getItem('telLay')){
+			// 				localStorage.removeItem('telLay');
+			// 			}
+			// 			if(localStorage.getItem('passLay')){
+			// 				localStorage.removeItem('passLay');
+			// 			}
+			// 		}
+			// 		let postData = {
+			// 				phone: this.ruleFormLay.telLay,
+			// 				password: this.ruleFormLay.passLay,
+			// 				code: this.imgCode,
+			// 				login_status:checkNum
+			// 		}
+			// 		axios.post('http://test.mhfire.cn/mhApi/User/login',Qs.stringify(postData),{
+			// 			headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+			// 		})
+			// 		.then(function(response){
+			// 			// this.$emit("dataLay",response.data.data);
+			// 			// this.$router.push({
+			// 			// 	name: 'ComBase',
+			// 			// 	params: {
+			// 			// 		topBarBoolean: true,
+			// 			// 		asideBoolean: true
+			// 			// 	}
+			// 			// })
+					
+			// 				console.log(response.data.data);
+			// 		})
+			// 		.catch(function(error){
+			// 				console.log(error);
+			// 		});
+			// 	} else {
+			// 		console.log('error submit!!');
+			// 		return false;
+			// 	}
+			// });
 		},
 		resetForm(formName) {
 			this.$refs[formName].resetFields();
@@ -343,6 +360,7 @@ data() {
 }
 .imgCodeDiv img{
 	float: right;
+	cursor: pointer;
 }
 .buttonPhoneCode{
 	width: 120px;

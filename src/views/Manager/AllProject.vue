@@ -2,7 +2,7 @@
   <el-container class="managerList">
 		<el-header class="managerListTop">
 			<div class="managerListTopCont">
-				公司列表
+				公司列表{{topBarBoolean}}{{aaa}}
 				<el-input placeholder="搜索公司名称" v-model="input3">
 					<el-button slot="append" icon="el-icon-search"></el-button>
 				</el-input>
@@ -113,7 +113,9 @@
 				currentPage1: 5,
         currentPage2: 5,
         currentPage3: 5,
-        currentPage4: 4
+				currentPage4: 4,
+				topBarBoolean: this.$route.params.topBarBoolean,
+				asideBoolean: this.$route.params.asideBoolean
 			}
 		},
 		methods: {

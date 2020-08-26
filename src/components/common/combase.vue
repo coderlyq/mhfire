@@ -30,8 +30,8 @@ components: {
 data() {
 	//这里存放数据
 	return {
-		topBarBoolean: true,
-		asideBoolean: false
+		topBarBoolean: this.$route.params.topBarBoolean,
+		asideBoolean: this.$route.params.asideBoolean
 	};
 },
 //监听属性 类似于data概念

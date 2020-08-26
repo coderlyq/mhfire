@@ -21,10 +21,6 @@ Vue.use(VueRouter)
 
 const routes = [
 	{
-		path: '',
-		redirect: '/Lay'
-	},
-	{
 		path: '/Lay',
 		component: Lay
 	},
@@ -62,6 +58,7 @@ const routes = [
 	},
 	{
 		path: '/AllProject',
+		name: 'AllProject',
 		component: AllProject
 	},
 	{

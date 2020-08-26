@@ -2,7 +2,7 @@
 <template>
 <div id='logotext'>
 	<img src="~@/assets/images/TopBar/logo.png" alt="">
-	<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
+	<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;">FCLOUD门海消防云平台{{isshowLay}}</span><span id="topbarpre"></span>
 	<span v-if="issuper">奇勤达科技发展有限公司</span>
 	<ol v-else id="logoList">
 		<li v-for="(item,index) in logoList" @click="topclick(index)" :key="item.name" :class="{clickBackColor:index===currendIndex}">
@@ -28,7 +28,6 @@ data() {
 	//这里存放数据
 	return {
 		currendIndex: 0,
-		issuper: false,
 		logoList:[{
 			name: '所有公司',
 			path: '/AllProject',
