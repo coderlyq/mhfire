@@ -6,74 +6,14 @@
 		</el-header>
 		<el-main>
 			<ul>
-				<li>
+				<li v-for="(item,index) in projectList" :key="item.ProjectName" @click="clickProject(index)">
 					<div class="listLiLeft">
 						<img src="~@/assets/images/List/logoDefault.png" alt="">
 						<dl>
-							<dt>深圳市奇勤达科技发展有限公司</dt>
-							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：刘德华</dd>
-							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：13389752034</dd>
-							<dd><img src="~@/assets/images/List/address.png" alt="">公司地址：留仙三路汇聚创新园</dd>
-						</dl>
-					</div>
-					<el-button type="primary">项目设置</el-button>
-				</li>
-				<li>
-					<div class="listLiLeft">
-						<img src="~@/assets/images/List/logoDefault.png" alt="">
-						<dl>
-							<dt>深圳市奇勤达科技发展有限公司</dt>
-							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：刘德华</dd>
-							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：13389752034</dd>
-							<dd><img src="~@/assets/images/List/address.png" alt="">公司地址：留仙三路汇聚创新园</dd>
-						</dl>
-					</div>
-					<el-button type="primary">项目设置</el-button>
-				</li>
-				<li>
-					<div class="listLiLeft">
-						<img src="~@/assets/images/List/logoDefault.png" alt="">
-						<dl>
-							<dt>深圳市奇勤达科技发展有限公司</dt>
-							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：刘德华</dd>
-							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：13389752034</dd>
-							<dd><img src="~@/assets/images/List/address.png" alt="">公司地址：留仙三路汇聚创新园</dd>
-						</dl>
-					</div>
-					<el-button type="primary">项目设置</el-button>
-				</li>
-				<li>
-					<div class="listLiLeft">
-						<img src="~@/assets/images/List/logoDefault.png" alt="">
-						<dl>
-							<dt>深圳市奇勤达科技发展有限公司</dt>
-							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：刘德华</dd>
-							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：13389752034</dd>
-							<dd><img src="~@/assets/images/List/address.png" alt="">公司地址：留仙三路汇聚创新园</dd>
-						</dl>
-					</div>
-					<el-button type="primary">项目设置</el-button>
-				</li>
-				<li>
-					<div class="listLiLeft">
-						<img src="~@/assets/images/List/logoDefault.png" alt="">
-						<dl>
-							<dt>深圳市奇勤达科技发展有限公司</dt>
-							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：刘德华</dd>
-							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：13389752034</dd>
-							<dd><img src="~@/assets/images/List/address.png" alt="">公司地址：留仙三路汇聚创新园</dd>
-						</dl>
-					</div>
-					<el-button type="primary">项目设置</el-button>
-				</li>
-				<li>
-					<div class="listLiLeft">
-						<img src="~@/assets/images/List/logoDefault.png" alt="">
-						<dl>
-							<dt>深圳市奇勤达科技发展有限公司</dt>
-							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：刘德华</dd>
-							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：13389752034</dd>
-							<dd><img src="~@/assets/images/List/address.png" alt="">公司地址：留仙三路汇聚创新园</dd>
+							<dt>{{item.ProjectName}}</dt>
+							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：{{item.ProLinkMan}}</dd>
+							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：{{item.ProLinkManTel}}</dd>
+							<dd><img src="~@/assets/images/List/address.png" alt="">公司地址：{{item.AddressDetail}}</dd>
 						</dl>
 					</div>
 					<el-button type="primary">项目设置</el-button>
@@ -84,8 +24,49 @@
 </template>
 
 <script>
+// 引入axios
+import axios from 'axios'
   export default {
-    name: "List"
+		name: "List",
+		data() {
+			return {
+				projectList:''
+			}
+		},
+		//生命周期 - 创建完成（可以访问当前this实例）
+		created() {
+			let token = this.$route.params.token;
+			let companyId = this.$route.params.companyId;
+			let page = this.$route.params.page;
+			console.log(token);
+			let _this = this;
+			axios.get('http://test.mhfire.cn/mhApi/Project/projectList',{
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：companyId(公司ID)，int类型，必填
+				// 参数3：projectName(项目名称)，string类型，选填
+				// 参数4：page(分页数)，int类型，选填，默认为1
+					params: {
+						token: token,
+						companyId: companyId,
+						projectName:'',
+						page:page
+					}
+			})
+			.then(function(response){
+				console.log(response.data.data.result);
+				_this.projectList = response.data.data.result;
+			})
+			.catch(function(error){
+					console.log(error);
+			})
+		},
+		methods: {
+			clickProject(index){
+				let companyId = sessionStorage.getItem('companyId');
+				console.log(index);
+				console.log(companyId);
+			}
+		}
   }
 </script>
 

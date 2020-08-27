@@ -3,6 +3,7 @@
 		<div v-show="!isshowLay">
 			<el-container>
 				<el-header style="height: 6.45vh;line-height: 6.45vh;" v-show="topBarBoolean">
+					<div style="display:none;"><span id="token">{{token}}</span></div>
 					<div id='logotext'>
 						<img src="~@/assets/images/TopBar/logo.png" alt="">
 						<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
@@ -122,6 +123,7 @@ export default {
 			}
 		};
 		return {
+			token: '808d7902a25245ae9be5ef242220b304',
 			issuper: true,//topbar显示公司名字还是权限菜单
 			currendIndex: 0,
 			logoList:[{
@@ -188,7 +190,7 @@ export default {
 		topclick(index) {
 			this.currendIndex = index;
 			this.$router.push(this.logoList[index].path)
-			console.log(index);
+			// console.log(index);
 		},
 		// 注册表单提交
 		submitForm(formName) {
@@ -230,8 +232,6 @@ export default {
 							path: '/AllProject',
 							name: 'AllProject',
 							params: {
-								topBarBoolean: true,
-								asideBoolean: true
 							}
 						})
 			// this.$refs[formName].validate((valid) => {

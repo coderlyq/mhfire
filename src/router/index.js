@@ -26,6 +26,7 @@ const routes = [
 	},
 	{
 		path: '/List',
+		name: 'List',
 		component: List
 	},
 	{

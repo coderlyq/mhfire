@@ -2,7 +2,7 @@
   <el-container class="managerList">
 		<el-header class="managerListTop">
 			<div class="managerListTopCont">
-				公司列表{{topBarBoolean}}{{aaa}}
+				公司列表
 				<el-input placeholder="搜索公司名称" v-model="input3">
 					<el-button slot="append" icon="el-icon-search"></el-button>
 				</el-input>
@@ -10,84 +10,20 @@
 		</el-header>
 		<el-main>
 			<ul class="managerListCont">
-				<li>
+				<li v-for="(item,index) in companyList" :key="item.CompanyName" @click="selectItem(index)">
 					<div class="managerLiLeft">
 						<img src="~@/assets/images/List/logoDefault.png" alt="">
 						<dl>
-							<dt>深圳市奇勤达科技发展有限公司</dt>
-							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：刘德华</dd>
-							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：13389752034</dd>
-							<dd><img src="~@/assets/images/Manager/barch.png" alt="">公司子项目10个</dd><br>
-							<dd><img src="~@/assets/images/List/address.png" class="managerLastLi" alt="">公司地址：留仙三路汇聚创新园</dd>
+							<dt>{{item.CompanyName}}</dt>
+							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：{{item.LinkMan}}</dd>
+							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：{{item.LinkNum}}</dd>
+							<dd><img src="~@/assets/images/Manager/barch.png" alt="">公司子项目{{item.projectCount}}个</dd><br>
+							<dd><img src="~@/assets/images/List/address.png" class="managerLastLi" alt="">公司地址：{{item.Address}}</dd>
 						</dl>
 					</div>
 					<el-button type="primary">公司设置</el-button>
 				</li>
-				<li>
-					<div class="managerLiLeft">
-						<img src="~@/assets/images/List/logoDefault.png" alt="">
-						<dl>
-							<dt>深圳市奇勤达科技发展有限公司</dt>
-							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：刘德华</dd>
-							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：13389752034</dd>
-							<dd><img src="~@/assets/images/Manager/barch.png" alt="">公司子项目10个</dd><br>
-							<dd><img src="~@/assets/images/List/address.png" class="managerLastLi" alt="">公司地址：留仙三路汇聚创新园</dd>
-						</dl>
-					</div>
-					<el-button type="primary">公司设置</el-button>
-				</li>
-				<li>
-					<div class="managerLiLeft">
-						<img src="~@/assets/images/List/logoDefault.png" alt="">
-						<dl>
-							<dt>深圳市奇勤达科技发展有限公司</dt>
-							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：刘德华</dd>
-							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：13389752034</dd>
-							<dd><img src="~@/assets/images/Manager/barch.png" alt="">公司子项目10个</dd><br>
-							<dd><img src="~@/assets/images/List/address.png" class="managerLastLi" alt="">公司地址：留仙三路汇聚创新园</dd>
-						</dl>
-					</div>
-					<el-button type="primary">公司设置</el-button>
-				</li>
-				<li>
-					<div class="managerLiLeft">
-						<img src="~@/assets/images/List/logoDefault.png" alt="">
-						<dl>
-							<dt>深圳市奇勤达科技发展有限公司</dt>
-							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：刘德华</dd>
-							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：13389752034</dd>
-							<dd><img src="~@/assets/images/Manager/barch.png" alt="">公司子项目10个</dd><br>
-							<dd><img src="~@/assets/images/List/address.png" class="managerLastLi" alt="">公司地址：留仙三路汇聚创新园</dd>
-						</dl>
-					</div>
-					<el-button type="primary">公司设置</el-button>
-				</li>
-				<li>
-					<div class="managerLiLeft">
-						<img src="~@/assets/images/List/logoDefault.png" alt="">
-						<dl>
-							<dt>深圳市奇勤达科技发展有限公司</dt>
-							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：刘德华</dd>
-							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：13389752034</dd>
-							<dd><img src="~@/assets/images/Manager/barch.png" alt="">公司子项目10个</dd>
-							<dd><img src="~@/assets/images/List/address.png" class="managerLastLi" alt="">公司地址：留仙三路汇聚创新园</dd>
-						</dl>
-					</div>
-					<el-button type="primary">公司设置</el-button>
-				</li>
-				<li>
-					<div class="managerLiLeft">
-						<img src="~@/assets/images/List/logoDefault.png" alt="">
-						<dl>
-							<dt>深圳市奇勤达科技发展有限公司</dt>
-							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：刘德华</dd>
-							<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：13389752034</dd>
-							<dd><img src="~@/assets/images/Manager/barch.png" alt="">公司子项目10个</dd>
-							<dd><img src="~@/assets/images/List/address.png" class="managerLastLi" alt="">公司地址：留仙三路汇聚创新园</dd>
-						</dl>
-					</div>
-					<el-button type="primary">公司设置</el-button>
-				</li>
+		
 			</ul>
 			<div class="managernavblock">
 				<span class="demonstration">完整功能</span>
@@ -106,6 +42,10 @@
 </template>
 
 <script>
+// 引入axios
+import axios from 'axios'
+// 引入qs对axios上传数据解析
+// import Qs from 'qs'
   export default {
 		name: "AllProject",
 		data() {
@@ -115,7 +55,8 @@
         currentPage3: 5,
 				currentPage4: 4,
 				topBarBoolean: this.$route.params.topBarBoolean,
-				asideBoolean: this.$route.params.asideBoolean
+				asideBoolean: this.$route.params.asideBoolean,
+				companyList: '123'
 			}
 		},
 		methods: {
@@ -124,9 +65,54 @@
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
-      }
+			},
+			selectItem(index) {
+				let _this = this;
+				sessionStorage.setItem('companyId',this.companyList[index].ID);
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：companyId(公司ID)，int类型，必填
+				// 参数3：projectName(项目名称)，string类型，选填
+				// 参数4：page(分页数)，int类型，选填，默认为1
+				let token = document.querySelector('#token').innerText;
+				let companyId = this.companyList[index].ID;
+				let projectName = this.companyList[index].CompanyName;
+				let page = 1;
+				_this.$router.push({
+					path: '/List',
+					name: 'List',
+					params: {
+						token: token,
+						companyId: companyId,
+						projectName:projectName,
+						page:page
+					}
+				})
+			}
+		},
+		//生命周期 - 创建完成（可以访问当前this实例）
+		created() {
+			let _this = this;
+			axios.get('http://test.mhfire.cn/mhApi/Company/companyList',{
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：page(分页数)，int类型，选填，默认为1
+				// 参数3：companyName(公司名称)，string类型，选填
+					params: {
+						token: '808d7902a25245ae9be5ef242220b304',
+						page: 1,
+						companyName:''
+					}
+			})
+			.then(function(response){
+				_this.companyList = response.data.data.result;
+			})
+			.catch(function(error){
+					console.log(error);
+			})
+		},
+		//生命周期 - 创建之前
+		beforeCreate() {
 		}
-  }
+	}
 </script>
 
 <style>
