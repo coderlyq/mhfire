@@ -62,9 +62,15 @@ import axios from 'axios'
 		},
 		methods: {
 			clickProject(index){
-				let companyId = sessionStorage.getItem('companyId');
+				let projectId = this.projectList[index].ID;
 				console.log(index);
-				console.log(companyId);
+				this.$router.push({
+					path: '/ProjectList',
+					name: 'ProjectList',
+					params: {
+						projectId:projectId
+					}
+				})
 			}
 		}
   }

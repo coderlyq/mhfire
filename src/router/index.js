@@ -47,6 +47,7 @@ const routes = [
 	},
 	{
 		path: '/ProjectList',
+		name: 'ProjectList',
 		component: ProjectList
 	},
 	{

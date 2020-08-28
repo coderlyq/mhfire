@@ -19,30 +19,25 @@
 				<div class="ProjectListDefCont">
 					<img src="~@/assets/images/Person/ProjectBaseImg.png" alt="">
 					<ol class="ProjectListDefContOl">
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
-						<li>项目名称：深圳门海安全技术有限公司</li>
+						<li>项目名称：{{projectDetail.baseInfo.ProjectName}}</li>
+						<li>单位建筑名称：{{projectDetail.baseInfo.BuildingName}}</li>
+						<li>项目地址：{{projectDetail.baseInfo.AddressDetail}}</li>
+						<li>防火等级：{{projectDetail.baseInfo.Grade}}</li>
+						<li>地上层数：{{projectDetail.baseInfo.UpFloor}}</li>
+						<li>地下层数：{{projectDetail.baseInfo.UnderFloor}}</li>
+						<li>建筑面积-地下：{{projectDetail.baseInfo.UnderAcreage}}</li>
+						<li>建筑面积-地上：{{projectDetail.baseInfo.UpAcreage}}</li>
+						<li>结构类型：{{projectDetail.baseInfo.structureType}}</li>
+						<li>建筑高度：{{projectDetail.baseInfo.buildingHeight}}</li>
+						<li>占地面积：{{projectDetail.baseInfo.floorSpace}}</li>
+						<li>建筑项目联系人：{{projectDetail.baseInfo.ProLinkMan}}</li>
+						<li>设计单位：{{projectDetail.baseInfo.architect}}</li>
+						<li>施工单位：{{projectDetail.baseInfo.constrOrg}}</li>
+						<li>监理单位：{{projectDetail.baseInfo.superUnit}}</li>
+						<li>建筑单位：{{projectDetail.baseInfo.builder}}</li>
+						<li>建筑项目联系人电话：{{projectDetail.baseInfo.ProLinkManTel}}</li>
+						<li>消防安全负责人：{{projectDetail.baseInfo.ResponseMan}}</li>
+						<li>消防安全负责人电话：{{projectDetail.baseInfo.ResponseManTel}}</li>
 					</ol>
 					<el-button type="primary">修改基础信息<i class="el-icon-edit-outline el-icon--right"></i></el-button>
 				</div>
@@ -55,87 +50,24 @@
 			</div>
 			<div class="ProjectListPower">
 				<div class="ProjectListPowerName">
-					FCloud消防云负责人：<span class="ProjectListPowerNameValue"></span>
+					FCloud消防云负责人：<span class="ProjectListPowerNameValue">{{ProjectListPower.UserName}}</span>
 				</div>
 				<div class="ProjectListPowerTel">
-					负责人电话：<span class="ProjectListPowerTelValue"></span>
+					负责人电话：<span class="ProjectListPowerTelValue">{{ProjectListPower.UserPhone}}</span>
 				</div>
-				<el-button type="primary">更换项目负责人</el-button>
+				<el-button type="primary" @click="dialogTableVisible=true">更换项目负责人</el-button>
 			</div>
 			<div class="ProjectElement">
 				<div class="ProjectElementTop">项目下的员工</div>
 				<ol class="ProjectElementItem">
-					<li>
+					<li v-for="(item,index) in memberList" :key="item.UserName">
 						<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
 						<dl>
 							<dt></dt>
-							<dd>姓名：<span>刘德华</span></dd>
-							<dd>电话：<span>13556885613</span></dd>
+							<dd>姓名：<span>{{item.UserName}}</span></dd>
+							<dd>电话：<span>{{item.UserPhone}}</span></dd>
 						</dl>
-						<el-button type="primary" icon="el-icon-delete" circle></el-button>
-					</li>
-					<li>
-						<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
-						<dl>
-							<dt></dt>
-							<dd>姓名：<span>刘德华</span></dd>
-							<dd>电话：<span>13556885613</span></dd>
-						</dl>
-						<el-button type="primary" icon="el-icon-delete" circle></el-button>
-					</li>
-					<li>
-						<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
-						<dl>
-							<dt></dt>
-							<dd>姓名：<span>刘德华</span></dd>
-							<dd>电话：<span>13556885613</span></dd>
-						</dl>
-						<el-button type="primary" icon="el-icon-delete" circle></el-button>
-					</li>
-					<li>
-						<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
-						<dl>
-							<dt></dt>
-							<dd>姓名：<span>刘德华</span></dd>
-							<dd>电话：<span>13556885613</span></dd>
-						</dl>
-						<el-button type="primary" icon="el-icon-delete" circle></el-button>
-					</li>
-					<li>
-						<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
-						<dl>
-							<dt></dt>
-							<dd>姓名：<span>刘德华</span></dd>
-							<dd>电话：<span>13556885613</span></dd>
-						</dl>
-						<el-button type="primary" icon="el-icon-delete" circle></el-button>
-					</li>
-					<li>
-						<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
-						<dl>
-							<dt></dt>
-							<dd>姓名：<span>刘德华</span></dd>
-							<dd>电话：<span>13556885613</span></dd>
-						</dl>
-						<el-button type="primary" icon="el-icon-delete" circle></el-button>
-					</li>
-					<li>
-						<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
-						<dl>
-							<dt></dt>
-							<dd>姓名：<span>刘德华</span></dd>
-							<dd>电话：<span>13556885613</span></dd>
-						</dl>
-						<el-button type="primary" icon="el-icon-delete" circle></el-button>
-					</li>
-					<li>
-						<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
-						<dl>
-							<dt></dt>
-							<dd>姓名：<span>刘德华</span></dd>
-							<dd>电话：<span>13556885613</span></dd>
-						</dl>
-						<el-button type="primary" icon="el-icon-delete" circle></el-button>
+						<el-button type="primary" @click="deleteMember(index)" icon="el-icon-delete" circle></el-button>
 					</li>
 				</ol>
 			</div>
@@ -246,6 +178,20 @@
 					</li>
 				</ol>
 			</div>
+			<el-dialog :visible.sync="dialogTableVisible" class="memberDialog" :before-close="handleClose" style="cellspacing:20px;cellpadding:20px;">
+					<div class="ProjectElementTop">项目下的员工</div>
+					<ol class="ProjectElementItem">
+						<li v-for="(item,index) in memberList" :key="item.UserName">
+							<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
+							<dl>
+								<dt></dt>
+								<dd>姓名：<span>{{item.UserName}}</span></dd>
+								<dd>电话：<span>{{item.UserPhone}}</span></dd>
+							</dl>
+							<el-button type="primary" @click="changeMember(index)" icon="el-icon-sort" style="transform:rotate(90deg);" circle></el-button>
+						</li>
+					</ol>
+				</el-dialog>
 		</el-main>
 	</el-container>
 </div>
@@ -254,7 +200,8 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+// 引入axios
+import axios from 'axios'
 export default {
 	name:'ProjectList',
 //import引入的组件需要注入到对象中才能使用
@@ -262,11 +209,42 @@ components: {},
 data() {
 	//这里存放数据
 	return {
+		options: [{
+			value: '选项1',
+			label: '黄金糕'
+		}, {
+			value: '选项2',
+			label: '双皮奶'
+		}, {
+			value: '选项3',
+			label: '蚵仔煎'
+		}, {
+			value: '选项4',
+			label: '龙须面'
+		}, {
+			value: '选项5',
+			label: '北京烤鸭'
+		}],
+		ProjectListPower:'',//项目负责人
+		dialogTableVisible: false,
+		value: '',
+		memberList: '',
+		projectDetail: '',
 		fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
 	};
 },
 //方法集合
 methods: {
+	handleClose(done) {
+		this.$confirm('确认关闭？')
+			.then(_ => {
+				done(_);
+			})
+			.catch(_ => {_});
+	},
+	changeMember(index){
+		this.ProjectListPower = this.memberList[index];
+	},
 	handleRemove(file, fileList) {
 		console.log(file, fileList);
 	},
@@ -279,10 +257,62 @@ methods: {
 	beforeRemove(file) {
 		return this.$confirm(`确定移除 ${ file.name }？`);
 	}
-}
+},
+//生命周期 - 创建完成（可以访问当前this实例）
+created() {
+	let _this = this;
+	let token = document.querySelector('#token').innerText;
+	let companyId = sessionStorage.getItem('companyId');
+	let projectId = this.$route.params.projectId;
+	axios.get('http://test.mhfire.cn/mhApi/Project/projectDetail',{
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：companyId(公司ID)，int类型，必填
+		// 参数3：projectId(项目ID)，int类型，必填
+			params: {
+				token: token,
+				companyId: companyId,
+				projectId: projectId
+			}
+	})
+	.then(function(response){
+		console.log(response.data.data);
+		_this.projectDetail = response.data.data;
+		_this.ProjectListPower = response.data.data.projectResponsible;
+	})
+	.catch(function(error){
+			console.log(error);
+	})
+	axios.get('http://test.mhfire.cn/mhApi/Project/memberList',{
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：companyId(公司ID)，int类型，必填
+		// 参数3：projectId(项目ID)，int类型，必填
+			params: {
+				token: token,
+				companyId: companyId,
+				projectId: projectId
+			}
+	})
+	.then(function(response){
+		console.log(response.data.data);
+		_this.memberList = response.data.data;
+	})
+	.catch(function(error){
+			console.log(error);
+	})
+},
 }
 </script>
 <style>
+	.memberDialog>div{
+		width: 779px;
+	}
+	.memberDialog>div li{
+		float: left;
+		margin-right: 30px;
+	}
+	.memberDialog .ProjectElementItem{
+		padding-left: 25px;
+	}
 	.ProjectListBarHead{
 		display: flex;
 		flex-direction: row;
