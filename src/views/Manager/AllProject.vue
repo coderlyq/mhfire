@@ -3,9 +3,17 @@
 		<el-header class="managerListTop">
 			<div class="managerListTopCont">
 				公司列表
-				<el-input placeholder="搜索公司名称" v-model="input3">
+				<!-- <el-input placeholder="搜索公司名称" v-model="input3">
 					<el-button slot="append" icon="el-icon-search"></el-button>
-				</el-input>
+				</el-input> -->
+				<el-autocomplete
+					suffix-icon="el-icon-search"
+					class="inline-input"
+					v-model="state1"
+					:fetch-suggestions="querySearch"
+					placeholder="请输入内容"
+					@select="handleSelect"
+				></el-autocomplete>
 			</div>
 		</el-header>
 		<el-main>
@@ -130,19 +138,22 @@ import axios from 'axios'
 	width: 1200px;
 	margin: 0 auto;
 }
-.managerListTopCont>.el-input-group--append {
-    border: 1px solid #dddddd;
-    border-radius: 5px;
-    margin-left: 25px;
+.managerListTopCont>.el-input-group--append{
+	border: 1px solid #dddddd;
+	border-radius: 5px;
+	margin-left: 25px;
 }
-.managerListTopCont .el-input{
+/* .managerListTopCont .el-autocomplete {
 	width: 272px;
-}
-.managerListTopCont  .el-input__inner{
-	width: 214px;
 	height: 30px !important;
 	line-height: 30px;
 	border: none;
+	border-radius: 5px;
+} */
+.managerListTopCont .el-autocomplete input{
+	width: 272px;
+	height: 30px !important;
+	line-height: 30px;
 	border-radius: 5px;
 }
 .managerListTopCont  .el-input-group__append{

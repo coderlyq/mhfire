@@ -44,9 +44,9 @@
 			</div>
 			<div class="ProjectListdevID">
 				<div class="ProjectListdevIDText">
-					采集器设备号：<span class="ProjectListdevIDValue"></span>
+					采集器设备号：<span class="ProjectListdevIDValue">{{projectDetail.proCollector.CollectorNum}}</span>
 				</div>
-				<el-button type="primary">更换采集器</el-button>
+				<el-button type="primary" @click="dialogChangeCollectorVisible=true">更换采集器</el-button>
 			</div>
 			<div class="ProjectListPower">
 				<div class="ProjectListPowerName">
@@ -67,7 +67,7 @@
 							<dd>姓名：<span>{{item.UserName}}</span></dd>
 							<dd>电话：<span>{{item.UserPhone}}</span></dd>
 						</dl>
-						<el-button type="primary" @click="deleteMember(index)" icon="el-icon-delete" circle></el-button>
+						<el-button type="primary" :plain="true" @click="deleteMember(index)" icon="el-icon-delete" circle></el-button>
 					</li>
 				</ol>
 			</div>
@@ -188,9 +188,20 @@
 								<dd>姓名：<span>{{item.UserName}}</span></dd>
 								<dd>电话：<span>{{item.UserPhone}}</span></dd>
 							</dl>
-							<el-button type="primary" @click="changeMember(index)" icon="el-icon-sort" style="transform:rotate(90deg);" circle></el-button>
+							<el-button type="primary" :plain="true" @click="changeMember(index)" icon="el-icon-sort" style="transform:rotate(90deg);" circle></el-button>
 						</li>
 					</ol>
+				</el-dialog>
+				<el-dialog
+					title="提示"
+					:visible.sync="dialogChangeCollectorVisible"
+					width="30%"
+					:before-close="handleClose" class="changeCollectorDialog">
+					<el-input v-model="projectDetail.proCollector.CollectorNum" placeholder="请输入内容"></el-input>
+					<span slot="footer" class="dialog-footer">
+						<el-button @click="dialogVisible = false">取 消</el-button>
+						<el-button type="primary" @click="changeCollector">确 定</el-button>
+					</span>
 				</el-dialog>
 		</el-main>
 	</el-container>
@@ -202,6 +213,7 @@
 //例如：import 《组件名称》 from '《组件路径》';
 // 引入axios
 import axios from 'axios'
+import Qs from 'qs'
 export default {
 	name:'ProjectList',
 //import引入的组件需要注入到对象中才能使用
@@ -227,6 +239,7 @@ data() {
 		}],
 		ProjectListPower:'',//项目负责人
 		dialogTableVisible: false,
+		dialogChangeCollectorVisible: false,
 		value: '',
 		memberList: '',
 		projectDetail: '',
@@ -242,8 +255,90 @@ methods: {
 			})
 			.catch(_ => {_});
 	},
+	changeCollector(){
+		this.dialogChangeCollectorVisible = false;
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：companyId(公司ID)，int类型，必填
+		// 参数3：projectId(项目ID)，int类型，必填
+		// 参数4：collectorNumber(采集器编号)，string类型，必填
+		let _this = this;
+		let changeCollector = {
+			token: document.querySelector('#token').innerText,
+			companyId: sessionStorage.getItem('companyId'),
+			projectId: this.$route.params.projectId,
+			collectorNumber: this.projectDetail.proCollector.CollectorNum
+		};
+		axios.post('http://test.mhfire.cn/mhApi/Project/setProjectCollector',Qs.stringify(changeCollector),{
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+		})
+		.then(function(response){
+			console.log(response.data.ret_code);
+			if(response.data.ret_code == 0){
+				_this.$message({
+					message: '成功，采集器更换成功',
+					type: 'success'
+				});
+			}
+		})
+		.catch(function(error){
+			console.log(error);
+			_this.$message.error('错了哦，采集器更换失败');		
+		})
+	},
 	changeMember(index){
-		this.ProjectListPower = this.memberList[index];
+		this.ProjectListPower = this.memberList[index];//改变data中的管理员数据
+		this.dialogTableVisible=false;//关闭弹窗
+		let _this = this;
+		let projectPower = {
+			token: document.querySelector('#token').innerText,
+			companyId: sessionStorage.getItem('companyId'),
+			projectId: this.$route.params.projectId,
+			uid: this.ProjectListPower.ID
+		};
+		axios.post('http://test.mhfire.cn/mhApi/Project/setProjecResponsePerson',Qs.stringify(projectPower),{
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+		})
+		.then(function(response){
+			console.log(response.data.ret_code);
+			if(response.data.ret_code == 0){
+				_this.$message({
+					message: '成功，项目负责人更改成功',
+					type: 'success'
+				});
+			}
+		})
+		.catch(function(error){
+			console.log(error);
+			_this.$message.error('错了哦，项目负责人更改失败');		
+		})
+	},
+	deleteMember(index){
+		let _this = this;
+		let delProjectMember = {
+			token: document.querySelector('#token').innerText,
+			companyId: sessionStorage.getItem('companyId'),
+			projectId: this.$route.params.projectId,
+			uid: this.memberList[index].ID
+		};
+		console.log('*************************************');
+		console.log(Qs.stringify(delProjectMember));
+		this.memberList.splice(index,1);
+		axios.post('http://test.mhfire.cn/mhApi/Project/delProjectMember',Qs.stringify(delProjectMember),{
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+		})
+		.then(function(response){
+			console.log(response.data.ret_code);
+			if(response.data.ret_code == 0){
+				_this.$message({
+					message: '删除成功',
+					type: 'success'
+				});
+			}
+		})
+		.catch(function(error){
+			console.log(error);
+			_this.$message.error('删除失败');		
+		})
 	},
 	handleRemove(file, fileList) {
 		console.log(file, fileList);
@@ -312,6 +407,9 @@ created() {
 	}
 	.memberDialog .ProjectElementItem{
 		padding-left: 25px;
+	}
+	.changeCollectorDialog{
+		width: 436px;
 	}
 	.ProjectListBarHead{
 		display: flex;
