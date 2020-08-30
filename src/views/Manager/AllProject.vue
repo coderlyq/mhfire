@@ -9,10 +9,10 @@
 				<el-autocomplete
 					suffix-icon="el-icon-search"
 					class="inline-input"
-					v-model="state1"
-					:fetch-suggestions="querySearch"
+					v-model="stateProject"
+					:fetch-suggestions="querySearchProject"
 					placeholder="请输入内容"
-					@select="handleSelect"
+					@select="handleSelectProject"
 				></el-autocomplete>
 			</div>
 		</el-header>
@@ -64,10 +64,30 @@ import axios from 'axios'
 				currentPage4: 4,
 				topBarBoolean: this.$route.params.topBarBoolean,
 				asideBoolean: this.$route.params.asideBoolean,
-				companyList: '123'
+				companyList: '123',
+				restaurantsProject: [],
+        stateProject: '',
 			}
 		},
 		methods: {
+			querySearchProject(queryString, cb) {
+				var restaurantsProject = this.restaurantsProject;
+        var results = queryString ? restaurantsProject.filter(this.createFilterProject(queryString)) : restaurantsProject;
+        // 调用 callback 返回建议列表的数据
+				cb(results);
+      },
+      createFilterProject(queryString) {
+        return (restaurant) => {
+          return (restaurant.value.toLowerCase().indexOf(queryString.toLowerCase()) != -1);
+        };
+			},
+			handleSelectProject(item) {
+				console.log(item);
+				console.log(this.companyList[item.index]);
+				this.companyList.unshift(this.companyList[item.index]);
+				this.companyList.splice(item.index+1,1);
+				console.log(this.companyList);
+      },
 			handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
       },
@@ -112,6 +132,15 @@ import axios from 'axios'
 			})
 			.then(function(response){
 				_this.companyList = response.data.data.result;
+				let restaurantsProjectArr = [];
+				for(let i = 0;i<_this.companyList.length;i++){
+					// console.log(restaurantsProject);
+					restaurantsProjectArr[i] = {};
+					restaurantsProjectArr[i].value = _this.companyList[i].CompanyName;
+					restaurantsProjectArr[i].ID = _this.companyList[i].ID;
+					restaurantsProjectArr[i].index = i;
+				}
+				_this.restaurantsProject = restaurantsProjectArr;
 			})
 			.catch(function(error){
 					console.log(error);
@@ -119,7 +148,11 @@ import axios from 'axios'
 		},
 		//生命周期 - 创建之前
 		beforeCreate() {
-		}
+		},
+		mounted() {
+			this.restaurantsProject = Array.from(this.companyList);
+			console.log(this.companyList);
+    }
 	}
 </script>
 

@@ -7,9 +7,7 @@
 			<dd><slot name="personitemName"></slot></dd>
 			<dd style="margin-top:10px;"><slot name="personitemTel"></slot></dd>
 		</dl>
-		<div class="personitemMark" :style="{backgroundColor:personMarkColor}">
-			<slot name="personitemMark"></slot>
-		</div>
+		<slot name="personitemMark"></slot>
 	</div>
 </template>
 

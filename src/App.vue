@@ -17,7 +17,7 @@
 				</el-header>
 				<el-container>
 					<el-aside v-show="asideBoolean" style="width: 220px;background-color: #081d61;height: 93.55vh;"><SideBar/></el-aside>
-					<el-main style="height: 99.999999vh;padding:0;" v-show="!topBarBoolean"><router-view></router-view></el-main>
+					<!-- <el-main style="height: 99.999999vh;padding:0;" v-show="!topBarBoolean"><router-view></router-view></el-main> -->
 					<el-main style="height: 93.55vh;padding:0;" v-show="topBarBoolean"><router-view></router-view></el-main>
 				</el-container>
 			</el-container>

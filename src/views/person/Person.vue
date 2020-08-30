@@ -1,24 +1,18 @@
 <template>
 	<el-container id="person" style="height: 93.55vh;">
 		<el-aside style="width:374px;padding:0;background-color:#ffffff;">
-			<PersonItem>
+			<div class='personImg' v-for="(item,index) in allMemberList" :key="item.UserName" @click="selectMember(index)">
 				<img src="~@/assets/images/Person/bigicon.png" slot="personitemImg">
-				<span slot="personitemName">姓名：123</span>
-				<span slot="personitemTel">电话：123456789</span>
-				<span slot="personitemMark">普通员工</span>
-			</PersonItem>
-			<PersonItem>
-				<img src="~@/assets/images/Person/bigicon.png" slot="personitemImg">
-				<span slot="personitemName">姓名：123</span>
-				<span slot="personitemTel">电话：123456789</span>
-				<span slot="personitemMark">普通员工</span>
-			</PersonItem>
-			<PersonItem>
-				<img src="~@/assets/images/Person/bigicon.png" slot="personitemImg">
-				<span slot="personitemName">姓名：123</span>
-				<span slot="personitemTel">电话：123456789</span>
-				<span slot="personitemMark">普通员工</span>
-			</PersonItem>
+				<dl>
+					<dt></dt>
+					<dd><span slot="personitemName">姓名：{{item.UserName}}</span></dd>
+					<dd style="margin-top:10px;"><span slot="personitemTel">电话：{{item.UserPhone}}</span></dd>
+				</dl>
+				<div slot="personitemMark" class="personitemMark" :style="{backgroundColor:personMarkColor[item.isResponseFlag]}">
+					<span v-show="item.isResponseFlag===0">普通员工</span>
+					<span v-show="item.isResponseFlag===1">项目负责人</span>
+				</div>
+			</div>
 		</el-aside>
 		<el-main style="padding:0;">
 			<el-container>
@@ -53,48 +47,17 @@
 					<el-container  v-show="true">
 						<el-header class="personContMainTop">
 							<span class="personContMainTopText">当前负责的项目</span>
-							<el-button type="primary" icon="el-icon-circle-plus-outline">添加负责项目</el-button>
+							<el-button type="primary" icon="el-icon-circle-plus-outline" @click="addMemberProject(index)">添加负责项目</el-button>
 						</el-header>
 						<el-main>
 							<ol class="elmainOl">
-								<li>
+								<li v-for="(item,index) in selectMemeberProject" :key="item.ProjectName">
 									<div class="elmainLeft">
-										<span class="elmainName">新明医院</span>
-										<span class="elmainAddress">深圳市宝安区留仙三路汇聚创新园A栋404</span>
+										<span class="elmainName">{{item.ProjectName}}</span>
+										<span class="elmainAddress">{{item.AddressDetail}}</span>
 									</div>
 									<div class="elmainRight">
-										<el-button type="primary" style="margin-right:45px;" plain @click="dialogTableVisible = true">去设置项目内功能权限</el-button>
-										<el-button type="primary" plain>从负责项目中移除</el-button>
-									</div>
-								</li>
-								<li>
-									<div class="elmainLeft">
-										<span class="elmainName">新明医院</span>
-										<span class="elmainAddress">深圳市宝安区留仙三路汇聚创新园A栋404</span>
-									</div>
-									<div class="elmainRight">
-										<el-button type="primary" style="margin-right:45px;" plain>去设置项目内功能权限</el-button>
-										<el-button type="primary" plain>从负责项目中移除</el-button>
-									</div>
-								</li>
-								<li>
-									<div class="elmainLeft">
-										<span class="elmainName">新明医院</span>
-										<span class="elmainAddress">深圳市宝安区留仙三路汇聚创新园A栋404</span>
-									</div>
-									<div class="elmainRight">
-										<el-button type="primary" style="margin-right:45px;" plain>去设置项目内功能权限</el-button>
-										<el-button type="primary" plain>从负责项目中移除</el-button>
-									</div>
-								</li>
-								<li>
-									<div class="elmainLeft">
-										<span class="elmainName">新明医院</span>
-										<span class="elmainAddress">深圳市宝安区留仙三路汇聚创新园A栋404</span>
-									</div>
-									<div class="elmainRight">
-										<el-button type="primary" style="margin-right:45px;" plain>去设置项目内功能权限</el-button>
-										<el-button type="primary" plain>从负责项目中移除</el-button>
+										<el-button type="primary" plain @click="delProject(index)">从负责项目中移除</el-button>
 									</div>
 								</li>
 							</ol>
@@ -103,62 +66,24 @@
 					<el-container style="margin-top:20px;" v-show="true">
 						<el-header class="personContMainTop">
 							<span class="personContMainTopText">作为员工隶属的项目</span>
-							<el-button type="primary" icon="el-icon-circle-plus-outline">添加负责项目</el-button>
+							<el-button type="primary" icon="el-icon-circle-plus-outline" @click="addOfMemberProject(index)">添加负责项目</el-button>
 						</el-header>
 						<el-main>
 							<ol class="elmainOl">
-								<li>
+								<li v-for="(item,index) in memberProjectList" :key="item.ProjectName">
 									<div class="elmainLeft">
-										<span class="elmainName">新明医院</span>
-										<span class="elmainAddress">深圳市宝安区留仙三路汇聚创新园A栋404</span>
+										<span class="elmainName">{{item.ProjectName}}</span>
+										<span class="elmainAddress">{{item.AddressDetail}}</span>
 									</div>
 									<div class="elmainRight">
-										<el-button type="primary" style="margin-right:45px;" plain>去设置项目内功能权限</el-button>
-										<el-button type="primary" plain>从负责项目中移除</el-button>
-									</div>
-								</li>
-								<li>
-									<div class="elmainLeft">
-										<span class="elmainName">新明医院</span>
-										<span class="elmainAddress">深圳市宝安区留仙三路汇聚创新园A栋404</span>
-									</div>
-									<div class="elmainRight">
-										<el-button type="primary" style="margin-right:45px;" plain>去设置项目内功能权限</el-button>
-										<el-button type="primary" plain>从负责项目中移除</el-button>
-									</div>
-								</li>
-								<li>
-									<div class="elmainLeft">
-										<span class="elmainName">新明医院</span>
-										<span class="elmainAddress">深圳市宝安区留仙三路汇聚创新园A栋404</span>
-									</div>
-									<div class="elmainRight">
-										<el-button type="primary" style="margin-right:45px;" plain>去设置项目内功能权限</el-button>
-										<el-button type="primary" plain>从负责项目中移除</el-button>
-									</div>
-								</li>
-								<li>
-									<div class="elmainLeft">
-										<span class="elmainName">新明医院</span>
-										<span class="elmainAddress">深圳市宝安区留仙三路汇聚创新园A栋404</span>
-									</div>
-									<div class="elmainRight">
-										<el-button type="primary" style="margin-right:45px;" plain>去设置项目内功能权限</el-button>
-										<el-button type="primary" plain>从负责项目中移除</el-button>
+										<el-button type="primary" style="margin-right:45px;" plain @click="setMemberProject(index)">去设置项目内功能权限er</el-button>
+										<el-button type="primary" plain @click="removeMemberProject(index)">从负责项目中移除</el-button>
 									</div>
 								</li>
 							</ol>
 						</el-main>
 					</el-container>
 				</el-main>
-				<!-- <el-dialog
-					title="提示"
-					:visible.sync="dialogVisible"
-					width="30%"
-					:before-close="handleClose">
-					<span>这是一段信息</span>
-				</el-dialog> -->
-
 				<el-dialog :visible.sync="dialogTableVisible" class="personDialog" :before-close="handleClose" style="cellspacing:20px;cellpadding:20px;">
 					<el-table :data="gridData">
 						<el-table-column property="name" label=" " width="326"></el-table-column>
@@ -180,11 +105,14 @@
 </template>
 
 <script>
-	import PersonItem from '@/views/person/PersonItem.vue'
+// 引入axios
+import axios from 'axios'
+	// import PersonItem from '@/views/person/PersonItem.vue'
   export default {
 		name: "Person",
 		data() {
       return {
+				personMarkColor: ['#f5835b','#5cc997'],
 				dialogTableVisible: false,
 				gridData: [{
           name: '王小虎'
@@ -202,25 +130,151 @@
           value: '02',
           label: '普通员工'
         }],
-        value: ''
+				value: '',
+				allMemberList: '',
+				selectMemeberProject: '',
+				memberProjectList: ''
       }
     },
-		components: {
-			PersonItem
-		},
 		methods: {
-      handleClose(done) {
+			setMemberProject(index){
+				console.log(index);
+				this.$router.push({
+					path: '/ProjectPerson',
+					name: 'ProjectPerson',
+					params: {
+					}
+				})
+			},
+			addMemberProject(index){
+				console.log(index);
+				this.dialogTableVisible = true;
+			},
+			addOfMemberProject(index){
+				console.log(index);
+				this.dialogTableVisible = true;
+			},
+			selectMember(index){
+				console.log('1234');
+				let _this = this;
+				let token = document.querySelector('#token').innerText;
+				let companyId = sessionStorage.getItem('companyId');
+				axios.get('http://test.mhfire.cn/mhApi/Project/responseProjectList',{
+					// 参数1：token(用户登录token)，string类型，必填
+					// 参数2：companyId(公司ID)，int类型，必填
+					// 参数3：uid(项目负责人ID)，int类型，必填
+						params: {
+							token: token,
+							companyId: companyId,
+							uid: _this.allMemberList[index].ID
+						}
+				})
+				.then(function(response){
+					_this.selectMemeberProject = response.data.data;
+					console.log(response);
+				})
+				.catch(function(error){
+						console.log(error);
+				})
+				axios.get('http://test.mhfire.cn/mhApi/Project/memberProjectList',{
+					// 参数1：token(用户登录token)，string类型，必填
+					// 参数2：companyId（公司id），int类型，必填
+					// 参数3：uid(员工用户ID)，int类型，必填
+						params: {
+							token: token,
+							companyId: companyId,
+							uid: _this.allMemberList[index].ID
+						}
+				})
+				.then(function(response){
+					_this.memberProjectList = response.data.data;
+					console.log(response);
+				})
+				.catch(function(error){
+						console.log(error);
+				})
+			},
+    handleClose(done) {
         this.$confirm('确认关闭？')
           .then(_ => {
             done(_);
           })
           .catch(_ => {_});
       }
-    }
+		},
+		created(){
+				let _this = this;
+				let token = document.querySelector('#token').innerText;
+				let companyId = sessionStorage.getItem('companyId');
+				axios.get('http://test.mhfire.cn/mhApi/Member/allMemberList',{
+					// 参数1：token(用户登录token)，string类型，必填
+					// 参数2：companyId(公司ID)，int类型，必填
+						params: {
+							token: token,
+							companyId: companyId
+						}
+				})
+				.then(function(response){
+					_this.allMemberList = response.data.data;
+					console.log(response);
+				})
+				.catch(function(error){
+						console.log(error);
+				})
+		}
   }
 </script>
 
 <style>
+		@font-face{
+     font-family: 'PF'; 
+     src:url('~@/assets/font/苹方黑体-极细-简.ttf') format('truetype');
+	}
+.personImg{
+	width: 328px;
+	box-sizing: border-box;
+	height: 110px;
+	margin: 0 auto;
+	margin-top: 20px;
+	box-shadow: 0 0 15px #cccccc;
+	border-radius: 5px;
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	/* font-family: "微软雅黑"; */
+	font-size: 14px;
+	color: #666666;
+	cursor: pointer;
+}
+.personImg .personitemMark{
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 100px;
+	height: 25px;
+	line-height: 25px;
+	text-align: center;
+	border-top-right-radius: 5px;
+	border-bottom-left-radius: 15px;
+	color: #ffffff;
+	font-size: 12px;
+}
+.personImg img{
+	width: 60px;
+	height: 60px;
+	border-radius: 60px;
+	margin-left: 30px;
+}
+.personImg dl{
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	/* align-items: flex-start; */
+	justify-content: center
+}
 	ol{
 		list-style: none;
 	}

@@ -21,24 +21,24 @@
 		</el-header>
 		<el-main>
 			<div class="attestationAreaCont">
-				<div class="attestationAreaItem">
+				<div class="attestationAreaItem" v-for="(item,index) in checkCompanyList" :key="item.CompanyName" >
 					<img src="~@/assets/images/List/logoDefault.png" alt="">
 					<dl>
-						<dt>深圳市奇勤达科技发展有限公司</dt>
-						<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：<span>刘德华</span></dd>
-						<dd><img src="~@/assets/images/List/address.png" alt="">公司地址<span>留仙三路汇聚创新园</span></dd>
-						<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：<span>13389752034</span></dd>
-						<dd><img src="~@/assets/images/List/check.png" alt="">申请认证方式：<span>通过营业执照认证</span></dd>
+						<dt>{{item.CompanyName}}</dt>
+						<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：<span>{{item.LinkMan}}</span></dd>
+						<dd><img src="~@/assets/images/List/address.png" alt="">公司地址<span>{{item.address}}</span></dd>
+						<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：<span>{{item.LinkNum}}</span></dd>
+						<dd><img src="~@/assets/images/List/check.png" alt="">申请认证方式：<span>{{item.AuthWay}}</span></dd>
 					</dl>
 					<img src="~@/assets/images/List/logoDefault.png" alt="" class="attestationBigImg">
 					<div class="attestationBtnArea">
-						<el-button type="danger" v-show="item1.attAreaShow==='check'">拒绝</el-button>
-						<el-button type="primary" v-show="item1.attAreaShow==='check'">通过认证</el-button>
+						<el-button type="danger" v-show="item.Status===0" @click="checkCompanyNo(index)">拒绝</el-button>
+						<el-button type="primary" v-show="item.Status===0" @click="checkCompanyYes(index)">通过认证</el-button>
 						<img src="~@/assets/images/Attestation/checkYes.png" alt="" class="attestationCheck" v-show="item1.attAreaShow==='checkYes'">
 						<img src="~@/assets/images/Attestation/checkNo.png" alt="" class="attestationCheck"  v-show="item1.attAreaShow==='checkNo'">
 					</div>
 					<div class="attestationCheckTime">
-						申请时间：<span>2019年12月30号</span>
+						申请时间：<span>{{item.CreateTime}}</span>
 					</div>
 				</div>
 			</div>
@@ -60,17 +60,19 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+// 引入axios
+import axios from 'axios'
 export default {
 //import引入的组件需要注入到对象中才能使用
+
 components: {},
 data() {
 	//这里存放数据
 	return {
 		item1: {
 			attAreaShow: 'check'
-		}
-		
+		},
+		checkCompanyList: ''
 	};
 },
 //监听属性 类似于data概念
@@ -80,7 +82,32 @@ watch: {},
 //方法集合
 methods: {
 
-}
+},
+//生命周期 - 创建完成（可以访问当前this实例）
+created() {
+	console.log('qwe');
+	let _this = this;
+	let token = document.querySelector('#token').innerText;
+	axios.get('http://test.mhfire.cn/mhApi/Company/checkCompanyList',{
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：page(分页数)，int类型，选填，默认为1
+		// 参数3：companyName(公司名称)，string类型，选填
+		// 参数4：status(审核状态)，int类型，选填，默认为0,0表示待审核，1表示已通过，2表示已拒绝
+			params: {
+				token: token,
+				page: 1,
+				companyName:'',
+				status: ''
+			}
+	})
+	.then(function(response){
+		_this.checkCompanyList = response.data.data.result;
+		console.log(response);
+	})
+	.catch(function(error){
+			console.log(error);
+	})
+},
 }
 </script>
 <style>

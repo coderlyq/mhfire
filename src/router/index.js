@@ -52,10 +52,12 @@ const routes = [
 	},
 	{
 		path: '/ProjectControl',
+		name: 'ProjectControl', 
 		component: ProjectControl
 	},
 	{
 		path: '/ProjectPerson',
+		name: 'ProjectPerson',
 		component: ProjectPerson
 	},
 	{
@@ -77,6 +79,7 @@ const routes = [
 	},
 	{
 		path: '/Map',
+		name: 'Map',
 		component: Map
 	}
 ]

@@ -34,8 +34,8 @@ data() {
 			cont: 0,
 			isshow:true
 		},{
-			name: '监控控制台',
-			path: '/Map',
+			name: '监控控制台1',
+			path: '/TopController',
 			cont: 0,
 			isshow:true
 		},{
