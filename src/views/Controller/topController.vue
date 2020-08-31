@@ -60,7 +60,8 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+// 引入axios
+import axios from 'axios'
 export default {
 	name: 'topController',
 	//import引入的组件需要注入到对象中才能使用
@@ -68,11 +69,13 @@ export default {
 	data() {
 		//这里存放数据
 		return {
+			warningSystem: '',
+			waterSystem: '',
 			chartLineDatas:[{
 				liBackImg:"url("+require("../../assets/images/Controller/supperFire.png")+")",
 				contImg:require("../../assets/images/Controller/fireIcon.png"),
 				dlname:'火警总数',
-				dlcount:1
+				dlcount:5
 			},{
 				liBackImg:"url("+require("../../assets/images/Controller/supperTrouble.png")+")",
 				contImg:require("../../assets/images/Controller/troubleIcon.png"),
@@ -126,7 +129,20 @@ export default {
 				value: '选项5',
 				label: '北京烤鸭'
 			}],
-			value: ''
+			value: '',
+			fireMonth: '',
+			troubleMonth: '',
+			startMonth: '',
+			feebackMonth: '',
+			pressureFire: '',
+			pressureTrouble: '',
+			waterLevelFire: '',
+			waterLevelTrouble: '',
+			monthArr: '',
+			firepercent:"",
+      feedBackpercent:"",
+			startpercent:"",
+			troublecent:""
 		};
 	},
 	//监听属性 类似于data概念
@@ -139,12 +155,88 @@ export default {
 	},
 	//生命周期 - 创建完成（可以访问当前this实例）
 	created() {
-
+		let _this = this;
+		axios.get('http://test.mhfire.cn/mhApi/Project/getSupperConsoleManger',{
+			// 参数1：token(用户登录token)，string类型，必填
+			// 参数2：projectId(项目ID)，int类型，选填，默认为0
+			// 参数3：companyId(公司id)，int类型，必填，默认为0
+				params: {
+					token: document.querySelector('#token').innerText,
+					projectId: 0,
+					companyId: 0
+				}
+		})
+		.then(function(response){
+			console.log('12312344335435');
+			console.log(response.data);
+			_this.warningSystem = response.data.data.warningSystem;
+			_this.chartLineDatas[0].dlcount = _this.warningSystem.fireCount
+			_this.chartLineDatas[1].dlcount = _this.warningSystem.troubleCount;
+			_this.chartLineDatas[2].dlcount = _this.warningSystem.startCount;
+			_this.chartLineDatas[3].dlcount = _this.warningSystem.feedBackCount;
+			let warningSystemMonthInfo = _this.warningSystem.monthInfo;
+			let fireMonth = [];
+			let troubleMonth = [];
+			let startMonth = [];
+			let feebackMonth = [];
+			let monthArr = [];
+			for(let i = 0;i<warningSystemMonthInfo.length;i++){
+				fireMonth[i] = warningSystemMonthInfo[i].fireNum;
+				troubleMonth[i] = warningSystemMonthInfo[i].troubleNum;
+				startMonth[i] = warningSystemMonthInfo[i].feekbackNum;
+				feebackMonth[i] = warningSystemMonthInfo[i].startNum;
+				monthArr[i] = warningSystemMonthInfo[i].date;
+			}
+			_this.fireMonth = fireMonth;
+			_this.troubleMonth = troubleMonth;
+			_this.startMonth = startMonth;
+			_this.feebackMonth = feebackMonth;
+			_this.monthArr = monthArr;
+						// 饼状图
+			_this.firepercent = _this.warningSystem.firepercent;
+      _this.feedBackpercent = _this.warningSystem.feedBackpercent;
+			_this.startpercent = _this.warningSystem.startpercent;
+			_this.troublecent = _this.warningSystem.troublecent;
+console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
+console.log(_this.feedBackpercent);
+console.log(_this.monthArr);
+			_this.waterSystem = response.data.data.waterSystem;
+			_this.chartWaterLineDatas[0].dlcount = _this.waterSystem.pressureFireCount
+			_this.chartWaterLineDatas[1].dlcount = _this.waterSystem.pressureTroubleCount;
+			_this.chartWaterLineDatas[2].dlcount = _this.waterSystem.waterLevelFireCount;
+			_this.chartWaterLineDatas[3].dlcount = _this.waterSystem.waterLevelTroubleCount;
+			let waterSystemMonthInfo = _this.waterSystem.monthInfo;
+			let pressureFire = [];
+			let pressureTrouble = [];
+			let waterLevelFire = [];
+			let waterLevelTrouble = [];
+			for(let j = 0;j<waterSystemMonthInfo.length;j++){
+				pressureFire[j] = waterSystemMonthInfo[j].pressureFireNum;
+				pressureTrouble[j] = waterSystemMonthInfo[j].pressureTroubleNum;
+				waterLevelFire[j] = waterSystemMonthInfo[j].waterLevelFireNum;
+				waterLevelTrouble[j] = waterSystemMonthInfo[j].waterLevelTroubleNum;
+			}
+			_this.pressureFire = pressureFire;
+			_this.pressureTrouble = pressureTrouble;
+			_this.waterLevelFire = waterLevelFire;
+			_this.waterLevelTrouble = waterLevelTrouble;
+			console.log('+++++++++++++++++++++++++++++');
+			console.log(_this.waterSystem.monthInfo);
+		})
+		.catch(function(error){
+				console.log(error);
+		})
 	},
 	//生命周期 - 挂载完成（可以访问DOM元素）
 	mounted() {
+		let _this = this;
+		setTimeout(()=>{
+
 // 以下三步即可完成echarts的初始化使用,代码注释的详解别忘了看看
-   const  myCharts = this.$echarts.init(this.$refs.myCharts);
+	const myCharts = this.$echarts.init(this.$refs.myCharts);
+	// let monthArr = this.monthArr;
+	console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
+	console.log(_this.pressureFireNum);
    let options = {
           title: { 
 						text: '趋势图',//图表顶部的标题 
@@ -154,9 +246,44 @@ export default {
           },
           tooltip: {   //鼠标悬浮框的提示文字
               trigger: 'axis'
-            },
+						},
+					color:['#f84027','#f59540','#4cd8d4','#45c74e'], 
           legend: {
-            data:['最高气温','最低气温'],
+						data:[
+							{
+								name: '火警',
+								// 强制设置图形为圆。
+								// icon: 'circle',
+								// 设置文本为红色
+								textStyle: {
+										color: '#f84027'
+								}
+							},{
+								name: '故障',
+								// 强制设置图形为圆。
+								// icon: 'circle',
+								// 设置文本为红色
+								textStyle: {
+										color: '#f59540'
+								}
+							},{
+								name: '启动',
+								// 强制设置图形为圆。
+								// icon: 'circle',
+								// 设置文本为红色
+								textStyle: {
+										color: '#4cd8d4'
+								}
+							},{
+								name: '反馈',
+								// 强制设置图形为圆。
+								// icon: 'circle',
+								// 设置文本为红色
+								textStyle: {
+										color: '#45c74e'
+								}
+							}
+						],
 						// icon: 'triangle',
 						itemHeight  :10,//改变圆圈大小
 						// bottom: 20,
@@ -167,7 +294,7 @@ export default {
 					xAxis : [{  //x轴坐标数据
             type : 'category',
             boundaryGap : false,
-						data : ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+						data : _this.monthArr,
 						axisTick:{       //y轴刻度线
 							"show":false,
 						},
@@ -202,23 +329,45 @@ export default {
 					}],
           series: [  //驱动图表生成的数据内容数组，几条折现，数组中就会有几个对应对象，来表示对应的折线
             {
-              name:"最高气温",
+              name:"火警",
               type: "line",  //pie->饼状图  line->折线图  bar->柱状图
-							data:[11, 11, 15, 13, 12, 13, 10,11, 11, 15, 13, 12, 13,],
+							data:_this.fireMonth,
 							symbol:'circle',
 							lineStyle:{
-								width: 1
+								width: 1,
+								color: '#f84027'
 							}
-              },
+            },
             {
-              name:"最低气温",
+              name:"故障",
               type: "line",  //pie->饼状图  line->折线图  bar->柱状图
-							data:[1, -2, 2, 5, 3, 2, 0,1, -2, 2, 5, 3, 2, 0],
+							data:_this.troubleMonth,
 							symbol:'circle',
 							lineStyle:{
-								width: 1
+								width: 1,
+								color: '#f59540',
 							}
-              }
+            },
+            {
+              name:"启动",
+              type: "line",  //pie->饼状图  line->折线图  bar->柱状图
+							data:_this.startMonth,
+							symbol:'circle',
+							lineStyle:{
+								width: 1,
+								color: '#4cd8d4',
+							}
+            },
+            {
+              name:"反馈",
+              type: "line",  //pie->饼状图  line->折线图  bar->柱状图
+							data:_this.feebackMonth,
+							symbol:'circle',
+							lineStyle:{
+								width: 1,
+								color: '#45c74e'
+							}
+            }
           ]}
 
 		myCharts.setOption(options);
@@ -232,7 +381,7 @@ export default {
 									trigger: 'item',
 									formatter: '{a} <br/>{b} : {c} ({d}%)'
 							},
-							color: ['#f76262','#f99339','#2bcec8','#2bcc72'],
+							color: ['#f84027','#f59540','#4cd8d4','#45c74e'],
 							legend: {
 								orient: 'vertical',
 								height  :100,//改变圆圈大小
@@ -250,10 +399,10 @@ export default {
 											radius: '55%',
 											center: ['50%', '60%'],
 											data: [
-													{value: 335, name: '火警'},
-													{value: 310, name: '故障'},
-													{value: 234, name: '启动'},
-													{value: 135, name: '反馈'}
+													{value: _this.firepercent, name: '火警'},
+													{value: _this.troublecent, name: '故障'},
+													{value: _this.startpercent, name: '启动'},
+													{value: _this.feedBackpercent, name: '反馈'}
 											],
 											emphasis: {
 													itemStyle: {
@@ -280,9 +429,44 @@ export default {
           },
           tooltip: {   //鼠标悬浮框的提示文字
               trigger: 'axis'
-            },
+						},
+					color:['#f84027','#f59540','#4cd8d4','#45c74e'],
           legend: {
-            data:['最高气温','最低气温'],
+            data:[
+							{
+								name: '水压报警',
+								// 强制设置图形为圆。
+								// icon: 'circle',
+								// 设置文本为红色
+								textStyle: {
+										color: '#f84027'
+								}
+							},{
+								name: '水压故障',
+								// 强制设置图形为圆。
+								// icon: 'circle',
+								// 设置文本为红色
+								textStyle: {
+										color: '#f59540'
+								}
+							},{
+								name: '水位报警',
+								// 强制设置图形为圆。
+								// icon: 'circle',
+								// 设置文本为红色
+								textStyle: {
+										color: '#4cd8d4'
+								}
+							},{
+								name: '水位故障',
+								// 强制设置图形为圆。
+								// icon: 'circle',
+								// 设置文本为红色
+								textStyle: {
+										color: '#45c74e'
+								}
+							}
+						],
 						// icon: 'triangle',
 						itemHeight  :10,//改变圆圈大小
 						// bottom: 20,
@@ -293,7 +477,7 @@ export default {
 					xAxis : [{  //x轴坐标数据
             type : 'category',
             boundaryGap : false,
-						data : ['一月','二月','三月','四月','五月','六月','七月','八月','九月','十月','十一月','十二月'],
+						data : _this.monthArr,
 						axisTick:{       //y轴刻度线
 							"show":false,
 						},
@@ -328,27 +512,52 @@ export default {
 					}],
           series: [  //驱动图表生成的数据内容数组，几条折现，数组中就会有几个对应对象，来表示对应的折线
             {
-              name:"最高气温",
+              name:"水压报警",
               type: "line",  //pie->饼状图  line->折线图  bar->柱状图
-							data:[11, 11, 15, 13, 12, 13, 10,11, 11, 15, 13, 12, 13,],
+							data: _this.pressureFire,
 							symbol:'circle',
 							symbolSize: 2,
 							lineStyle:{
-								width: 1
+								width: 1,
+								color: '#f84027'
 							}
               },
             {
-              name:"最低气温",
+              name:"水压故障",
               type: "line",  //pie->饼状图  line->折线图  bar->柱状图
-							data:[1, -2, 2, 5, 3, 2, 0,1, -2, 2, 5, 3, 2, 0],
+							data:_this.pressureTrouble,
 							symbol:'circle',
 							lineStyle:{
-								width: 1
+								width: 1,
+								color: '#f59540',
 							}
-              }
+						},
+						{
+              name:"水位报警",
+              type: "line",  //pie->饼状图  line->折线图  bar->柱状图
+							data: _this.waterLevelFire,
+							symbol:'circle',
+							symbolSize: 2,
+							lineStyle:{
+								width: 1,
+								color: '#4cd8d4',
+							}
+						},
+						{
+              name:"水位故障",
+              type: "line",  //pie->饼状图  line->折线图  bar->柱状图
+							data: _this.waterLevelTrouble,
+							symbol:'circle',
+							symbolSize: 2,
+							lineStyle:{
+								width: 1,
+								color: '#45c74e'
+							}
+            }
           ]}
 
 		myWaterCharts.setOption(optionsWater);
+	},3000);
 	}
 }
 </script>

@@ -2,10 +2,10 @@
 <template>
 <div class='attestation'>
 		<el-header class="attestationTop">
-			<div class="attestationTopCont">
+			<div class="attestationTopCont"  @compositionend="searchCompany">
 				<div class="attestationLeft">员工申请审核</div>
 				<div class="attestationRight">
-					<el-select v-model="value" placeholder="待审核">
+					<el-select v-model="value" placeholder="全部" @change="selectAttest(value)">
 						<el-option
 							v-for="item in options"
 							:key="item.value"
@@ -13,7 +13,7 @@
 							:value="item.value">
 						</el-option>
 					</el-select>
-					<el-input placeholder="搜公司名称" v-model="input3">
+					<el-input placeholder="搜公司名称" v-model="inputCompany">
 						<el-button slot="append" icon="el-icon-search"></el-button>
 					</el-input>
 				</div>
@@ -22,27 +22,27 @@
 		<el-main>
 			<div class="attestationAreaCont">
 				<div class="attestationAreaItem" v-for="(item,index) in checkCompanyList" :key="item.CompanyName" >
-					<img src="~@/assets/images/List/logoDefault.png" alt="">
+					<img src="~@/assets/images/List/logoDefault.png" alt="啊撒旦范德萨分">
 					<dl>
 						<dt>{{item.CompanyName}}</dt>
 						<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：<span>{{item.LinkMan}}</span></dd>
-						<dd><img src="~@/assets/images/List/address.png" alt="">公司地址<span>{{item.address}}</span></dd>
+						<dd><img src="~@/assets/images/List/address.png" alt="">公司地址：<span>{{item.Address}}</span></dd>
 						<dd><img src="~@/assets/images/List/tel.png" alt="">手机号码：<span>{{item.LinkNum}}</span></dd>
-						<dd><img src="~@/assets/images/List/check.png" alt="">申请认证方式：<span>{{item.AuthWay}}</span></dd>
+						<dd><img src="~@/assets/images/List/check.png" alt="">申请认证方式：<span>{{item.AuthWay===1?'营业执照':'其他'}}</span></dd>
 					</dl>
-					<img src="~@/assets/images/List/logoDefault.png" alt="" class="attestationBigImg">
+					<img src="~@/assets/images/List/logoDefault.png" alt="撒范德萨分" class="attestationBigImg">
 					<div class="attestationBtnArea">
-						<el-button type="danger" v-show="item.Status===0" @click="checkCompanyNo(index)">拒绝</el-button>
-						<el-button type="primary" v-show="item.Status===0" @click="checkCompanyYes(index)">通过认证</el-button>
-						<img src="~@/assets/images/Attestation/checkYes.png" alt="" class="attestationCheck" v-show="item1.attAreaShow==='checkYes'">
-						<img src="~@/assets/images/Attestation/checkNo.png" alt="" class="attestationCheck"  v-show="item1.attAreaShow==='checkNo'">
+						<el-button type="danger" v-show="item.Status==0" @click="checkCompanyNo(index)">拒绝</el-button>
+						<el-button type="primary" v-show="item.Status==0" @click="checkCompanyYes(index)">通过认证</el-button>
+						<img src="~@/assets/images/Attestation/checkYes.png" v-show="item.Status==1" alt="" class="attestationCheck">
+						<img src="~@/assets/images/Attestation/checkNo.png" v-show="item.Status==2" alt="" class="attestationCheck">
 					</div>
 					<div class="attestationCheckTime">
 						申请时间：<span>{{item.CreateTime}}</span>
 					</div>
 				</div>
 			</div>
-			<div class="managernavblock">
+			<!-- <div class="managernavblock">
 				<el-pagination
 					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
@@ -52,7 +52,7 @@
 					layout="total, sizes, prev, pager, next, jumper"
 					:total="400">
 				</el-pagination>
-			</div>
+			</div> -->
 		</el-main>
 </div>
 </template>
@@ -69,6 +69,23 @@ components: {},
 data() {
 	//这里存放数据
 	return {
+		options:[
+			{
+				label:'全部',
+				value: 3
+			},{
+				label:'待审核',
+				value: 0
+			},{
+				label:'已通过',
+				value: 1
+			},{
+				label:'拒绝',
+				value: 2
+			}
+		],
+		value: '',
+		inputCompany: '',
 		item1: {
 			attAreaShow: 'check'
 		},
@@ -81,7 +98,55 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-
+	selectAttest(value){
+		let _this = this;
+		let token = document.querySelector('#token').innerText;
+		console.log('*************************************');
+		console.log(value);
+		axios.get('http://test.mhfire.cn/mhApi/Company/checkCompanyList',{
+			// 参数1：token(用户登录token)，string类型，必填
+			// 参数2：page(分页数)，int类型，选填，默认为1
+			// 参数3：companyName(公司名称)，string类型，选填
+			// 参数4：status(审核状态)，int类型，选填，默认为0,0表示待审核，1表示已通过，2表示已拒绝
+				params: {
+					token: token,
+					page: 1,
+					companyName:'',
+					status: value
+				}
+		})
+		.then(function(response){
+			_this.checkCompanyList = response.data.data.result;
+			console.log(response);
+		})
+		.catch(function(error){
+				console.log(error);
+		})
+	},
+	searchCompany(){
+		let _this = this;
+		let token = document.querySelector('#token').innerText;
+		console.log('*************************************');
+		axios.get('http://test.mhfire.cn/mhApi/Company/checkCompanyList',{
+			// 参数1：token(用户登录token)，string类型，必填
+			// 参数2：page(分页数)，int类型，选填，默认为1
+			// 参数3：companyName(公司名称)，string类型，选填
+			// 参数4：status(审核状态)，int类型，选填，默认为0,0表示待审核，1表示已通过，2表示已拒绝
+				params: {
+					token: token,
+					page: 1,
+					companyName: _this.inputCompany,
+					status: _this.value
+				}
+		})
+		.then(function(response){
+			_this.checkCompanyList = response.data.data.result;
+			console.log(response);
+		})
+		.catch(function(error){
+				console.log(error);
+		})
+	}
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
@@ -97,7 +162,7 @@ created() {
 				token: token,
 				page: 1,
 				companyName:'',
-				status: ''
+				status: 1
 			}
 	})
 	.then(function(response){
@@ -111,6 +176,9 @@ created() {
 }
 </script>
 <style>
+.el-select-dropdown__item{
+	text-align: center;
+}
 .attestation .attestationTop{
 	background-color: #ffffff;
 	font-family: "PFz";
@@ -201,6 +269,7 @@ created() {
 	box-sizing: border-box;
 	padding-left: 30px;
 	position: relative;
+	margin-top: 20px;
 }
 .attestationAreaItem dl{
 	margin: 0;
@@ -259,5 +328,9 @@ created() {
 	justify-content: flex-end;
 	align-items: center;
 	margin-top: 20px;
+ }
+ .el-select-dropdown{
+	left: 1154px;
+	padding-bottom: 10px;
  }
 </style>

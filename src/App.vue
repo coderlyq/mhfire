@@ -133,7 +133,7 @@ export default {
 				isshow:true
 			},{
 				name: '监控控制台',
-				path: '/Map',
+				path: '/TopController',
 				cont: 0,
 				isshow:true
 			},{
@@ -378,6 +378,9 @@ export default {
      src:url('~@/assets/font/苹方黑体-准-简.ttf') format('truetype');
 	}
 /* topbar样式 */
+.el-button{
+	text-align: center;
+}
 #logotext{
 	color: #ffffff;
 	height: 100%;

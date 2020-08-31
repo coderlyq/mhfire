@@ -60,8 +60,7 @@
 				<el-dialog
 					title="二级管理员信息"
 					:visible.sync="dialogChangeSuManagerVisible"
-					width="30%"
-					:before-close="handleClose" class="SuManagerDialog">
+					:before-close="handleClose" id="SuManagerDialog">
 					<div><span>账户名</span><el-input class="userName" type="text" v-model="userName" placeholder="请输入账户名"></el-input></div>
 					<div><span>密码</span><el-input class="userPass" type="text" v-model="userPass" placeholder="请输入密码"></el-input></div>
 					<div><span>手机号</span><el-input class="userTel" type="text" v-model="userTel" placeholder="请输入手机号"></el-input></div>
@@ -72,26 +71,20 @@
 					</span>
 				</el-dialog>
 				<el-dialog
-					title="二级管理员信息"
 					:visible.sync="dialogSetSuManagerVisible"
-					width="30%"
-					:before-close="handleClose" class="dialogSetSuManagerVisible">
+					:before-close="handleClose" id="dialogSetSuManagerVisible">
 					<div class="dialogSetSuManagerVisibleLeft">
-						<h2>已管理公司</h2>
-						<ol v-for="(item,index) in havecompanyList" :key="item.companyName">
-							<li><span>{{item.companyName}}</span><el-button type="danger" icon="el-icon-minus" circle @click="removeCompany(index)"></el-button></li>
+						<h3>已管理公司</h3>
+						<ol>
+							<li v-for="(item,index) in havecompanyList" :key="item.CompanyName"><span>{{item.CompanyName}}</span><el-button type="danger" icon="el-icon-minus" circle @click="removeCompany(index)"></el-button></li>
 						</ol>
 					</div>
 					<div class="dialogSetSuManagerVisibleRight">
-						<h2>可选管理公司</h2>
-						<ol v-for="(item,index) in trycompanyList" :key="item.CompanyName"> 
-							<li><span>{{item.CompanyName}}</span><el-button type="primary" icon="el-icon-plus" circle @click="addCompany(index)"></el-button></li>
+						<h3>可选管理公司</h3>
+						<ol> 
+							<li v-for="(item,index) in trycompanyList" :key="item.CompanyName"><span>{{item.CompanyName}}</span><el-button type="primary" icon="el-icon-plus" circle @click="addCompany(index)"></el-button></li>
 						</ol>
 					</div>
-					<span slot="footer" class="dialog-footer">
-						<el-button @click="dialogSetSuManagerVisible = false">取 消</el-button>
-						<el-button type="primary" @click="setManager">确 定</el-button>
-					</span>
 				</el-dialog>
 			</el-main>
 		</el-container>
@@ -145,7 +138,8 @@ data() {
 		currentPage3: 5,
 		currentPage4: 4,
 		adminList: '',
-		currentIndex:0
+		currentIndex:0,
+		sonID: 0
 	};
 },
 //监听属性 类似于data概念
@@ -183,6 +177,7 @@ methods: {
 		console.log(str);
 		this.dialogSetSuManagerVisible = true;
 		let _this = this;
+		this.sonID = str.ID;
 		let token = document.querySelector('#token').innerText;
 		axios.get('http://test.mhfire.cn/mhApi/Admin/companyList',{
 			// 参数1：token(用户登录token)，string类型，必填
@@ -240,9 +235,6 @@ methods: {
 				console.log(error);
 		});
 	},
-	setManager(){
-		this.dialogSetSuManagerVisible = false;
-	},
 	removeCompany(index){
 		this.trycompanyList.unshift(this.havecompanyList[index]);
 		this.havecompanyList.splice(index,1);
@@ -251,11 +243,25 @@ methods: {
 		console.log(this.havecompanyList);
 	},
 	addCompany(index){
-		this.havecompanyList.unshift(this.havecompanyList[index]);
+		this.havecompanyList.unshift(this.trycompanyList[index]);
 		this.trycompanyList.splice(index,1);
-		console.log(this.trycompanyList);
-		console.log('addd');
-		console.log(this.havecompanyList);
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：companyId(公司ID)，int类型，必填
+		// 参数3：id(二级管理员ID)，int类型，必填
+		let doCompanyData = {
+			token: document.querySelector('#token').innerText,
+			companyId: sessionStorage.getItem('companyId'),
+			id: this.sonID
+		};
+		axios.post('http://test.mhfire.cn/mhApi/Admin/doCompanySelect',Qs.stringify(doCompanyData),{
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+		})
+		.then(function(response){
+			console.log(response.data.ret_code);
+		})
+		.catch(function(error){
+			console.log(error);		
+		})
 	}
 },
 //生命周期 - 创建完成（可以访问当前this实例）
@@ -282,18 +288,64 @@ created() {
 }
 </script>
 <style>
-.SuManagerDialog .el-dialog{
+.supperManager .supperManagerTop .el-button{
+	text-align: center;
+}
+.el-dialog__body{
+	width: 851px;
+	box-sizing: border-box;
+	padding-top: 50px;
+	padding-bottom: 50px;
+	border-radius: 10px;
+	overflow: hidden;
+}
+.el-dialog__body div{
+	width: 50%;
+	float: left;
+}
+.el-dialog__body h3{
+	margin-left: 40px;
+}
+#dialogSetSuManagerVisible>.el-dialog ol{
+
+	list-style: none;
+}
+#dialogSetSuManagerVisible>.el-dialog ol li{
+	width: 360px;
+	box-sizing: border-box;
+	width: 100%;
+	height: 50px;
+	padding-left: 20px;
+	line-height: 50px;
+	background-color: #f6f6f6;
+	margin-top: 20px;
+	position: relative;
+	border-radius: 5px;
+}
+.el-dialog ol li .el-button{
+	width: 20px;
+	height: 20px;
+	font-size: 14px;
+	font-weight: bolder;
+	position: absolute;
+	top: 50%;
+	right: 20px;
+	margin-top: -10px;
+}
+.el-dialog ol li i{
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	margin-top: -6px;
+	margin-left: -6px;
+}
+#SuManagerDialog>.el-dialog{
 	width: 510px;
 	box-sizing: border-box;
 	padding-top: 50px;
 	padding-top: 50px;
 }
-.dialogSetSuManagerVisible .el-dialog{
-	width: 851px;
-	box-sizing: border-box;
-	padding-top: 50px;
-	padding-top: 50px;
-}
+
 .supperManager .supperManagerTop{
 	background-color: #ffffff;
 	font-family: "PFz";
