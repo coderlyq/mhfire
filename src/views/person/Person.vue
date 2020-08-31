@@ -76,7 +76,7 @@
 										<span class="elmainAddress">{{item.AddressDetail}}</span>
 									</div>
 									<div class="elmainRight">
-										<el-button type="primary" style="margin-right:45px;" plain @click="setMemberProject(index)">去设置项目内功能权限er</el-button>
+										<el-button type="primary" style="margin-right:45px;" plain @click="setMemberProject(index)">去设置项目内功能权限</el-button>
 										<el-button type="primary" plain @click="removeMemberProject(index)">从负责项目中移除</el-button>
 									</div>
 								</li>

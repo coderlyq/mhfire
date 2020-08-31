@@ -61,12 +61,12 @@
 					title="二级管理员信息"
 					:visible.sync="dialogChangeSuManagerVisible"
 					:before-close="handleClose" id="SuManagerDialog">
-					<div><span>账户名</span><el-input class="userName" type="text" v-model="userName" placeholder="请输入账户名"></el-input></div>
-					<div><span>密码</span><el-input class="userPass" type="text" v-model="userPass" placeholder="请输入密码"></el-input></div>
-					<div><span>手机号</span><el-input class="userTel" type="text" v-model="userTel" placeholder="请输入手机号"></el-input></div>
-					<div><span>备注</span><el-input class="userMark" type="text" v-model="userMark" placeholder="请输入备注"></el-input></div>
+					<div class="divCont"><span>账户名</span><el-input class="userName" type="text" v-model="userName" placeholder="请输入账户名"></el-input></div>
+					<div class="divCont"><span>密码</span><el-input class="userPass" type="text" v-model="userPass" placeholder="请输入密码"></el-input></div>
+					<div class="divCont"><span>手机号</span><el-input class="userTel" type="text" v-model="userTel" placeholder="请输入手机号"></el-input></div>
+					<div class="divCont"><span>备注</span><el-input class="userMark" type="text" v-model="userMark" placeholder="请输入备注"></el-input></div>
 					<span slot="footer" class="dialog-footer">
-						<el-button @click="dialogVisible = false">取 消</el-button>
+						<el-button @click="dialogChangeSuManagerVisible = false">取 消</el-button>
 						<el-button type="primary" @click="updateManager">确 定</el-button>
 					</span>
 				</el-dialog>
@@ -166,6 +166,7 @@ methods: {
 	},
 	supperClickEdit(str){
 		console.log(str);
+		this.sonID = str.ID;
 		this.userName = str.UserName;
 		this.userPass = str.Password;
 		this.userTel = str.UserPhone;
@@ -215,6 +216,7 @@ methods: {
 		this.dialogChangeSuManagerVisible = false;
 		let updateManager = {
 			token: document.querySelector('#token').innerText,
+			id:this.sonID,
 			userName: this.userName,
 			password: this.userPass,
 			phone: this.userTel,
@@ -291,7 +293,7 @@ created() {
 .supperManager .supperManagerTop .el-button{
 	text-align: center;
 }
-.el-dialog__body{
+#dialogSetSuManagerVisible .el-dialog__body{
 	width: 851px;
 	box-sizing: border-box;
 	padding-top: 50px;
@@ -299,15 +301,14 @@ created() {
 	border-radius: 10px;
 	overflow: hidden;
 }
-.el-dialog__body div{
+#dialogSetSuManagerVisible .el-dialog__body div{
 	width: 50%;
 	float: left;
 }
-.el-dialog__body h3{
+#dialogSetSuManagerVisible .el-dialog__body h3{
 	margin-left: 40px;
 }
 #dialogSetSuManagerVisible>.el-dialog ol{
-
 	list-style: none;
 }
 #dialogSetSuManagerVisible>.el-dialog ol li{
@@ -345,7 +346,20 @@ created() {
 	padding-top: 50px;
 	padding-top: 50px;
 }
-
+#SuManagerDialog .divCont{
+	margin-bottom: 20px;
+}
+#SuManagerDialog .divCont span{
+	display:inline-block;
+	width: 60px;
+	text-align: right;
+	margin-right: 20px;
+}
+#SuManagerDialog .divCont .el-input{
+	width: 338px;
+	height: 40px;
+	display: inline-block;
+}
 .supperManager .supperManagerTop{
 	background-color: #ffffff;
 	font-family: "PFz";

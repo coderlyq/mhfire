@@ -40,22 +40,22 @@
 		</el-header>
 		<el-main>
 			<el-table
-				:data="tableData"
+				:data="historyEvent"
 				border
 				style="width: 100%">
 				<el-table-column
 					fixed
-					prop="eventtype"
+					prop="Order"
 					label="事件类型"
 					width="410">
 				</el-table-column>
 				<el-table-column
-					prop="devAddress"
+					prop="Tag"
 					label="设备位置"
 					width="410">
 				</el-table-column>
 				<el-table-column
-					prop="activeTime"
+					prop="HappenedTime"
 					label="发生时间"
 					width="410">
 				</el-table-column>
@@ -64,7 +64,7 @@
 					label="操作"
 					width="310">
 					<template slot-scope="scope">
-						<el-button @click="handleClick(scope.row)" type="text" size="small">查看</el-button>
+						<el-button @click="historyClick(scope.row)" type="text" size="small">查看</el-button>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -85,6 +85,8 @@
 </template>
 
 <script>
+// 引入axios
+import axios from 'axios'
   export default {
 		name: "Search",
 		data() {
@@ -135,31 +137,22 @@
 				value: '',
         value1: '',
 				value2: '',
-				tableData: [{
-          activeTime: '2016-05-02',
-          eventtype: '王小虎',
-          devAddress: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          activeTime: '2016-05-02',
-          eventtype: '王小虎',
-          devAddress: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          activeTime: '2016-05-02',
-          eventtype: '王小虎',
-          devAddress: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          activeTime: '2016-05-02',
-          eventtype: '王小虎',
-          devAddress: '上海市普陀区金沙江路 1518 弄'
-				}],
 				currentPage1: 5,
         currentPage2: 5,
         currentPage3: 5,
-        currentPage4: 4
+				currentPage4: 4,
+				historyEvent: ''
       };
 		},
 		methods: {
-			handleClick(row) {
+			historyClick(row) {
+				this.$router.push({
+					path: '/SearchInfos',
+					name: 'SearchInfos',
+					params: {
+						messageId:row.ID
+					}
+				})
 				console.log(row);
 			},
 			handleSizeChange(val) {
@@ -169,6 +162,37 @@
         console.log(`当前页: ${val}`);
       }
 		},
+		created(){
+			let _this = this;
+			let token = document.querySelector('#token').innerText;
+			axios.get('http://test.mhfire.cn/mhApi/Project/getHistoryEvent',{
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：companyId(公司id)，int类型，必填
+				// 参数3：projectId(项目ID)，int类型，必填
+				// 参数4：systemInfo(系统信息)，int类型，可选，传系统id过来
+				// 参数5：type(事件类型)，int类型，0全部，1火警，2故障，3反馈，4启动,可选
+				// 参数6：startTime(开始时间)，时间戳格式，将年月日转换成时间戳格式，int类型，可选
+				// 参数7：endTime(结束时间)，时间戳格式，将年月日转换成时间戳格式，int类型，可选
+				// 参数8：page(分页数)，int类型，默认为第1页
+					params: {
+						token: token,
+						companyId: sessionStorage.getItem('companyId'),
+						projectId: 0,
+						systemInfo: '',
+						type: 0,
+						startTime: '',
+						endTime: '',
+						page: 1
+					}
+			})
+			.then(function(response){
+				_this.historyEvent = response.data.data.result;
+				console.log(response);
+			})
+			.catch(function(error){
+					console.log(error);
+			})
+		}
   }
 </script>
 
