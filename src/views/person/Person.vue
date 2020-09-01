@@ -18,7 +18,7 @@
 			<el-container>
 				<el-header style="background-color:#fff;" class="personBarHead">
 					<span class="personTopTitle">人员等级</span>
-					<el-select style="font-family:'Microsoft YaHei';font-size:12px;color:#666;font-weight:bold;" v-model="value" placeholder="请选择">
+					<el-select style="font-family:'Microsoft YaHei';font-size:12px;color:#666;font-weight:bold;" v-model="levelvalue" placeholder="请选择" @change="changeLevel">
 						<el-option
 							v-for="item in options"
 							:key="item.value"
@@ -38,6 +38,7 @@
 						iconColor="red"
 						title="删除员工将会彻底把该员工的所有平台信息移除？"
 						class="personBarBut" 
+						@onConfirm="deleteMember()"
 					>
 						<el-button type="danger" slot="reference" plain>删除员工</el-button>
 					</el-popconfirm>
@@ -47,7 +48,7 @@
 					<el-container  v-show="true">
 						<el-header class="personContMainTop">
 							<span class="personContMainTopText">当前负责的项目</span>
-							<el-button type="primary" icon="el-icon-circle-plus-outline" @click="addMemberProject(index)">添加负责项目</el-button>
+							<el-button type="primary" icon="el-icon-circle-plus-outline" @click="addMemberProject('own')">添加负责项目</el-button>
 						</el-header>
 						<el-main>
 							<ol class="elmainOl">
@@ -66,7 +67,7 @@
 					<el-container style="margin-top:20px;" v-show="true">
 						<el-header class="personContMainTop">
 							<span class="personContMainTopText">作为员工隶属的项目</span>
-							<el-button type="primary" icon="el-icon-circle-plus-outline" @click="addOfMemberProject(index)">添加负责项目</el-button>
+							<el-button type="primary" icon="el-icon-circle-plus-outline" @click="addOfMemberProject('fllow')">添加负责项目</el-button>
 						</el-header>
 						<el-main>
 							<ol class="elmainOl">
@@ -85,8 +86,8 @@
 					</el-container>
 				</el-main>
 				<el-dialog :visible.sync="dialogTableVisible" class="personDialog" :before-close="handleClose" style="cellspacing:20px;cellpadding:20px;">
-					<el-table :data="gridData">
-						<el-table-column property="name" label=" " width="326"></el-table-column>
+					<el-table :data="allProjectList">
+						<el-table-column prop="ProjectName" label=" " width="326"></el-table-column>
 						<!-- <el-table-column property="name" label=" " width="175"></el-table-column> -->
 						<el-table-column
 							fixed="right"
@@ -94,7 +95,9 @@
 							width="175"
 							border=true
 							>
-							<el-button type="primary" @click="handleClick(scope.row)" plain>添加负责项目</el-button>
+							<template slot-scope="scope">
+								<el-button type="primary" @click="handleClick(scope.row)" plain>添加负责项目</el-button>
+							</template>
 							<!-- <el-button @click="handleClick(scope.row)" type="button" size="big">查看</el-button> -->
 						</el-table-column>
 					</el-table>
@@ -107,6 +110,8 @@
 <script>
 // 引入axios
 import axios from 'axios'
+// 引入qs对axios上传数据解析
+import Qs from 'qs'
 	// import PersonItem from '@/views/person/PersonItem.vue'
   export default {
 		name: "Person",
@@ -124,16 +129,20 @@ import axios from 'axios'
           name: '王小虎'
         }],
         options: [{
-          value: '01',
+          value: '1',
           label: '项目负责人'
         }, {
-          value: '02',
+          value: '2',
           label: '普通员工'
         }],
-				value: '',
+				levelvalue: '',
 				allMemberList: '',
 				selectMemeberProject: '',
-				memberProjectList: ''
+				memberProjectList: '',
+				selectUID: '',
+				selectIndex: '',
+				allProjectList:'',
+				currenRole: ''//负责或者隶属板块
       }
     },
 		methods: {
@@ -146,19 +155,114 @@ import axios from 'axios'
 					}
 				})
 			},
-			addMemberProject(index){
-				console.log(index);
-				this.dialogTableVisible = true;
+			handleClick(clickData){
+				console.log(clickData);
+				let _this = this;
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：companyId(公司ID),int类型，必填
+				// 参数3：projectId(项目ID)，int类型，必填
+				// 参数4：uid(员工id)，int类型，必填
+				// 参数5：type(用户类型，1项目负责人，2普通员工)，int类型，必填
+				let addResponseProject = {
+					token: document.querySelector('#token').innerText,
+					companyId: sessionStorage.getItem('companyId'),
+					projectId: clickData.ID,
+					uid: this.selectUID,
+					type: this.allMemberList[this.selectIndex]
+				};
+				axios.post('http://test.mhfire.cn/mhApi/Project/addResponseProject',Qs.stringify(addResponseProject),{
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+				})
+				.then(function(response){
+						_this.dialogTableVisible = false;
+						_this.selectMember(_this.selectIndex);
+						console.log(response);
+				})
+				.catch(function(error){
+					_this.dialogTableVisible = false;
+					console.log(error);
+				});
 			},
-			addOfMemberProject(index){
-				console.log(index);
+			addMemberProject(infs){
+				this.currenRole = infs;
 				this.dialogTableVisible = true;
+				let _this = this;
+				axios.get('http://test.mhfire.cn/mhApi/Project/allProjectList',{
+					// 参数1：token(用户登录token)，string类型，必填
+					// 参数2：companyId(公司ID)，int类型，必填
+						params: {
+							token: document.querySelector('#token').innerText,
+							companyId: sessionStorage.getItem('companyId')
+						}
+				})
+				.then(function(response){
+					_this.allProjectList = response.data.data;
+					console.log(response);
+				})
+				.catch(function(error){
+						console.log(error);
+				})
+			},
+			changeLevel(){
+				let _this = this;
+				let changeLevelData = {
+					token: document.querySelector('#token').innerText,
+					companyId: sessionStorage.getItem('companyId'),
+					type: this.levelvalue,
+					uid: this.selectUID
+				};
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：companyId(公司ID),int类型，必填
+				// 参数3：type(人员等级类型,1项目负责人，2普通员工，默认为项目负责人)，int类型，选填
+				// 参数4：uid(用户ID)，int类型，必填
+				axios.post('http://test.mhfire.cn/mhApi/Project/setMemberLevel',Qs.stringify(changeLevelData),{
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+				})
+				.then(function(response){
+					let level = '';
+					if(_this.levelvalue==1){
+						level = 1;
+					}
+					if(_this.levelvalue==2){
+						level = 0;
+					}
+					console.log(level);
+					_this.allMemberList[_this.selectIndex].isResponseFlag = level;
+						console.log(response);
+				})
+				.catch(function(error){
+						console.log(error);
+				});
+			},
+			deleteMember(){
+				console.log('jljkl;jkl;jl;');
+				let _this = this;
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：uid(项目负责人用户ID)，int类型，必填
+				// 参数3：companyId(公司id)，int类型，必填
+				let dataConfirm = {
+					token: document.querySelector('#token').innerText,
+					uid: this.selectUID,
+					companyId: sessionStorage.getItem('companyId')
+				}
+				axios.post('http://test.mhfire.cn/mhApi/Project/deleteMember',Qs.stringify(dataConfirm),{
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+				})
+				.then(function(response){
+					_this.allMemberList.splice(_this.selectIndex,1);
+						console.log(response);
+				})
+				.catch(function(error){
+						console.log(error);
+				});
 			},
 			selectMember(index){
-				console.log('1234');
 				let _this = this;
 				let token = document.querySelector('#token').innerText;
 				let companyId = sessionStorage.getItem('companyId');
+				// 选择人员ID
+				this.selectUID = this.allMemberList[index].ID;
+				this.selectIndex = index;
 				axios.get('http://test.mhfire.cn/mhApi/Project/responseProjectList',{
 					// 参数1：token(用户登录token)，string类型，必填
 					// 参数2：companyId(公司ID)，int类型，必填
@@ -203,24 +307,24 @@ import axios from 'axios'
       }
 		},
 		created(){
-				let _this = this;
-				let token = document.querySelector('#token').innerText;
-				let companyId = sessionStorage.getItem('companyId');
-				axios.get('http://test.mhfire.cn/mhApi/Member/allMemberList',{
-					// 参数1：token(用户登录token)，string类型，必填
-					// 参数2：companyId(公司ID)，int类型，必填
-						params: {
-							token: token,
-							companyId: companyId
-						}
-				})
-				.then(function(response){
-					_this.allMemberList = response.data.data;
-					console.log(response);
-				})
-				.catch(function(error){
-						console.log(error);
-				})
+			let _this = this;
+			let token = document.querySelector('#token').innerText;
+			let companyId = sessionStorage.getItem('companyId');
+			axios.get('http://test.mhfire.cn/mhApi/Member/allMemberList',{
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：companyId(公司ID)，int类型，必填
+					params: {
+						token: token,
+						companyId: companyId
+					}
+			})
+			.then(function(response){
+				_this.allMemberList = response.data.data;
+				console.log(response);
+			})
+			.catch(function(error){
+					console.log(error);
+			})
 		}
   }
 </script>
