@@ -64,6 +64,7 @@ import axios from 'axios'
 			clickProject(index){
 				let projectId = this.projectList[index].ID;
 				console.log(index);
+				sessionStorage.setItem('projectId',projectId),
 				this.$router.push({
 					path: '/ProjectList',
 					name: 'ProjectList',

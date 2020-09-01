@@ -2,8 +2,8 @@
   <el-container class="checkCont">
 		<el-header class="checkContTop">
 			<div class="checkLeft">员工申请审核</div>
-			<div class="checkRight">
-				<el-select v-model="value" placeholder="待审核">
+			<div class="checkRight"  @compositionend="checkMemberList">
+				<el-select v-model="checkvalue" placeholder="待审核" @change="checkMemberList">
 					<el-option
 						v-for="item in options"
 						:key="item.value"
@@ -11,29 +11,29 @@
 						:value="item.value">
 					</el-option>
 				</el-select>
-				<el-input placeholder="员工姓名/电话" v-model="input3">
+				<el-input placeholder="员工姓名/电话" v-model="inputcheck">
 					<el-button slot="append" icon="el-icon-search"></el-button>
 				</el-input>
 			</div>
 		</el-header>
 		<el-main>
 			<el-table
-				:data="tableData"
+				:data="memberList"
 				border
 				style="width: 100%">
 				<el-table-column
 					fixed
-					prop="elename"
+					prop="UserName"
 					label="申请员工姓名"
 					width="403">
 				</el-table-column>
 				<el-table-column
-					prop="eletel"
+					prop="UserPhone"
 					label="注册电话"
 					width="403">
 				</el-table-column>
 				<el-table-column
-					prop="eleTime"
+					prop="CreateTime"
 					label="申请时间"
 					width="403">
 				</el-table-column>
@@ -42,8 +42,12 @@
 					label="操作"
 					width="310">
 					<template slot-scope="scope">
-						<el-button @click="handleClickYes(scope.row)" type="text" size="big" class="checkLiYes">通过</el-button>
-						<el-button @click="handleClickNo(scope.row)" type="text" size="normal" class="checkLiNo">拒绝</el-button>
+						<div v-show="scope.row.Status===1">
+							<el-button @click="handleClickYes(scope.row)" type="text" size="big" class="checkLiYes">通过</el-button>
+							<el-button @click="handleClickNo(scope.row)" type="text" size="normal" class="checkLiNo">拒绝</el-button>
+						</div>
+						<span v-show="scope.row.Status===2" style="color:#43d68b;">已通过</span>
+						<span v-show="scope.row.Status===3" style="color:#f05d5c;">已拒绝</span>
 					</template>
 				</el-table-column>
 			</el-table>
@@ -64,6 +68,10 @@
 </template>
 
 <script>
+// 引入axios
+import axios from 'axios'
+// 引入qs对axios上传数据解析
+import Qs from 'qs'
   export default {
 		name: "Search",
 		data() {
@@ -90,22 +98,18 @@
         currentPage3: 5,
 				currentPage4: 4,
 				options: [{
-          value: '选项1',
-          label: '黄金糕'
+          value: '1',
+          label: '待审核'
         }, {
-          value: '选项2',
-          label: '双皮奶'
+          value: '2',
+          label: '已通过'
         }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
+          value: '3',
+          label: '已拒绝'
         }],
-        value: ''
+				checkvalue: '待审核',
+				inputcheck: '',
+				memberList: ''
       };
 		},
 		methods: {
@@ -117,8 +121,104 @@
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
-      }
+			},
+			checkMemberList(){
+				console.log(this.checkvalue);
+				console.log(this.inputcheck);
+				let _this = this;
+				let token = document.querySelector('#token').innerText;
+				let status = this.checkvalue==='待审核'?1:this.checkvalue;
+				axios.get('http://test.mhfire.cn/mhApi/Member/checkMemberList',{
+					// 参数1：token(用户登录token)，string类型，必填
+					// 参数2：companyId(公司ID)，int类型，必填
+					// 参数3：keyword(关键字)，（员工姓名、电话）string类型，选填
+					// 参数4：page(分页数)，int类型，选填，默认为1
+					// 参数5：status（审核状态）,1审核中，2审核通过，3审核失败，int类型，必选
+					params: {
+						token: token,
+						companyId: sessionStorage.getItem('companyId'),
+						keyword: this.inputcheck,
+						page: 1,
+						status: status
+					}
+				})
+				.then(function(response){
+					_this.memberList = response.data.data.result;
+					console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+					console.log(response);
+				})
+				.catch(function(error){
+						console.log(error);
+				})
+			},
+			handleClickYes(getEle){
+				let _this = this;
+				let token = document.querySelector('#token').innerText;
+				let postData = {
+						token: token,
+						companyId: sessionStorage.getItem('companyId'),
+						uid: getEle.ID,
+						status: 1
+					};
+				axios.post('http://test.mhfire.cn/mhApi/Member/updateCheckMemberStatus',Qs.stringify(postData),{
+						headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+						// 参数1：token(用户登录token)，string类型，必填
+					// 参数2：uid(待审核用户id)，int类型，必填
+					// 参数2：companyId(公司ID)，int类型，必填
+					// 参数3：status(审核状态)，int类型，必填，1表示审核通过，2表示拒绝
+					})
+				.then(function(response){
+					for(let i = 0;i<_this.memberList.length;i++){
+						if(_this.memberList[i].ID===getEle.ID){
+							console.log(_this.memberList[i].ID);
+							console.log(getEle.ID);
+							_this.memberList[i].Status = 2;
+							console.log(_this.memberList[i]);
+						}
+					}
+					console.log(getEle);
+					console.log(response);
+				})
+				.catch(function(error){
+						console.log(error);
+				})
+			},
+			handleClickNo(getEle){
+				let _this = this;
+				let token = document.querySelector('#token').innerText;
+				let postData = {
+						token: token,
+						companyId: sessionStorage.getItem('companyId'),
+						uid: getEle.ID,
+						status: 2
+					};
+				axios.post('http://test.mhfire.cn/mhApi/Member/updateCheckMemberStatus',Qs.stringify(postData),{
+						headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+						// 参数1：token(用户登录token)，string类型，必填
+					// 参数2：uid(待审核用户id)，int类型，必填
+					// 参数2：companyId(公司ID)，int类型，必填
+					// 参数3：status(审核状态)，int类型，必填，1表示审核通过，2表示拒绝
+					})
+				.then(function(response){
+					for(let i = 0;i<_this.memberList.length;i++){
+						if(_this.memberList[i].ID===getEle.ID){
+							console.log(_this.memberList[i].ID);
+							console.log(getEle.ID);
+							_this.memberList[i].Status = 3;
+							console.log(_this.memberList[i]);
+						}
+					}
+					console.log(getEle);
+					console.log(response);
+				})
+				.catch(function(error){
+						console.log(error);
+				})
+			}
 		},
+		created(){
+			this.checkMemberList();
+		}
   }
 </script>
 

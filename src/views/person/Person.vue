@@ -112,7 +112,7 @@ import axios from 'axios'
 		name: "Person",
 		data() {
       return {
-				personMarkColor: ['#f5835b','#5cc997'],
+				personMarkColor: ['#5cc997','#f5835b'],
 				dialogTableVisible: false,
 				gridData: [{
           name: '王小虎'

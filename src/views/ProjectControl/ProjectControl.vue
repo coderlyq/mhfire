@@ -173,7 +173,8 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+// 引入axios
+import axios from 'axios'
 export default {
 	name: 'ProjectControl',
 //import引入的组件需要注入到对象中才能使用
@@ -217,6 +218,26 @@ mounted(){
 		ProjectControlFlag[i].style.height = 555-50-25-30-20-ProjectControlCheckBoxol2[i].offsetHeight+"px";
 	}
 },
+created(){
+	let token = document.querySelector('#token').innerText;
+	axios.get('http://test.mhfire.cn/mhApi/Project/projectModuleList',{
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：companyId(公司id)，int类型，必填
+		// 参数3：projectId(项目ID)，int类型，必填
+		params: {
+			token: token,
+			companyId: sessionStorage.getItem('companyId'),
+			projectId: sessionStorage.getItem('projectId'),
+		}
+	})
+	.then(function(response){
+		console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+		console.log(response);
+	})
+	.catch(function(error){
+			console.log(error);
+	})
+}
 }
 </script>
 <style>

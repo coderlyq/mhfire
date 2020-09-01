@@ -3,24 +3,18 @@
 <div class='ProjectPerson'>
 	<el-container id="ProjectPerson" style="height: 93.55vh;">
 		<el-aside style="width:374px;padding:0;background-color:#ffffff;">
-			<PersonItem>
+			<div class='personImg' v-for="(item,index) in memberList" :key="item.UserName" @click="selectProjectPerson(index)">
 				<img src="~@/assets/images/Person/bigicon.png" slot="personitemImg">
-				<span slot="personitemName">姓名：123</span>
-				<span slot="personitemTel">电话：123456789</span>
-				<span slot="personitemMark">普通员工</span>
-			</PersonItem>
-			<PersonItem>
-				<img src="~@/assets/images/Person/bigicon.png" slot="personitemImg">
-				<span slot="personitemName">姓名：123</span>
-				<span slot="personitemTel">电话：123456789</span>
-				<span slot="personitemMark">普通员工</span>
-			</PersonItem>
-			<PersonItem>
-				<img src="~@/assets/images/Person/bigicon.png" slot="personitemImg">
-				<span slot="personitemName">姓名：123</span>
-				<span slot="personitemTel">电话：123456789</span>
-				<span slot="personitemMark">普通员工</span>
-			</PersonItem>
+				<dl>
+					<dt></dt>
+					<dd><span slot="personitemName">姓名：{{item.UserName}}</span></dd>
+					<dd style="margin-top:10px;"><span slot="personitemTel">电话：{{item.UserPhone}}</span></dd>
+				</dl>
+				<div slot="personitemMark" class="personitemMark" :style="{backgroundColor:personMarkColor[item.isResponseFlag]}">
+					<span v-show="item.isResponseFlag===0">普通员工</span>
+					<span v-show="item.isResponseFlag===1">项目负责人</span>
+				</div>
+			</div>
 		</el-aside>
 		<el-main>
 				<el-header style="background-color:#fff;" class="ProjectPersonBarHead">
@@ -148,16 +142,16 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-import PersonItem from '@/views/person/PersonItem.vue'
+// 引入axios
+import axios from 'axios'
+// import PersonItem from '@/views/person/PersonItem.vue'
 export default {
 //import引入的组件需要注入到对象中才能使用
 name: 'ProjectPerson',
-components: {
-	PersonItem
-},
 data() {
 	//这里存放数据
 	return {
+		personMarkColor: ['#5cc997','#f5835b'],
 		switchwork: true,
 		switchamark: true,
 		switchlists: true,
@@ -180,16 +174,94 @@ data() {
 			value: '选项5',
 			label: '北京烤鸭'
 		}],
-		value: ''
+		value: '',
+		memberList: ''
 	};
 },
 //方法集合
 methods: {
+	// selectProjectPerson(index){
 
+	// }
+},
+created(){
+	let _this = this;
+	let token = document.querySelector('#token').innerText;
+	let companyId = sessionStorage.getItem('companyId');
+	let projectId = sessionStorage.getItem('projectId');
+	axios.get('http://test.mhfire.cn/mhApi/Project/memberList',{
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：companyId(公司ID)，int类型，必填
+		// 参数3：projectId(项目ID)，int类型，必填
+			params: {
+				token: token,
+				companyId: companyId,
+				projectId: projectId
+			}
+	})
+	.then(function(response){
+		_this.memberList = response.data.data;
+		console.log(response);
+	})
+	.catch(function(error){
+			console.log(error);
+	})
 }
 }
 </script>
 <style>
+		@font-face{
+     font-family: 'PF'; 
+     src:url('~@/assets/font/苹方黑体-极细-简.ttf') format('truetype');
+	}
+.personImg{
+	width: 328px;
+	box-sizing: border-box;
+	height: 110px;
+	margin: 0 auto;
+	margin-top: 20px;
+	box-shadow: 0 0 15px #cccccc;
+	border-radius: 5px;
+	position: relative;
+	display: flex;
+	flex-direction: row;
+	justify-content: flex-start;
+	align-items: center;
+	/* font-family: "微软雅黑"; */
+	font-size: 14px;
+	color: #666666;
+	cursor: pointer;
+}
+.personImg .personitemMark{
+	position: absolute;
+	top: 0;
+	right: 0;
+	width: 100px;
+	height: 25px;
+	line-height: 25px;
+	text-align: center;
+	border-top-right-radius: 5px;
+	border-bottom-left-radius: 15px;
+	color: #ffffff;
+	font-size: 12px;
+}
+.personImg img{
+	width: 60px;
+	height: 60px;
+	border-radius: 60px;
+	margin-left: 30px;
+}
+.personImg dl{
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: flex-start;
+	/* align-items: flex-start; */
+	justify-content: center
+}
+	ol{
+		list-style: none;
+	}
 	.ProjectPersonBarHead{
 		display: flex;
 		flex-direction: row;

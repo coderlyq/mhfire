@@ -1,12 +1,12 @@
 <template>
   <el-container class="searchCont">
 		<el-header class="searchContTop">
-			<el-select v-model="value" placeholder="全部项目">
+			<el-select v-model="projectvalue" placeholder="全部项目" @change="getHistoryEvent(value)">
 				<el-option
-					v-for="item in options"
-					:key="item.value"
-					:label="item.label"
-					:value="item.value">
+					v-for="item in allProjectList"
+					:key="item.ProjectName"
+					:label="item.ProjectName"
+					:value="item.ID">
 				</el-option>
 			</el-select>
 			<el-select v-model="value" placeholder="全部系统">
@@ -46,7 +46,7 @@
 				<el-table-column
 					fixed
 					prop="Order"
-					label="事件类型"
+					label="事件"
 					width="410">
 				</el-table-column>
 				<el-table-column
@@ -134,14 +134,15 @@ import axios from 'axios'
           value: '选项5',
           label: '北京烤鸭'
 				}],
-				value: '',
+				projectvalue: 0,
         value1: '',
 				value2: '',
 				currentPage1: 5,
         currentPage2: 5,
         currentPage3: 5,
 				currentPage4: 4,
-				historyEvent: ''
+				historyEvent: '',
+				allProjectList: ''
       };
 		},
 		methods: {
@@ -150,7 +151,8 @@ import axios from 'axios'
 					path: '/SearchInfos',
 					name: 'SearchInfos',
 					params: {
-						messageId:row.ID
+						messageId:row.ID,
+						ProjectID: row.ProjectID
 					}
 				})
 				console.log(row);
@@ -160,33 +162,55 @@ import axios from 'axios'
       },
       handleCurrentChange(val) {
         console.log(`当前页: ${val}`);
-      }
+			},
+			getHistoryEvent(){
+				let _this = this;
+				let token = document.querySelector('#token').innerText;
+				let projectId = this.projectvalue;
+				axios.get('http://test.mhfire.cn/mhApi/Project/getHistoryEvent',{
+					// 参数1：token(用户登录token)，string类型，必填
+					// 参数2：companyId(公司id)，int类型，必填
+					// 参数3：projectId(项目ID)，int类型，必填
+					// 参数4：systemInfo(系统信息)，int类型，可选，传系统id过来
+					// 参数5：type(事件类型)，int类型，0全部，1火警，2故障，3反馈，4启动,可选
+					// 参数6：startTime(开始时间)，时间戳格式，将年月日转换成时间戳格式，int类型，可选
+					// 参数7：endTime(结束时间)，时间戳格式，将年月日转换成时间戳格式，int类型，可选
+					// 参数8：page(分页数)，int类型，默认为第1页
+						params: {
+							token: token,
+							companyId: sessionStorage.getItem('companyId'),
+							projectId: projectId,
+							systemInfo: '',
+							type: 0,
+							startTime: '',
+							endTime: '',
+							page: 1
+						}
+				})
+				.then(function(response){
+					_this.historyEvent = response.data.data.result;
+					console.log(response);
+				})
+				.catch(function(error){
+						console.log(error);
+				})
+			}
 		},
 		created(){
+			this.getHistoryEvent();
 			let _this = this;
 			let token = document.querySelector('#token').innerText;
-			axios.get('http://test.mhfire.cn/mhApi/Project/getHistoryEvent',{
+			axios.get('http://test.mhfire.cn/mhApi/Project/allProjectList',{
 				// 参数1：token(用户登录token)，string类型，必填
 				// 参数2：companyId(公司id)，int类型，必填
-				// 参数3：projectId(项目ID)，int类型，必填
-				// 参数4：systemInfo(系统信息)，int类型，可选，传系统id过来
-				// 参数5：type(事件类型)，int类型，0全部，1火警，2故障，3反馈，4启动,可选
-				// 参数6：startTime(开始时间)，时间戳格式，将年月日转换成时间戳格式，int类型，可选
-				// 参数7：endTime(结束时间)，时间戳格式，将年月日转换成时间戳格式，int类型，可选
-				// 参数8：page(分页数)，int类型，默认为第1页
-					params: {
-						token: token,
-						companyId: sessionStorage.getItem('companyId'),
-						projectId: 0,
-						systemInfo: '',
-						type: 0,
-						startTime: '',
-						endTime: '',
-						page: 1
-					}
+				params: {
+					token: token,
+					companyId: sessionStorage.getItem('companyId'),
+				}
 			})
 			.then(function(response){
-				_this.historyEvent = response.data.data.result;
+				_this.allProjectList = response.data.data;
+				_this.projectvalue = _this.allProjectList[0].ProjectName;
 				console.log(response);
 			})
 			.catch(function(error){
