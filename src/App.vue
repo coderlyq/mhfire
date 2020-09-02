@@ -7,8 +7,8 @@
 					<div id='logotext'>
 						<img src="~@/assets/images/TopBar/logo.png" alt="">
 						<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
-						<span v-if="!issuper">奇勤达科技发展有限公司</span>
-						<ol v-else id="logoList">
+						<span class="logodis" style="display:none;">奇勤达科技发展有限公司</span>
+						<ol id="logoList">
 							<li v-for="(item,index) in logoList" @click="topclick(index)" :key="item.name" :class="{clickBackColor:index===currendIndex}">
 								{{item.name}} <span v-show="item.isshow">({{item.cont}})</span>
 							</li>
@@ -16,7 +16,7 @@
 					</div>
 				</el-header>
 				<el-container>
-					<el-aside v-show="asideBoolean" style="width: 220px;background-color: #081d61;height: 93.55vh;"><SideBar/></el-aside>
+					<el-aside v-show="asideBoolean" style="width: 220px;background-color: #081d61;height: 93.55vh;" class="leftSideBar"><SideBar/></el-aside>
 					<!-- <el-main style="height: 99.999999vh;padding:0;" v-show="!topBarBoolean"><router-view></router-view></el-main> -->
 					<el-main style="height: 93.55vh;padding:0;" v-show="topBarBoolean"><router-view></router-view></el-main>
 				</el-container>
@@ -123,7 +123,7 @@ export default {
 			}
 		};
 		return {
-			token: '808d7902a25245ae9be5ef242220b304',
+			token: '',
 			issuper: true,//topbar显示公司名字还是权限菜单
 			currendIndex: 0,
 			logoList:[{
@@ -224,66 +224,121 @@ export default {
 			});
 		},
 		// 登录表单提交
-		submitLay(){
-			this.topBarBoolean = true;
-			this.asideBoolean = true;
-			this.isshowLay = false;
-				this.$router.push({
-							path: '/AllProject',
-							name: 'AllProject',
-							params: {
-							}
-						})
-			// this.$refs[formName].validate((valid) => {
-			// 	console.log(valid);
-			// 	if (valid) {
-			// 		// 参数1：phone(表示手机号)，string类型，必填
-			// 		// 参数2：password(表示密码)，string类型，必填
-			// 		// 参数4：code(手机验证码)，int类型，必填
-			// 		var checkNum = 0;
-			// 		if(this.checked === true){
-			// 			checkNum = 1;
-			// 			localStorage.setItem('telLay', this.ruleFormLay.telLay);
-			// 			localStorage.setItem('passLay', this.ruleFormLay.passLay);
-			// 		}else{
-			// 			sessionStorage.setItem('telLay', this.ruleFormLay.telLay);
-			// 			sessionStorage.setItem('passLay', this.ruleFormLay.passLay);
-			// 			if(localStorage.getItem('telLay')){
-			// 				localStorage.removeItem('telLay');
-			// 			}
-			// 			if(localStorage.getItem('passLay')){
-			// 				localStorage.removeItem('passLay');
-			// 			}
-			// 		}
-			// 		let postData = {
-			// 				phone: this.ruleFormLay.telLay,
-			// 				password: this.ruleFormLay.passLay,
-			// 				code: this.imgCode,
-			// 				login_status:checkNum
-			// 		}
-			// 		axios.post('http://test.mhfire.cn/mhApi/User/login',Qs.stringify(postData),{
-			// 			headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
-			// 		})
-			// 		.then(function(response){
-			// 			// this.$emit("dataLay",response.data.data);
-			// 			// this.$router.push({
-			// 			// 	name: 'ComBase',
-			// 			// 	params: {
-			// 			// 		topBarBoolean: true,
-			// 			// 		asideBoolean: true
-			// 			// 	}
-			// 			// })
-					
-			// 				console.log(response.data.data);
-			// 		})
-			// 		.catch(function(error){
-			// 				console.log(error);
-			// 		});
-			// 	} else {
-			// 		console.log('error submit!!');
-			// 		return false;
-			// 	}
-			// });
+		submitLay(formName){
+		// this.$router.push({
+		// 			path: '/AllProject',
+		// 			name: 'AllProject',
+		// 			params: {
+		// 			}
+		// 		})
+		
+			this.$refs[formName].validate((valid) => {
+				console.log(valid);
+				let _this = this;
+				if (valid) {
+					// 参数1：phone(表示手机号)，string类型，必填
+					// 参数2：password(表示密码)，string类型，必填
+					// 参数4：code(手机验证码)，int类型，必填
+					var checkNum = 0;
+					if(this.checked === true){
+						checkNum = 1;
+						localStorage.setItem('telLay', this.ruleFormLay.telLay);
+						localStorage.setItem('passLay', this.ruleFormLay.passLay);
+					}else{
+						sessionStorage.setItem('telLay', this.ruleFormLay.telLay);
+						sessionStorage.setItem('passLay', this.ruleFormLay.passLay);
+						if(localStorage.getItem('telLay')){
+							localStorage.removeItem('telLay');
+						}
+						if(localStorage.getItem('passLay')){
+							localStorage.removeItem('passLay');
+						}
+					}
+					let postData = {
+							phone: this.ruleFormLay.telLay,
+							password: this.ruleFormLay.passLay,
+							code: this.imgCode,
+							login_status:checkNum
+					}
+					axios.post('http://test.mhfire.cn/mhApi/User/login',Qs.stringify(postData),{
+						headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+					})
+					.then(function(response){
+						_this.token = response.data.data.token_id;
+						_this.isshowLay = false;
+						if(response.data.data.type==1){
+							_this.topBarBoolean = true;
+							_this.asideBoolean = true;
+							_this.logoList[0].cont = response.data.data.node.company_count;
+							_this.logoList[1].cont = response.data.data.node.fire_count;
+							_this.logoList[2].cont = response.data.data.node.company_auth_count;
+							sessionStorage.setItem('companyId', ' ');
+							sessionStorage.setItem('projectId', ' ');
+							console.log('1');
+							_this.$router.push({
+								path: '/AllProject',
+								name: 'AllProject',
+								params: {
+									asideShow: 'none'
+								}
+							})
+						}
+						if(response.data.data.type==2){
+							_this.topBarBoolean = true;
+							_this.asideBoolean = true;
+							_this.logoList[0].cont = response.data.data.node.company_count;
+							_this.logoList[1].cont = response.data.data.node.fire_count;
+							_this.logoList[2].isshow = false;
+							_this.logoList[3].isshow = false;
+							sessionStorage.setItem('companyId', ' ');
+							sessionStorage.setItem('projectId', ' ');
+							console.log('2');
+							_this.$router.push({
+								path: '/AllProject',
+								name: 'AllProject',
+								params: {
+									asideShow: 'none'
+								}
+							})
+						}
+						if(response.data.data.type==3){
+							_this.topBarBoolean = false;
+							_this.asideBoolean = true;
+							sessionStorage.setItem('companyId', ' ');
+							sessionStorage.setItem('projectId', ' ');
+							console.log('3');
+							_this.$router.push({
+								path: '/AllProject',
+								name: 'AllProject',
+								params: {
+									asideShow: 'block'
+								}
+							})
+						}
+						if(response.data.data.type==4){
+							_this.topBarBoolean = false;
+							_this.asideBoolean = true;
+							sessionStorage.setItem('companyId', ' ');
+							sessionStorage.setItem('projectId', ' ');
+							_this.$router.push({
+								path: '/AllProject',
+								name: 'AllProject',
+								params: {
+									asideShow: 'block'
+								}
+							})
+						}
+						console.log('jklj;lj;lj;lj;lj;l');
+						// console.log(response.data.data);
+					})
+					.catch(function(error){
+							console.log(error);
+					});
+				} else {
+					console.log('error submit!!');
+					return false;
+				}
+			});
 		},
 		resetForm(formName) {
 			this.$refs[formName].resetFields();
@@ -321,18 +376,18 @@ export default {
 			});
 		},
 		lay(){
-			axios.get('http://test.mhfire.cn/mhApi/Admin/adminList',{
-					params: {
-						token:'09b603f882584d92baeefbcfbe48c972',
-						page: 1
-					}
-			})
-			.then(function(response){
-					console.log(response);
-			})
-			.catch(function(error){
-					console.log(error);
-			});
+			// axios.get('http://test.mhfire.cn/mhApi/Admin/adminList',{
+			// 		params: {
+			// 			token:'09b603f882584d92baeefbcfbe48c972',
+			// 			page: 1
+			// 		}
+			// })
+			// .then(function(response){
+			// 		console.log(response);
+			// })
+			// .catch(function(error){
+			// 		console.log(error);
+			// });
 			return this.isLay = true;
 		},
 		layIn(){
@@ -343,7 +398,15 @@ export default {
 		},
 	},//改变验证码图片
 	beforeCreate(){
-	}//生命周期 - 创建之前
+	},//生命周期 - 创建之前
+	created(){
+		if(localStorage.getItem('telLay')){
+			this.ruleFormLay.telLay = localStorage.getItem('telLay')
+		}
+		if(localStorage.getItem('passLay')){
+			this.ruleFormLay.passLay = localStorage.getItem('passLay')
+		}
+	}
 }
 </script>
 

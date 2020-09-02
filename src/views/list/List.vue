@@ -6,7 +6,7 @@
 		</el-header>
 		<el-main>
 			<ul>
-				<li v-for="(item,index) in projectList" :key="item.ProjectName" @click="clickProject(index)">
+				<li v-for="(item,index) in projectList" :key="item.ProjectName">
 					<div class="listLiLeft">
 						<img src="~@/assets/images/List/logoDefault.png" alt="">
 						<dl>
@@ -16,7 +16,7 @@
 							<dd><img src="~@/assets/images/List/address.png" alt="">公司地址：{{item.AddressDetail}}</dd>
 						</dl>
 					</div>
-					<el-button type="primary">项目设置</el-button>
+					<el-button type="primary" @click="clickProject(index)">项目设置</el-button>
 				</li>
 			</ul>
 		</el-main>
@@ -63,7 +63,8 @@ import axios from 'axios'
 		methods: {
 			clickProject(index){
 				let projectId = this.projectList[index].ID;
-				console.log(index);
+				document.querySelector('.siderBarTop').style.display = 'none';
+				document.querySelector('.siderBarBottom').style.display = 'block';
 				sessionStorage.setItem('projectId',projectId),
 				this.$router.push({
 					path: '/ProjectList',

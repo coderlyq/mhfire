@@ -1,7 +1,7 @@
 <!--  -->
 <template>
   <div>
-		<div>
+		<div class="siderBarTop">
 			<el-menu-item path="/List">
 				<img slot="item-icon" src="~@/assets/images/TopBar/list.png" alt="">
 				<img slot="item-icon-active" src="~@/assets/images/TopBar/listed.png" alt="">
@@ -28,7 +28,7 @@
 				<span slot="item-text">员工申请审核 (<span></span>)</span>
 			</el-menu-item>
 		</div>
-		<div>
+		<div class="siderBarBottom" style="display:none;">
 			<el-menu-item path="/ProjectList">
 				<img slot="item-icon" src="~@/assets/images/SiderBar/listdefault.png" alt="">
 				<img slot="item-icon-active" src="~@/assets/images/SiderBar/listchecked.png" alt="">

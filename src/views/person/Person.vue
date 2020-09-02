@@ -67,7 +67,7 @@
 					<el-container style="margin-top:20px;" v-show="true">
 						<el-header class="personContMainTop">
 							<span class="personContMainTopText">作为员工隶属的项目</span>
-							<el-button type="primary" icon="el-icon-circle-plus-outline" @click="addOfMemberProject('fllow')">添加负责项目</el-button>
+							<el-button type="primary" icon="el-icon-circle-plus-outline" @click="addMemberProject('fllow')">添加负责项目</el-button>
 						</el-header>
 						<el-main>
 							<ol class="elmainOl">
@@ -157,6 +157,14 @@ import Qs from 'qs'
 			},
 			handleClick(clickData){
 				console.log(clickData);
+				console.log(this.allMemberList[this.selectIndex].isResponseFlag);
+				let selectType = '';
+				if(this.allMemberList[this.selectIndex].isResponseFlag==1){
+					selectType = 1;
+				}
+				if(this.allMemberList[this.selectIndex].isResponseFlag==0){
+					selectType = 2;
+				}
 				let _this = this;
 				// 参数1：token(用户登录token)，string类型，必填
 				// 参数2：companyId(公司ID),int类型，必填
@@ -168,7 +176,7 @@ import Qs from 'qs'
 					companyId: sessionStorage.getItem('companyId'),
 					projectId: clickData.ID,
 					uid: this.selectUID,
-					type: this.allMemberList[this.selectIndex]
+					type: selectType
 				};
 				axios.post('http://test.mhfire.cn/mhApi/Project/addResponseProject',Qs.stringify(addResponseProject),{
 					headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
@@ -197,6 +205,7 @@ import Qs from 'qs'
 				})
 				.then(function(response){
 					_this.allProjectList = response.data.data;
+					console.log("?????????????????????????????");
 					console.log(response);
 				})
 				.catch(function(error){

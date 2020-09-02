@@ -18,7 +18,7 @@
 		</el-header>
 		<el-main>
 			<ul class="managerListCont">
-				<li v-for="(item,index) in companyList" :key="item.CompanyName" @click="selectItem(index)">
+				<li v-for="(item,index) in companyList" :key="item.CompanyName">
 					<div class="managerLiLeft">
 						<img src="~@/assets/images/List/logoDefault.png" alt="">
 						<dl>
@@ -29,7 +29,7 @@
 							<dd><img src="~@/assets/images/List/address.png" class="managerLastLi" alt="">公司地址：{{item.Address}}</dd>
 						</dl>
 					</div>
-					<el-button type="primary">公司设置</el-button>
+					<el-button type="primary" @click="selectItem(index)">公司设置</el-button>
 				</li>
 		
 			</ul>
@@ -95,6 +95,8 @@ import axios from 'axios'
         console.log(`当前页: ${val}`);
 			},
 			selectItem(index) {
+				document.querySelector('.leftSideBar').style.display = 'block';
+				document.querySelector('.logodis').style.display = 'block';
 				let _this = this;
 				sessionStorage.setItem('companyId',this.companyList[index].ID);
 				// 参数1：token(用户登录token)，string类型，必填
@@ -119,18 +121,25 @@ import axios from 'axios'
 		},
 		//生命周期 - 创建完成（可以访问当前this实例）
 		created() {
+			
 			let _this = this;
 			axios.get('http://test.mhfire.cn/mhApi/Company/companyList',{
 				// 参数1：token(用户登录token)，string类型，必填
 				// 参数2：page(分页数)，int类型，选填，默认为1
 				// 参数3：companyName(公司名称)，string类型，选填
 					params: {
-						token: '808d7902a25245ae9be5ef242220b304',
+						token: document.querySelector('#token').innerText,
 						page: 1,
 						companyName:''
 					}
 			})
 			.then(function(response){
+
+			console.log('123455678890');
+			let asideShow = _this.$route.params.asideShow;
+			console.log(_this.$route.params.asideShow);
+			document.querySelector('.leftSideBar').style.display = asideShow;
+
 				_this.companyList = response.data.data.result;
 				let restaurantsProjectArr = [];
 				for(let i = 0;i<_this.companyList.length;i++){
