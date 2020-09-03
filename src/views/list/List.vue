@@ -6,7 +6,7 @@
 		</el-header>
 		<el-main>
 			<ul>
-				<li v-for="(item,index) in projectList" :key="item.ProjectName">
+				<li v-for="(item,index) in projectLists" :key="item.ProjectName">
 					<div class="listLiLeft">
 						<img src="~@/assets/images/List/logoDefault.png" alt="">
 						<dl>
@@ -30,15 +30,19 @@ import axios from 'axios'
 		name: "List",
 		data() {
 			return {
-				projectList:''
+				projectLists:''
 			}
 		},
 		//生命周期 - 创建完成（可以访问当前this实例）
 		created() {
-			let token = this.$route.params.token;
-			let companyId = this.$route.params.companyId;
-			let page = this.$route.params.page;
-			console.log(token);
+			document.querySelector('.logodis').style.display = 'block';
+			// 二级菜单返回上一级时调用
+			document.querySelector('.siderBarTop').style.display = 'block';
+			document.querySelector('.siderBarBottom').style.display = 'none';
+			//二级菜单返回上一级时调用（上）
+			let token = document.querySelector('#token').innerText;
+			let companyId = sessionStorage.getItem('companyId');
+			let page = 1;
 			let _this = this;
 			axios.get('http://test.mhfire.cn/mhApi/Project/projectList',{
 				// 参数1：token(用户登录token)，string类型，必填
@@ -54,7 +58,7 @@ import axios from 'axios'
 			})
 			.then(function(response){
 				console.log(response.data.data.result);
-				_this.projectList = response.data.data.result;
+				_this.projectLists = response.data.data.result;
 			})
 			.catch(function(error){
 					console.log(error);
@@ -62,7 +66,7 @@ import axios from 'axios'
 		},
 		methods: {
 			clickProject(index){
-				let projectId = this.projectList[index].ID;
+				let projectId = this.projectLists[index].ID;
 				document.querySelector('.siderBarTop').style.display = 'none';
 				document.querySelector('.siderBarBottom').style.display = 'block';
 				sessionStorage.setItem('projectId',projectId),

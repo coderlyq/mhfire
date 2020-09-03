@@ -1,6 +1,9 @@
 <template>
   <el-container class="searchCont">
 		<el-header class="searchContTop">
+			<el-breadcrumb separator-class="el-icon-arrow-right" class="ProjectListTopTitle">
+				<el-breadcrumb-item :to="{ path: '/List' }">返回上层</el-breadcrumb-item>
+			</el-breadcrumb>
 			<el-select v-model="projectvalue" placeholder="全部项目" @change="getHistoryEvent(value)">
 				<el-option
 					v-for="item in allProjectList"
@@ -9,7 +12,7 @@
 					:value="item.ID">
 				</el-option>
 			</el-select>
-			<el-select v-model="value" placeholder="全部系统">
+			<el-select v-model="value" placeholder="全部系统" style="display:none;">
 				<el-option
 					v-for="item in options"
 					:key="item.value"
@@ -118,22 +121,7 @@ import axios from 'axios'
             }
           }]
 				},
-				options: [{
-          value: '选项1',
-          label: '黄金糕'
-        }, {
-          value: '选项2',
-          label: '双皮奶'
-        }, {
-          value: '选项3',
-          label: '蚵仔煎'
-        }, {
-          value: '选项4',
-          label: '龙须面'
-        }, {
-          value: '选项5',
-          label: '北京烤鸭'
-				}],
+				options: [],
 				projectvalue: 0,
         value1: '',
 				value2: '',
@@ -232,6 +220,9 @@ import axios from 'axios'
 	justify-content: flex-start;
 	align-items: center;
 	font-weight: normal;
+}
+.searchCont .ProjectListTopTitle{
+	position: relative;
 }
 .searchContTop .el-select .el-input .el-input__inner{
 	width: 272px;

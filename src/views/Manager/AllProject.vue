@@ -96,25 +96,17 @@ import axios from 'axios'
 			},
 			selectItem(index) {
 				document.querySelector('.leftSideBar').style.display = 'block';
-				document.querySelector('.logodis').style.display = 'block';
 				let _this = this;
 				sessionStorage.setItem('companyId',this.companyList[index].ID);
+				document.querySelector('.logodis').innerText = this.companyList[index].CompanyName;
 				// 参数1：token(用户登录token)，string类型，必填
 				// 参数2：companyId(公司ID)，int类型，必填
 				// 参数3：projectName(项目名称)，string类型，选填
 				// 参数4：page(分页数)，int类型，选填，默认为1
-				let token = document.querySelector('#token').innerText;
-				let companyId = this.companyList[index].ID;
-				let projectName = this.companyList[index].CompanyName;
-				let page = 1;
 				_this.$router.push({
 					path: '/List',
 					name: 'List',
 					params: {
-						token: token,
-						companyId: companyId,
-						projectName:projectName,
-						page:page
 					}
 				})
 			}

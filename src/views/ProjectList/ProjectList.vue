@@ -3,7 +3,11 @@
 <div class=''>
 	<el-container>
 		<el-header style="background-color:#fff;" class="ProjectListBarHead">
-			<span class="ProjectListTopTitle">项目信息管理</span>
+			<el-breadcrumb separator-class="el-icon-arrow-right" class="ProjectListTopTitle">
+				<el-breadcrumb-item :to="{ path: '/List' }">返回上层</el-breadcrumb-item>
+				<el-breadcrumb-item>项目信息管理</el-breadcrumb-item>
+			</el-breadcrumb>
+			<!-- <span class="ProjectListTopTitle">项目信息管理</span> -->
 			<el-select style="font-family:'Microsoft YaHei';font-size:12px;color:#666;font-weight:bold;" v-model="value" placeholder="全部项目">
 				<el-option
 					v-for="item in options"
@@ -67,7 +71,7 @@
 							<dd>姓名：<span>{{item.UserName}}</span></dd>
 							<dd>电话：<span>{{item.UserPhone}}</span></dd>
 						</dl>
-						<el-button type="primary" :plain="true" @click="deleteMember(index)" icon="el-icon-delete" circle></el-button>
+						<el-button type="primary" plain="true" @click="deleteMember(index)" icon="el-icon-delete" circle></el-button>
 					</li>
 				</ol>
 			</div>
@@ -358,7 +362,7 @@ created() {
 	let _this = this;
 	let token = document.querySelector('#token').innerText;
 	let companyId = sessionStorage.getItem('companyId');
-	let projectId = this.$route.params.projectId;
+	let projectId = sessionStorage.getItem('projectId');
 	axios.get('http://test.mhfire.cn/mhApi/Project/projectDetail',{
 		// 参数1：token(用户登录token)，string类型，必填
 		// 参数2：companyId(公司ID)，int类型，必填

@@ -2,13 +2,13 @@
   <div id="app" style="height: 100vh;background-color: #f2f4fa;">
 		<div v-show="!isshowLay">
 			<el-container>
-				<el-header style="height: 6.45vh;line-height: 6.45vh;" v-show="topBarBoolean">
+				<el-header style="height: 6.45vh;line-height: 6.45vh;">
 					<div style="display:none;"><span id="token">{{token}}</span></div>
 					<div id='logotext'>
 						<img src="~@/assets/images/TopBar/logo.png" alt="">
 						<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
-						<span class="logodis" style="display:none;">奇勤达科技发展有限公司</span>
-						<ol id="logoList">
+						<span class="logodis" style="display:none;margin-right:25px;"></span>
+						<ol id="logoList" v-show="topBarBoolean">
 							<li v-for="(item,index) in logoList" @click="topclick(index)" :key="item.name" :class="{clickBackColor:index===currendIndex}">
 								{{item.name}} <span v-show="item.isshow">({{item.cont}})</span>
 							</li>
@@ -18,7 +18,8 @@
 				<el-container>
 					<el-aside v-show="asideBoolean" style="width: 220px;background-color: #081d61;height: 93.55vh;" class="leftSideBar"><SideBar/></el-aside>
 					<!-- <el-main style="height: 99.999999vh;padding:0;" v-show="!topBarBoolean"><router-view></router-view></el-main> -->
-					<el-main style="height: 93.55vh;padding:0;" v-show="topBarBoolean"><router-view></router-view></el-main>
+					<!-- <el-main style="height: 93.55vh;padding:0;" v-show="topBarBoolean"><router-view></router-view></el-main> -->
+					<el-main style="height: 93.55vh;padding:0;"><router-view></router-view></el-main>
 				</el-container>
 			</el-container>
 		</div>
@@ -188,6 +189,10 @@ export default {
 	methods: {
 		// topbar点击切换菜单
 		topclick(index) {
+			document.querySelector('.logodis').style.display = 'none';
+			document.querySelector('.leftSideBar').style.display = 'none';
+			document.querySelector('.siderBarTop').style.display = 'block';
+			document.querySelector('.siderBarBottom').style.display = 'none';
 			this.currendIndex = index;
 			this.$router.push(this.logoList[index].path)
 			// console.log(index);
@@ -304,25 +309,31 @@ export default {
 						if(response.data.data.type==3){
 							_this.topBarBoolean = false;
 							_this.asideBoolean = true;
-							sessionStorage.setItem('companyId', ' ');
+							console.log('33333333333333333333333333333333333');
+							console.log(response);
+							document.querySelector('.logodis').innerText = response.data.data.CompanyName;
+							document.querySelector('.logodis').style.display = 'block';
+							sessionStorage.setItem('companyId', response.data.data.CompanyID);
 							sessionStorage.setItem('projectId', ' ');
 							console.log('3');
 							_this.$router.push({
-								path: '/AllProject',
-								name: 'AllProject',
+								path: '/List',
+								name: 'List',
 								params: {
-									asideShow: 'block'
+									
 								}
 							})
 						}
 						if(response.data.data.type==4){
 							_this.topBarBoolean = false;
 							_this.asideBoolean = true;
-							sessionStorage.setItem('companyId', ' ');
+							document.querySelector('.logodis').innerText = response.data.data.CompanyName;
+							document.querySelector('.logodis').style.display = 'block';
+							sessionStorage.setItem('companyId', response.data.data.CompanyID);
 							sessionStorage.setItem('projectId', ' ');
 							_this.$router.push({
-								path: '/AllProject',
-								name: 'AllProject',
+								path: '/List',
+								name: 'List',
 								params: {
 									asideShow: 'block'
 								}

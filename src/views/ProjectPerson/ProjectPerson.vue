@@ -18,7 +18,11 @@
 		</el-aside>
 		<el-main>
 				<el-header style="background-color:#fff;" class="ProjectPersonBarHead">
-					<span class="ProjectPersonTopTitle">项目人员管理</span>
+					<el-breadcrumb separator-class="el-icon-arrow-right" class="ProjectListTopTitle">
+						<el-breadcrumb-item :to="{ path: '/List' }">返回上层</el-breadcrumb-item>
+						<el-breadcrumb-item>项目人员管理</el-breadcrumb-item>
+					</el-breadcrumb>
+					<!-- <span class="ProjectPersonTopTitle">项目人员管理</span> -->
 					<el-select style="font-family:'Microsoft YaHei';font-size:12px;color:#666;font-weight:bold;" v-model="value" placeholder="全部项目">
 						<el-option
 							v-for="item in options"
