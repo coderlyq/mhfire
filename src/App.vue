@@ -229,127 +229,131 @@ export default {
 			});
 		},
 		// 登录表单提交
-		submitLay(formName){
-		// this.$router.push({
-		// 			path: '/AllProject',
-		// 			name: 'AllProject',
-		// 			params: {
-		// 			}
-		// 		})
+		submitLay(){
+			this.token = "adc2a6db8a304474ad21a96746bb03fa";
+			this.topBarBoolean = true;
+			this.asideBoolean = true;
+			this.isshowLay = false;
+		this.$router.push({
+					path: '/AllProject',
+					name: 'AllProject',
+					params: {
+					}
+				})
 		
-			this.$refs[formName].validate((valid) => {
-				console.log(valid);
-				let _this = this;
-				if (valid) {
-					// 参数1：phone(表示手机号)，string类型，必填
-					// 参数2：password(表示密码)，string类型，必填
-					// 参数4：code(手机验证码)，int类型，必填
-					var checkNum = 0;
-					if(this.checked === true){
-						checkNum = 1;
-						localStorage.setItem('telLay', this.ruleFormLay.telLay);
-						localStorage.setItem('passLay', this.ruleFormLay.passLay);
-					}else{
-						sessionStorage.setItem('telLay', this.ruleFormLay.telLay);
-						sessionStorage.setItem('passLay', this.ruleFormLay.passLay);
-						if(localStorage.getItem('telLay')){
-							localStorage.removeItem('telLay');
-						}
-						if(localStorage.getItem('passLay')){
-							localStorage.removeItem('passLay');
-						}
-					}
-					let postData = {
-							phone: this.ruleFormLay.telLay,
-							password: this.ruleFormLay.passLay,
-							code: this.imgCode,
-							login_status:checkNum
-					}
-					axios.post('http://test.mhfire.cn/mhApi/User/login',Qs.stringify(postData),{
-						headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
-					})
-					.then(function(response){
-						_this.token = response.data.data.token_id;
-						_this.isshowLay = false;
-						if(response.data.data.type==1){
-							_this.topBarBoolean = true;
-							_this.asideBoolean = true;
-							_this.logoList[0].cont = response.data.data.node.company_count;
-							_this.logoList[1].cont = response.data.data.node.fire_count;
-							_this.logoList[2].cont = response.data.data.node.company_auth_count;
-							sessionStorage.setItem('companyId', ' ');
-							sessionStorage.setItem('projectId', ' ');
-							console.log('1');
-							_this.$router.push({
-								path: '/AllProject',
-								name: 'AllProject',
-								params: {
-									asideShow: 'none'
-								}
-							})
-						}
-						if(response.data.data.type==2){
-							_this.topBarBoolean = true;
-							_this.asideBoolean = true;
-							_this.logoList[0].cont = response.data.data.node.company_count;
-							_this.logoList[1].cont = response.data.data.node.fire_count;
-							_this.logoList[2].isshow = false;
-							_this.logoList[3].isshow = false;
-							sessionStorage.setItem('companyId', ' ');
-							sessionStorage.setItem('projectId', ' ');
-							console.log('2');
-							_this.$router.push({
-								path: '/AllProject',
-								name: 'AllProject',
-								params: {
-									asideShow: 'none'
-								}
-							})
-						}
-						if(response.data.data.type==3){
-							_this.topBarBoolean = false;
-							_this.asideBoolean = true;
-							console.log('33333333333333333333333333333333333');
-							console.log(response);
-							document.querySelector('.logodis').innerText = response.data.data.CompanyName;
-							document.querySelector('.logodis').style.display = 'block';
-							sessionStorage.setItem('companyId', response.data.data.CompanyID);
-							sessionStorage.setItem('projectId', ' ');
-							console.log('3');
-							_this.$router.push({
-								path: '/List',
-								name: 'List',
-								params: {
+			// this.$refs[formName].validate((valid) => {
+			// 	console.log(valid);
+			// 	let _this = this;
+			// 	if (valid) {
+			// 		// 参数1：phone(表示手机号)，string类型，必填
+			// 		// 参数2：password(表示密码)，string类型，必填
+			// 		// 参数4：code(手机验证码)，int类型，必填
+			// 		var checkNum = 0;
+			// 		if(this.checked === true){
+			// 			checkNum = 1;
+			// 			localStorage.setItem('telLay', this.ruleFormLay.telLay);
+			// 			localStorage.setItem('passLay', this.ruleFormLay.passLay);
+			// 		}else{
+			// 			sessionStorage.setItem('telLay', this.ruleFormLay.telLay);
+			// 			sessionStorage.setItem('passLay', this.ruleFormLay.passLay);
+			// 			if(localStorage.getItem('telLay')){
+			// 				localStorage.removeItem('telLay');
+			// 			}
+			// 			if(localStorage.getItem('passLay')){
+			// 				localStorage.removeItem('passLay');
+			// 			}
+			// 		}
+			// 		let postData = {
+			// 				phone: this.ruleFormLay.telLay,
+			// 				password: this.ruleFormLay.passLay,
+			// 				code: this.imgCode,
+			// 				login_status:checkNum
+			// 		}
+			// 		axios.post('http://test.mhfire.cn/mhApi/User/login',Qs.stringify(postData),{
+			// 			headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+			// 		})
+			// 		.then(function(response){
+			// 			_this.token = response.data.data.token_id;
+			// 			_this.isshowLay = false;
+			// 			if(response.data.data.type==1){
+			// 				_this.topBarBoolean = true;
+			// 				_this.asideBoolean = true;
+			// 				_this.logoList[0].cont = response.data.data.node.company_count;
+			// 				_this.logoList[1].cont = response.data.data.node.fire_count;
+			// 				_this.logoList[2].cont = response.data.data.node.company_auth_count;
+			// 				sessionStorage.setItem('companyId', ' ');
+			// 				sessionStorage.setItem('projectId', ' ');
+			// 				console.log('1');
+			// 				_this.$router.push({
+			// 					path: '/AllProject',
+			// 					name: 'AllProject',
+			// 					params: {
+			// 						asideShow: 'none'
+			// 					}
+			// 				})
+			// 			}
+			// 			if(response.data.data.type==2){
+			// 				_this.topBarBoolean = true;
+			// 				_this.asideBoolean = true;
+			// 				_this.logoList[0].cont = response.data.data.node.company_count;
+			// 				_this.logoList[1].cont = response.data.data.node.fire_count;
+			// 				_this.logoList[2].isshow = false;
+			// 				_this.logoList[3].isshow = false;
+			// 				sessionStorage.setItem('companyId', ' ');
+			// 				sessionStorage.setItem('projectId', ' ');
+			// 				console.log('2');
+			// 				_this.$router.push({
+			// 					path: '/AllProject',
+			// 					name: 'AllProject',
+			// 					params: {
+			// 						asideShow: 'none'
+			// 					}
+			// 				})
+			// 			}
+			// 			if(response.data.data.type==3){
+			// 				_this.topBarBoolean = false;
+			// 				_this.asideBoolean = true;
+			// 				console.log('33333333333333333333333333333333333');
+			// 				console.log(response);
+			// 				document.querySelector('.logodis').innerText = response.data.data.CompanyName;
+			// 				document.querySelector('.logodis').style.display = 'block';
+			// 				sessionStorage.setItem('companyId', response.data.data.CompanyID);
+			// 				sessionStorage.setItem('projectId', ' ');
+			// 				console.log('3');
+			// 				_this.$router.push({
+			// 					path: '/List',
+			// 					name: 'List',
+			// 					params: {
 									
-								}
-							})
-						}
-						if(response.data.data.type==4){
-							_this.topBarBoolean = false;
-							_this.asideBoolean = true;
-							document.querySelector('.logodis').innerText = response.data.data.CompanyName;
-							document.querySelector('.logodis').style.display = 'block';
-							sessionStorage.setItem('companyId', response.data.data.CompanyID);
-							sessionStorage.setItem('projectId', ' ');
-							_this.$router.push({
-								path: '/List',
-								name: 'List',
-								params: {
-									asideShow: 'block'
-								}
-							})
-						}
-						console.log('jklj;lj;lj;lj;lj;l');
-						// console.log(response.data.data);
-					})
-					.catch(function(error){
-							console.log(error);
-					});
-				} else {
-					console.log('error submit!!');
-					return false;
-				}
-			});
+			// 					}
+			// 				})
+			// 			}
+			// 			if(response.data.data.type==4){
+			// 				_this.topBarBoolean = false;
+			// 				_this.asideBoolean = true;
+			// 				document.querySelector('.logodis').innerText = response.data.data.CompanyName;
+			// 				document.querySelector('.logodis').style.display = 'block';
+			// 				sessionStorage.setItem('companyId', response.data.data.CompanyID);
+			// 				sessionStorage.setItem('projectId', ' ');
+			// 				_this.$router.push({
+			// 					path: '/List',
+			// 					name: 'List',
+			// 					params: {
+			// 						asideShow: 'block'
+			// 					}
+			// 				})
+			// 			}
+			// 			console.log('jklj;lj;lj;lj;lj;l');
+			// 			// console.log(response.data.data);
+			// 		})
+			// 		.catch(function(error){
+			// 				console.log(error);
+			// 		});
+			// 	} else {
+			// 		console.log('error submit!!');
+			// 		return false;
+			// 	}
+			// });
 		},
 		resetForm(formName) {
 			this.$refs[formName].resetFields();

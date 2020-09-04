@@ -129,7 +129,7 @@ import axios from 'axios'
 
 			console.log('123455678890');
 			let asideShow = _this.$route.params.asideShow;
-			console.log(_this.$route.params.asideShow);
+			console.log(response);
 			document.querySelector('.leftSideBar').style.display = asideShow;
 
 				_this.companyList = response.data.data.result;
