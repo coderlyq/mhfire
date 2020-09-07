@@ -22,6 +22,7 @@ Vue.use(VueRouter)
 const routes = [
 	{
 		path: '/Lay',
+		name: 'Lay',
 		component: Lay
 	},
 	{
@@ -49,6 +50,7 @@ const routes = [
 	},
 	{
 		path: '/Check',
+		name: 'Check',
 		component: Check
 	},
 	{
