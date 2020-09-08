@@ -2,15 +2,15 @@
 <template>
   <el-container class="projectCreate">
 		<el-header class="projectCreateTop">
-			<div class="projectCreateTopCont">
+			<div class="projectCreateTopCont" style="text-align:left;">
 				新建项目
 			</div>
 		</el-header>
 		<el-main>
 			<div class="projectCreateTopCont">
-				<div class="projectCreatePartOne">
-					<div class="createPartOneTop">项目基础信息</div>
-					<el-form :label-position="labelPosition" label-width="80px" :model="formLabelAlign">
+				<div class="projectCreatePart">
+					<div class="createPartTop">项目基础信息</div>
+					<el-form :label-position="labelPosition" label-width="180px" :model="formLabelAlign">
 						<el-form-item label="项目名称">
 							<el-input v-model="formLabelAlign.projectName"></el-input>
 						</el-form-item>
@@ -70,6 +70,24 @@
 						</el-form-item>
 					</el-form>
 				</div>
+				<div class="projectCreatePart">
+					<div class="createPartTop">项目基础信息</div>
+					<el-form :label-position="labelPosition" label-width="180px" :model="formLabelAlign">
+						<el-form-item label="填写采集器设备号绑定">
+							<el-input v-model="formLabelAlign.collectorNumber"></el-input>
+						</el-form-item>
+						<el-form-item label="FCLOUD消防员">
+							<el-select v-model="responseUid" placeholder="请选择……">
+								<el-option
+									v-for="item in responseUidList"
+									:key="item.value"
+									:label="item.label"
+									:value="item.value">
+								</el-option>
+							</el-select>
+						</el-form-item>
+					</el-form>
+				</div>
 			</div>
 		</el-main>
 	</el-container>
@@ -106,7 +124,24 @@ return {
 		architect: '',
 		constrOrg: '',
 		superUnit: ''
-	}
+	},
+	responseUidList: [{
+			value: '选项1',
+			label: '黄金糕'
+		}, {
+			value: '选项2',
+			label: '双皮奶'
+		}, {
+			value: '选项3',
+			label: '蚵仔煎'
+		}, {
+			value: '选项4',
+			label: '龙须面'
+		}, {
+			value: '选项5',
+			label: '北京烤鸭'
+		}],
+    responseUid: ''
 };
 },
 //监听属性 类似于data概念
@@ -142,24 +177,26 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 	margin-bottom: 20px;
 }
 .projectCreateTopCont{
-	display: flex;
+	/* display: flex;
 	flex-direction: row;
 	justify-content: space-between;
-	align-items: center;
+	align-items: center; */
 	width: 1200px;
 	margin: 0 auto;
 	position: relative;
 }
-.projectCreatePartOne{
+.projectCreatePart{
 	background-color: #ffffff;
 	width: 100%;
 	border-radius: 15px;
 	margin-top: 20px;
+	padding-bottom: 10px;
 }
-.createPartOneTop{
+.createPartTop{
 	height: 50px;
 	line-height: 50px;
 	width: 100%;
+	box-sizing: border-box;
 	background-color: #2f8cdb;
 	border-top-left-radius: 15px;
 	border-top-right-radius: 15px;
@@ -178,7 +215,6 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 	font-family: "PFz";
 	color: #333;
 	font-size: 14px;
-	width: 180px!important;
 }
 .projectCreateTopCont .el-form .el-form-item__content{
 	margin-left: 180px!important;
@@ -186,5 +222,8 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 .projectCreateTopCont .el-form .el-input__inner{
 	width: 389px;
 	height: 40px;
+}
+.projectCreateTopCont .el-select .el-input__inner{
+	width: 204px;
 }
 </style>
