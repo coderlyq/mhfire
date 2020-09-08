@@ -16,6 +16,7 @@ const TopController = ()=> import('@/views/Controller/topController');
 const Map = ()=> import('@/views/Controller/map');
 const Lay = ()=> import('@/views/Lay/lay');
 const SearchInfos = ()=> import('@/views/search/SearchInfos');
+const ProjectCreate =()=> import('@/views/ProjectControl/ProjectCreate');
 // 安装插件
 Vue.use(VueRouter)
 
@@ -89,6 +90,11 @@ const routes = [
 		path: '/Map',
 		name: 'Map',
 		component: Map
+	},
+	{
+		path: '/ProjectCreate',
+		name: 'ProjectCreate',
+		component: ProjectCreate
 	}
 ]
 

@@ -2,7 +2,7 @@
   <el-container class="eleList">
 		<el-header class="eleListTop">
 			项目列表
-			<el-button type="primary" icon="el-icon-circle-plus-outline">创建新项目</el-button>
+			<el-button type="primary" icon="el-icon-circle-plus-outline" @click="toCreateProject">创建新项目</el-button>
 		</el-header>
 		<el-main>
 			<ul>
@@ -75,6 +75,15 @@ import axios from 'axios'
 					name: 'ProjectList',
 					params: {
 						projectId:projectId
+					}
+				})
+			},
+			toCreateProject(){
+				document.querySelector('.leftSideBar').style.display = 'none';
+				this.$router.push({
+					path: '/ProjectCreate',
+					name: 'ProjectCreate',
+					params: {
 					}
 				})
 			}
