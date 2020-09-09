@@ -17,6 +17,7 @@ const Map = ()=> import('@/views/Controller/map');
 const Lay = ()=> import('@/views/Lay/lay');
 const SearchInfos = ()=> import('@/views/search/SearchInfos');
 const ProjectCreate =()=> import('@/views/ProjectControl/ProjectCreate');
+const PersonInfos =()=> import('@/views/person/PersonInfos');
 // 安装插件
 Vue.use(VueRouter)
 
@@ -95,6 +96,10 @@ const routes = [
 		path: '/ProjectCreate',
 		name: 'ProjectCreate',
 		component: ProjectCreate
+	},{
+		path: '/PersonInfos',
+		name: 'PersonInfos',
+		component: PersonInfos
 	}
 ]
 

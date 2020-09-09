@@ -88,6 +88,111 @@
 						</el-form-item>
 					</el-form>
 				</div>
+				<div class="projectCreatePart">
+					<div class="createPartTop">项目档案文件设置</div>
+					<el-form :label-position="labelPosition" label-width="220px" :model="formLabelAlign">
+						<el-form-item label="建筑消防设施平面布置图">
+							<el-upload
+							class="upload-demo"
+							action="https://jsonplaceholder.typicode.com/posts/"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:before-remove="beforeRemove"
+							multiple
+							:limit="1"
+							:on-exceed="handleExceed"
+							:file-list="fileList">
+								<el-button size="small" type="primary" plain>点击上传</el-button>
+							</el-upload>
+						</el-form-item>
+						<el-form-item label="建筑消防设施验收文件和产品">
+							<el-upload
+							class="upload-demo"
+							action="https://jsonplaceholder.typicode.com/posts/"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:before-remove="beforeRemove"
+							multiple
+							:limit="1"
+							:on-exceed="handleExceed"
+							:file-list="fileList">
+								<el-button size="small" type="primary" plain>点击上传</el-button>
+							</el-upload>
+						</el-form-item>
+						<el-form-item label="系统使用说明书">
+							<el-upload
+							class="upload-demo"
+							action="https://jsonplaceholder.typicode.com/posts/"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:before-remove="beforeRemove"
+							multiple
+							:limit="1"
+							:on-exceed="handleExceed"
+							:file-list="fileList">
+								<el-button size="small" type="primary" plain>点击上传</el-button>
+							</el-upload>
+						</el-form-item>
+						<el-form-item label="灭火及应急疏散预案">
+							<el-upload
+							class="upload-demo"
+							action="https://jsonplaceholder.typicode.com/posts/"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:before-remove="beforeRemove"
+							multiple
+							:limit="1"
+							:on-exceed="handleExceed"
+							:file-list="fileList">
+								<el-button size="small" type="primary" plain>点击上传</el-button>
+							</el-upload>
+						</el-form-item>
+						<el-form-item label="建筑消防设施系统图">
+							<el-upload
+							class="upload-demo"
+							action="https://jsonplaceholder.typicode.com/posts/"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:before-remove="beforeRemove"
+							multiple
+							:limit="1"
+							:on-exceed="handleExceed"
+							:file-list="fileList">
+								<el-button size="small" type="primary" plain>点击上传</el-button>
+							</el-upload>
+						</el-form-item>
+						<el-form-item label="系统调试记录">
+							<el-upload
+							class="upload-demo"
+							action="https://jsonplaceholder.typicode.com/posts/"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:before-remove="beforeRemove"
+							multiple
+							:limit="1"
+							:on-exceed="handleExceed"
+							:file-list="fileList">
+								<el-button size="small" type="primary" plain>预览</el-button>
+							</el-upload>
+							<el-upload
+							class="upload-demo"
+							action="https://jsonplaceholder.typicode.com/posts/"
+							:on-preview="handlePreview"
+							:on-remove="handleRemove"
+							:before-remove="beforeRemove"
+							multiple
+							:limit="1"
+							:on-exceed="handleExceed"
+							:file-list="fileList">
+								<el-button size="small" type="primary" plain>重新上传</el-button>
+							</el-upload>
+						</el-form-item>
+					</el-form>
+				</div>
+				<div class="projectCreatePart">
+					<el-button>取消</el-button>
+					<el-button type="primary" @click="onSubmit">立即创建</el-button>
+				</div>
 			</div>
 		</el-main>
 	</el-container>
@@ -177,10 +282,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 	margin-bottom: 20px;
 }
 .projectCreateTopCont{
-	/* display: flex;
-	flex-direction: row;
-	justify-content: space-between;
-	align-items: center; */
+
 	width: 1200px;
 	margin: 0 auto;
 	position: relative;
@@ -191,6 +293,31 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 	border-radius: 15px;
 	margin-top: 20px;
 	padding-bottom: 10px;
+}
+.projectCreatePart:nth-child(3) .el-form-item__label{
+	letter-spacing: 2px;
+}
+.projectCreatePart:nth-child(3) .el-button{
+	width: 134px;
+	height: 40px;
+}
+.projectCreatePart:nth-child(3) .el-form-item:nth-child(6) .upload-demo{
+	display: inline-block;
+	width: 134px;
+	margin-right: 20px;
+}
+.projectCreatePart:last-child{
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	margin-top: 30px;
+	background-color: rgba(255, 255, 255, 0.1);
+	margin-bottom: 160px;
+}
+.projectCreatePart:last-child .el-button{
+	width: 134px;
+	height: 40px;
 }
 .createPartTop{
 	height: 50px;

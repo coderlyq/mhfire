@@ -15,7 +15,8 @@
 						</ol>
 					</div>
 					<div class="layinfos">
-						<img class="layout" src="~@/assets/images/Lay/layout.png" alt="" @click="layout">
+						<img style="cursor:pointer" class="personIcon" src="~@/assets/images/Person/personIcon.png" alt="" @click="getPersonInfos"><span style="vertical-align:center;" class="personTel">13455……</span>
+						<img style="cursor:pointer" class="layout" src="~@/assets/images/Lay/layout.png" alt="" @click="layout">
 					</div>
 				</el-header>
 				<el-container>
@@ -190,6 +191,15 @@ export default {
 		};
 	},
 	methods: {
+		// 查看用户信息
+		getPersonInfos(){
+			this.$router.push({
+					path: '/PersonInfos',
+					name: 'PersonInfos',
+					params: {
+					}
+				})
+		},
 		// 退出登录
 		layout(){
 			this.token = ' ';
@@ -457,10 +467,6 @@ export default {
 #app {
 
 }
-.layinfos{
-	float: right;
-	margin-right: 4px;
-}
 .layout{
 	width: 23px;
 	height: 22px;
@@ -489,6 +495,10 @@ export default {
      font-family: 'PFz'; 
      src:url('~@/assets/font/苹方黑体-准-简.ttf') format('truetype');
 	}
+.layinfos{
+	float: right;
+	margin-right: 4px;
+}
 /* topbar样式 */
 .el-button{
 	text-align: center;
@@ -546,6 +556,13 @@ export default {
 	}
 	.el-main{
 		padding: 0;
+	}
+	.personTel{
+		font-family: "PF";
+		color: #fff;
+		font-size: 10px;
+		margin-left: 5px;
+		margin-right: 15px;
 	}
 	/* 登录页面样式 */
 .lay{
