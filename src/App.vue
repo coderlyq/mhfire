@@ -269,9 +269,9 @@ export default {
 				}
 			});
 		},
-		// 登录表单提交
+		// 登录表单提交a947d3b8cde84caba6a19ff05e376090
 		submitLay(){
-			this.token = "a947d3b8cde84caba6a19ff05e376090";
+			this.token = "b15a8d6b249a41adbe05a9e527dba813";
 			this.topBarBoolean = true;
 			this.asideBoolean = false;
 			this.isshowLay = false;
