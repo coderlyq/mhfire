@@ -271,7 +271,7 @@ export default {
 		},
 		// 登录表单提交a947d3b8cde84caba6a19ff05e376090
 		submitLay(){
-			this.token = "b15a8d6b249a41adbe05a9e527dba813";
+			this.token = "a947d3b8cde84caba6a19ff05e376090";
 			this.topBarBoolean = true;
 			this.asideBoolean = false;
 			this.isshowLay = false;
@@ -455,10 +455,10 @@ export default {
 	},//改变验证码图片
 	beforeCreate(){
 	},//生命周期 - 创建之前
-	activated(){
-		this.changeImgSrc();	
-		console.log('lkjljljljkl');
-	},
+	// activated(){
+	// 	this.changeImgSrc();	
+	// 	console.log('lkjljljljkl');
+	// },
 	created(){
 		if(localStorage.getItem('telLay')){
 			this.ruleFormLay.telLay = localStorage.getItem('telLay')

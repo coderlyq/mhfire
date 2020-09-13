@@ -23,7 +23,7 @@
 							<input type="text" name="linkMan" id="linkMan"></li>
 							<li><label for="phone">手机号码</label>
 							<input type="text" name="phone" id="phone" v-model="formCompany.phone"  ></li>
-							<li><label for="smsCode">验证码</label>
+							<li id="getTelCode"><label for="smsCode">验证码</label>
 							<input placeholder="短信验证码" name="smsCode" id="smsCode">
 							<el-button class="getCompanyTelcodeBtn" type="primary" @click="getTelCode">获取验证码</el-button></li>
 							<li><label for="linkEmail">联系邮箱</label>
@@ -44,7 +44,7 @@
 // 引入axios
 import axios from 'axios'
 // 引入qs对axios上传数据解析
-import Qs from 'qs'
+// import Qs from 'qs'
 export default {
 	name: 'CompanyCheck',
 	data(){
@@ -59,6 +59,50 @@ export default {
 				smsCode: ''
 			},
 		}
+	},
+	//生命周期 - 创建完成（可以访问当前this实例）
+	created() {
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：companyId（公司ID）,int类型，必填
+		axios.get('http://test.mhfire.cn/mhApi/Company/companyAuthCheck',{
+				params: {
+					token: document.querySelector('#token').innerText,
+					companyId: sessionStorage.getItem('companyId')
+				}
+		})
+		.then(function(response){
+				console.log(response);
+				let companyCheackStatus = response.data.data.Status;
+				//审核中
+				if(companyCheackStatus==0){
+					document.querySelector('#getTelCode').style.display = 'none';
+					document.querySelector('#uploadCompanyPic').style.backgroundColor = '#e5e5e5';
+					document.querySelector('#uploadCompanyPic').style.color = '#9f9f9f';
+					document.querySelector('#uploadCompanyPic').disabled = false;
+					document.querySelector('#commitUp').style.backgroundColor = '#e5e5e5';
+					document.querySelector('#commitUp').style.color = '#9f9f9f';
+					document.querySelector('#commitUp').disabled = false;
+					document.querySelector('#commitUp').innerText = '审核中';
+				}
+				//审核成功
+				if(companyCheackStatus==1){
+					document.querySelector('#getTelCode').style.display = 'none';
+					document.querySelector('#uploadCompanyPic').style.backgroundColor = '#e5e5e5';
+					document.querySelector('#uploadCompanyPic').style.color = '#9f9f9f';
+					document.querySelector('#uploadCompanyPic').disabled = false;
+					document.querySelector('#commitUp').style.backgroundColor = '#e5e5e5';
+					document.querySelector('#commitUp').style.color = '#9f9f9f';
+					document.querySelector('#commitUp').disabled = false;
+					document.querySelector('#commitUp').innerText = '审核成功';
+				}
+				//审核失败
+				if(companyCheackStatus==2){
+					document.querySelector('#commitUp').innerText = '审核失败，请重新提交';
+				}
+		})
+		.catch(function(error){
+				console.log(error);
+		});
 	},
 	methods:{
 		previewFile(){
@@ -86,37 +130,6 @@ export default {
 			if (file) {
 					reader.readAsDataURL(file);
 			}
-		},
-		onSubmitCompany(){
-			// 参数1：token(用户登录token)，string类型，必填
-			// 参数2：companyLogo(公司logo),以file类型上传，input中name为companyLogo，可以不上传
-			// 参数3：Address(公司地址)，string类型，必填
-			// 参数4：companyName(公司名称)，string类型，必填
-			// 参数5：linkMan(公司联系人)，string类型，必填
-			// 参数6：phone(手机号码)，string类型，必填
-			// 参数7：linkEmail(联系邮箱)，string类型，选填
-			// 参数8：licensePath(营业执照)，以file类型上传，input中name为licensePath，必须上传
-			// 参数9：smsCode(短信验证码)，int类型，必填
-			let postCompany = {
-				token: document.querySelector('#token').innerText,
-				companyLogo: document.querySelector('#uploadCompanyLogoinput').files[0],
-				Address: this.formCompany.Address,
-				companyName: this.formCompany.companyName,
-				linkMan: this.formCompany.linkMan,
-				phone: this.formCompany.phone,
-				linkEmail: this.formCompany.linkEmail,
-				licensePath: document.querySelector('#uploadCompanyPic').files[0],
-				smsCode:this.formCompany.smsCode,
-			}
-			console.log(postCompany);
-			axios.post('http://test.mhfire.cn/mhApi/Company/companyAuth',Qs.stringify(postCompany),{
-							headers: {'Content-Type': 'multipart/form-data'} //加上这个
-						}).then(function(response){
-					console.log(response);
-			})
-			.catch(function(error){
-					console.log(error);
-			});
 		},
 		//获取手机验证码
 		getTelCode(){
@@ -244,9 +257,23 @@ export default {
 .companyCheckTopCont input:hover{
 	outline: none;
 }
+.companyCheckTopCont .el-button--primary{
+	background-color: #2f8cdb;
+}
 .companyCheckTopCont label{
 	font-family: "PFxi";
 	font-size: 14px;
 	color: #333;
+}
+#commitUp{
+	border:none;
+	border-radius: 5px;
+	background-color: #2f8cdb;
+	cursor: pointer;
+	color: #ffffff;
+	box-sizing: 390px;
+	height: 50px;
+	line-height: 50px;
+	font-size: 14px;
 }
 </style>
