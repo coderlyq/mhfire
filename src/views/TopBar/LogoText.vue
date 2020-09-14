@@ -37,7 +37,7 @@ data() {
 			name: '监控控制台1',
 			path: '/TopController',
 			cont: 0,
-			isshow:true
+			isshow:false
 		},{
 			name: '认证申请',
 			path: '/Attestation',

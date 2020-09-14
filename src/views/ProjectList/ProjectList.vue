@@ -43,7 +43,7 @@
 						<li>消防安全负责人：{{projectDetail.baseInfo.ResponseMan}}</li>
 						<li>消防安全负责人电话：{{projectDetail.baseInfo.ResponseManTel}}</li>
 					</ol>
-					<el-button type="primary">修改基础信息<i class="el-icon-edit-outline el-icon--right"></i></el-button>
+					<el-button type="primary" @click="dialogBaseInfos=true">修改基础信息<i class="el-icon-edit-outline el-icon--right"></i></el-button>
 				</div>
 			</div>
 			<div class="ProjectListdevID">
@@ -183,30 +183,114 @@
 				</ol>
 			</div>
 			<el-dialog :visible.sync="dialogTableVisible" class="memberDialog" :before-close="handleClose" style="cellspacing:20px;cellpadding:20px;">
-					<div class="ProjectElementTop">项目下的员工</div>
-					<ol class="ProjectElementItem">
-						<li v-for="(item,index) in memberList" :key="item.UserName">
-							<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
-							<dl>
-								<dt></dt>
-								<dd>姓名：<span>{{item.UserName}}</span></dd>
-								<dd>电话：<span>{{item.UserPhone}}</span></dd>
-							</dl>
-							<el-button type="primary" :plain="true" @click="changeMember(index)" icon="el-icon-sort" style="transform:rotate(90deg);" circle></el-button>
+				<div class="ProjectElementTop">项目下的员工</div>
+				<ol class="ProjectElementItem">
+					<li v-for="(item,index) in memberList" :key="item.UserName">
+						<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
+						<dl>
+							<dt></dt>
+							<dd>姓名：<span>{{item.UserName}}</span></dd>
+							<dd>电话：<span>{{item.UserPhone}}</span></dd>
+						</dl>
+						<el-button type="primary" :plain="true" @click="changeMember(index)" icon="el-icon-sort" style="transform:rotate(90deg);" circle></el-button>
+					</li>
+				</ol>
+			</el-dialog>
+			<el-dialog :visible.sync="dialogBaseInfos" class="BaseInfosDialog" :before-close="handleClose" style="cellspacing:20px;cellpadding:20px;">
+					<ol class="BaseInfosCont">
+						<li>
+							<label for="projectNameF">项目名称</label>
+							<input id="projectNameF" v-model="projectDetail.baseInfo.ProjectName" name="projectName">
+						</li>
+						<li>
+							<label for="addressDetailF">项目地址</label>
+							<input id="addressDetailF" v-model="projectDetail.baseInfo.addressDetail" name="addressDetail">
+						</li>
+						<li>
+							<label for="buildingNameF">单体建筑名称</label>
+							<input id="buildingNameF" v-model="projectDetail.baseInfo.buildingName" name="buildingName">
+						</li>
+						<li>
+							<label for="structureTypeF">结构类型</label>
+							<input id="structureTypeF" v-model="projectDetail.baseInfo.structureType" name="structureType">
+						</li>
+						<li>
+							<label for="gradeF">耐火等级</label>
+							<input id="gradeF" v-model="projectDetail.baseInfo.grade" name="grade">
+						</li>
+						<li>
+							<label for="upFloorF">层数-地上</label>
+							<input id="upFloorF" v-model="projectDetail.baseInfo.upFloor" name="upFloor">
+						</li>
+						<li>
+							<label for="underFloorF">层数-地下</label>
+							<input id="underFloorF" v-model="projectDetail.baseInfo.underFloor" name="underFloor">
+						</li>
+						<li>
+							<label for="buildingHeightF">建筑高度（m）</label>
+							<input id="buildingHeightF" v-model="projectDetail.baseInfo.buildingHeight" name="buildingHeight">
+						</li>
+						<li>
+							<label for="floorSpaceF">占地面积1（m²）</label>
+							<input id="floorSpaceF" v-model="projectDetail.baseInfo.floorSpace" name="floorSpace">
+						</li>
+						<li>
+							<label for="upAcreageF">建筑面积-地上（m²）</label>
+							<input id="upAcreageF" v-model="projectDetail.baseInfo.upAcreage" name="upAcreage">
+						</li>
+						<li>
+							<label for="underAcreageF">建筑面积-地下（m²）</label>
+							<input id="underAcreageF" v-model="projectDetail.baseInfo.underAcreage" name="underAcreage">
+						</li>
+						<li>
+							<label for="builderF">建设单位</label>
+							<input id="builderF" v-model="projectDetail.baseInfo.builder" name="builder">
+						</li>
+						<li>
+							<label for="proLinkManF">建筑项目联系人</label>
+							<input id="proLinkManF" v-model="projectDetail.baseInfo.proLinkMan" name="proLinkMan">
+						</li>
+						<li>
+							<label for="proLinkManTelF">建筑项目联系人电话</label>
+							<input id="proLinkManTelF" v-model="projectDetail.baseInfo.proLinkManTel" name="proLinkManTel">
+						</li>
+						<li>
+							<label for="responseManF">消防安全负责人</label>
+							<input id="responseManF" v-model="projectDetail.baseInfo.responseMan" name="responseMan">
+						</li>
+						<li>
+							<label for="responseManTelF">消防安全负责人电话</label>
+							<input id="responseManTelF" v-model="projectDetail.baseInfo.responseManTel" name="responseManTel">
+						</li>
+						<li>
+							<label for="architectF">设计单位</label>
+							<input id="architectF" v-model="projectDetail.baseInfo.architect" name="architect">
+						</li>
+						<li>
+							<label for="constrOrgF">施工单位</label>
+							<input id="constrOrgF" v-model="projectDetail.baseInfo.constrOrg" name="constrOrg">
+						</li>
+						<li>
+							<label for="superUnitF">监理单位</label>
+							<input id="superUnitF" v-model="projectDetail.baseInfo.superUnit" name="superUnit">
 						</li>
 					</ol>
-				</el-dialog>
-				<el-dialog
-					title="提示"
-					:visible.sync="dialogChangeCollectorVisible"
-					width="30%"
-					:before-close="handleClose" class="changeCollectorDialog">
-					<el-input v-model="projectDetail.proCollector.CollectorNum" placeholder="请输入内容"></el-input>
 					<span slot="footer" class="dialog-footer">
-						<el-button @click="dialogVisible = false">取 消</el-button>
-						<el-button type="primary" @click="changeCollector">确 定</el-button>
+						<el-button @click="dialogBaseInfos = false">取 消</el-button>
+						<el-button type="primary" @click="BaseInfosSubmit">确 定</el-button>
 					</span>
-				</el-dialog>
+			</el-dialog>
+			<el-dialog
+				title="提示"
+				:visible.sync="dialogChangeCollectorVisible"
+				width="30%"
+				:before-close="handleClose" class="changeCollectorDialog">
+				<el-input v-model="projectDetail.proCollector.CollectorNum" placeholder="请输入内容"></el-input>
+				<span slot="footer" class="dialog-footer">
+					<el-button @click="dialogVisible = false">取 消</el-button>
+					<el-button type="primary" @click="changeCollector">确 定</el-button>
+				</span>
+			</el-dialog>
 		</el-main>
 	</el-container>
 </div>
@@ -225,6 +309,7 @@ components: {},
 data() {
 	//这里存放数据
 	return {
+		dialogBaseInfos: false,
 		options: [{
 			value: '选项1',
 			label: '黄金糕'
@@ -258,6 +343,74 @@ methods: {
 				done(_);
 			})
 			.catch(_ => {_});
+	},
+	BaseInfosSubmit(){
+		let _this = this;
+		let BaseInfosData = {};
+// 参数1：token(用户登录token)，string类型，必填
+// 参数2：companyId(公司ID),int类型，必填
+// 参数3：projectId(项目ID)，int类型，必填
+// 参数4：logo(项目logo)，可以不用上传
+// 参数5：projectName(项目名称)，string类型，必填
+// 参数6：buildingName(单位建筑名称)，string类型，选填
+// 参数7：addressDetail(项目地址)，string类型，必填
+// 参数8：structureType(结构类型)，string类型，选填
+// 参数9：grade(耐火等级)，string类型，选填
+// 参数10：upFloor(地上层数)，int类型，选填
+// 参数11：underFloor(地下层数)，int类型，选填
+// 参数12：buildingHeight(建筑高度)，float类型，选填
+// 参数13：floorSpace(占地面积)，选填
+// 参数14：upAcreage(建筑面积-地上)，选填
+// 参数15：underAcreage(建筑面积-地下)，选填
+// 参数16：builder(建筑单位)，string类型，选填
+// 参数17：proLinkMan(建筑项目联系人)，string类型，选填
+// 参数18：proLinkManTel(建筑项目联系人电话)，string类型，选填
+// 参数19：responseMan(消防安全负责人)，string类型，选填
+// 参数20：responseManTel(消防安全负责人电话)，string类型，选填
+// 参数21：architect(设计单位)，string类型，选填
+// 参数22：constrOrg(施工单位)，string类型，选填
+// 参数23：superUnit(监理单位)，string类型，选填
+		BaseInfosData.token = document.querySelector('#token').innerText;
+		BaseInfosData.companyId = sessionStorage.getItem('companyId');
+		BaseInfosData.projectId = sessionStorage.getItem('projectId');
+		
+		BaseInfosData.projectName = this.projectDetail.baseInfo.ProjectName;
+		BaseInfosData.buildingName = this.projectDetail.baseInfo.BuildingName;
+		BaseInfosData.addressDetail = this.projectDetail.baseInfo.AddressDetail;
+		BaseInfosData.structureType = this.projectDetail.baseInfo.StructureType;
+		BaseInfosData.grade = this.projectDetail.baseInfo.Grade;
+		BaseInfosData.upFloor = this.projectDetail.baseInfo.UpFloor;
+		BaseInfosData.underFloor = this.projectDetail.baseInfo.UnderFloor;
+		BaseInfosData.buildingHeight = this.projectDetail.baseInfo.BuildingHeight;
+		BaseInfosData.floorSpace = this.projectDetail.baseInfo.FloorSpace;
+		BaseInfosData.upAcreage = this.projectDetail.baseInfo.UpAcreage;
+		BaseInfosData.underAcreage = this.projectDetail.baseInfo.UnderAcreage;
+		BaseInfosData.builder = this.projectDetail.baseInfo.Builder;
+		BaseInfosData.proLinkMan = this.projectDetail.baseInfo.ProLinkMan;
+		BaseInfosData.proLinkManTel = this.projectDetail.baseInfo.ProLinkManTel;
+		BaseInfosData.responseMan = this.projectDetail.baseInfo.ResponseMan;
+		BaseInfosData.responseManTel = this.projectDetail.baseInfo.ResponseManTel;
+		BaseInfosData.architect = this.projectDetail.baseInfo.Architect;
+		BaseInfosData.constrOrg = this.projectDetail.baseInfo.ConstrOrg;
+		BaseInfosData.superUnit = this.projectDetail.baseInfo.SuperUnit;
+		console.log(BaseInfosData);
+		axios.post('http://test.mhfire.cn/mhApi/Project/updateProject',Qs.stringify(BaseInfosData),{
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+		})
+		.then(function(response){
+			console.log(response.data.ret_code);
+			if(response.data.ret_code == 0){
+				_this.dialogBaseInfos = false;
+				_this.$message({
+					message: '成功，基本信息更新成功',
+					type: 'success'
+				});
+			}
+		})
+		.catch(function(error){
+			console.log(error);
+			_this.$message.error('错了哦，基本信息更新失败');		
+		})
 	},
 	changeCollector(){
 		this.dialogChangeCollectorVisible = false;
@@ -402,6 +555,37 @@ created() {
 }
 </script>
 <style>
+.BaseInfosCont{
+	padding-left: 0;
+}
+	.BaseInfosCont li{
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-end;
+		align-items: center;
+		list-style: none;
+		width: 600px;
+		margin: 0 auto;
+		margin-top: 20px;
+	}
+	.BaseInfosCont label{
+		font-family: "PFz";
+		color: #333;
+		font-size: 14px;
+		width: 165px;
+		text-align: right;
+		letter-spacing: 2px;
+	}
+	.BaseInfosCont input{
+		width: 389px;
+		height: 40px;
+		background-color: #f6f6f6;
+		border: none;
+		outline: none;
+		margin-left: 20px;
+		border-radius: 5px;
+		text-indent: 20px;
+	}
 	.memberDialog>div{
 		width: 779px;
 	}

@@ -6,7 +6,7 @@
 			<div class="controllerAreaCont">
 				<div class="controllerTopleft">
 					事件概览
-					<el-button plain >查看地图监控</el-button>
+					<el-button plain @click="gotMap">查看地图监控</el-button>
 				</div>
 				<div class="controllerTopRight">
 					<el-select v-model="value" placeholder="全部项目">
@@ -136,7 +136,14 @@ export default {
 	watch: {},
 	//方法集合
 	methods: {
-    
+    gotMap(){
+		this.$router.push({
+				path: '/Map',
+				name: 'Map',
+				params: {
+				}
+			})
+		}
 	},
 	//生命周期 - 创建完成（可以访问当前this实例）
 	created() {

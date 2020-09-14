@@ -13,6 +13,7 @@
 						<div class="createPartTop">项目基础信息</div>
 						<div class="projectCreatePart">
 							<input type="text" name="token" :value="formFactory.token" style="display:none;">
+							<input type="text" name="companyId" :value="formFactory.companyId" style="display:none;">
 							<img class="projectLogo" id="projectLogo" src="~@/assets/images/Person/companylogo.png" alt="">
 							<input type="file" class="uploadprojectLogo" name="logo" id="uploadprojectLogoinput" style="display:none;" @change="changeprojectLogo">
 							<span class="projectLogo uploadprojectLogo" size="small" type="primary" @click="uploadprojectLogoinput">上传LOGO</span>
@@ -105,13 +106,13 @@
 									<input id="collectorNumberF" name="collectorNumber">
 								</li>
 								<li>
-									<label for="">FCLOUD消防员</label>
-									<select v-model="responseUid" placeholder="请选择……">
+									<label for="">FCLOUD消防云负责人设置</label>
+									<select v-model="responseUid" placeholder="请选择……" name="responseUid">
 										<option
-											v-for="item in responseUidList"
-											:key="item.value"
-											:label="item.label"
-											:value="item.value">
+											v-for="item in allMemberList"
+											:key="item.UserName"
+											:label="item.UserName"
+											:value="item.ID">
 										</option>
 									</select>
 								</li>
@@ -172,7 +173,8 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+// 引入axios
+import axios from 'axios'
 export default {
 name: 'ProjectCreate',
 //import引入的组件需要注入到对象中才能使用
@@ -182,6 +184,7 @@ data() {
 return {
 	formFactory:{
 		token: document.querySelector('#token').innerText,
+		companyId: sessionStorage.getItem('companyId'),
 		projectName: '',
 		buildingName: '',
 		addressDetail: '',
@@ -202,23 +205,8 @@ return {
 		constrOrg: '',
 		superUnit: ''
 	},
-	responseUidList: [{
-			value: '选项1',
-			label: '黄金糕'
-		}, {
-			value: '选项2',
-			label: '双皮奶'
-		}, {
-			value: '选项3',
-			label: '蚵仔煎'
-		}, {
-			value: '选项4',
-			label: '龙须面'
-		}, {
-			value: '选项5',
-			label: '北京烤鸭'
-		}],
-    responseUid: ''
+	allMemberList: {},
+	responseUid: ''
 };
 },
 //监听属性 类似于data概念
@@ -227,6 +215,14 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+	// had(){
+	// 	this.$router.push({
+	// 		path: '/List',
+	// 		name: 'List',
+	// 		params: {
+	// 		}
+	// 	})
+	// },
 	uploadprojectLogoinput(){
 		document.querySelector('#uploadprojectLogoinput').click();
 	},
@@ -270,8 +266,23 @@ methods: {
 	},
 },
 //生命周期 - 创建完成（可以访问当前this实例）
+// 参数1：token(用户登录token)，string类型，必填
+// 参数2：companyId(公司ID)，int类型，必填
 created() {
-
+	let _this = this;
+	axios.get('http://test.mhfire.cn/mhApi/Member/allMemberList',{
+			params: {
+				token: document.querySelector('#token').innerText,
+				companyId: sessionStorage.getItem('companyId')
+			}
+	})
+	.then(function(response){
+			console.log(response);
+			_this.allMemberList = response.data.data;
+	})
+	.catch(function(error){
+			console.log(error);
+	});
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
@@ -429,5 +440,9 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 	border:none;
 	border-radius: 5px;
 	outline: none;
+	cursor: pointer;
+}
+.projectCreateTopCont select option{
+	cursor: pointer;
 }
 </style>

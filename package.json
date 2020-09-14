@@ -13,6 +13,7 @@
     "css-loader": "^3.6.0",
     "echarts": "^4.8.0",
     "element-ui": "^2.13.2",
+    "jquery-form": "^4.3.0",
     "vue": "^2.6.11",
     "vue-baidu-map": "^0.21.22",
     "vue-router": "^3.3.4"
