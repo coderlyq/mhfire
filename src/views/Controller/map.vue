@@ -4,6 +4,8 @@
 </template>
 <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=bISSwqQz3RZ8jQI6KcMGO4DcUb0zKcjm" ></script>
 <script>
+// 引入axios
+import axios from 'axios'
 export default {
 	name: 'map',
 	data(){
@@ -54,12 +56,40 @@ export default {
 			],
 			eventList:[{
 				
-			}]
+			}],
+			MapCompanyInfos:{}
 		}
 	},
 	mounted () {
-		this.baiduMap()
+		// setTimeout(()=>this.baiduMap(),2000);
+		this.baiduMap();
 	},
+	//生命周期 - 创建完成（可以访问当前this实例）
+created() {
+	let _this = this;
+	// 参数1：token(用户登录token)，string类型，必填
+	// 参数2：companyId(公司id)，超级管理员进去，companyId值为0，企业管理员传具体公司id，int类型
+	// 参数3：projectName(项目名称)，string类型，选填
+	// 参数4：page(分页数)，int类型，选填，默认为1
+	let companyId = sessionStorage.getItem('companyId')=='undefined'?sessionStorage.getItem('companyId'):0;
+	console.log(companyId);
+	axios.get('http://test.mhfire.cn/mhApi/Project/getMapCompanyInfo',{
+			params: {
+				token: document.querySelector('#token').innerText,
+				companyId: companyId,
+				projectName: '',
+				page: ''
+			}
+	})
+	.then(function(response){
+			console.log(response);
+			console.log(response.data.data.result);
+			_this.MapCompanyInfos = response.data.data.result;
+	})
+	.catch(function(error){
+			console.log(error);
+	});
+},
 	methods: {
 		// 返回
 		goback () {
@@ -75,11 +105,25 @@ export default {
 
 			// 百度地图API功能	
 			var map = new BMap.Map("allmap");
-			map.centerAndZoom(new BMap.Point(113.932904,22.589275), 15);
-			var data_info = [[113.932904,22.589275,"汇聚创新园"],
-							[113.929872,22.581628,"中粮商务公园"],
-							[113.931625,22.582769,"华测检测大楼"]
-							];
+			let _that = this;
+			setTimeout(function(){
+				let data_info = [];
+				console.log('%%%%%%%%%%%%%%%%%%');
+				for(var k=0;k<_that.MapCompanyInfos.length;k++){
+					if(_that.MapCompanyInfos[k].Lltude){
+						let currentLltude = _that.MapCompanyInfos[k].Lltude.split(',');
+						console.log(currentLltude);
+						data_info[k] = [currentLltude[0],currentLltude[1],_that.MapCompanyInfos[k].ProjectName];
+					}
+				}
+				console.log('&&&&&&&&&&');
+				console.log(data_info);
+				console.log('*************');
+				map.centerAndZoom(new BMap.Point(113.936543,22.538501), 15);
+			// var data_info = [[113.932904,22.589275,"汇聚创新园"],
+			// 				[113.929872,22.581628,"中粮商务公园"],
+			// 				[113.931625,22.582769,"华测检测大楼"]
+			// 				];
 			var opts = {
 						width : 100,     // 信息窗口宽度
 						height: 10,     // 信息窗口高度
@@ -112,10 +156,9 @@ export default {
 				this.defaultAnchor = BMAP_ANCHOR_TOP_LEFT;
 				this.defaultOffset = new BMap.Size(24, 123);
 			}
-
 			// 通过JavaScript的prototype属性继承于BMap.Control
 			ZoomControl.prototype = new BMap.Control();
-			var lent = this.listArr;
+			var lent = _that.MapCompanyInfos;
 			// 自定义控件必须实现自己的initialize方法,并且将控件的DOM元素返回
 			// 在本方法中创建个div元素作为控件的容器,并将其添加到地图容器中
 			ZoomControl.prototype.initialize = function(map){
@@ -134,14 +177,14 @@ export default {
 				inputSearch.style.backgroundPosition = "292px center";
 				inputSearch.style.backgroundRepeat = "no-repeat";
 				div.appendChild(inputSearch);
-
-
 				// nodeEle.innerText = lent[i].name;
 				for(var i = 0;i<lent.length;i++){
+					console.log(i);
+					console.log(lent[i].ProjectName);
 					var nodeEles = document.createElement('div');
 					nodeEles.className = 'nodeEles';
 					nodeEles.style.position = 'relative';
-					nodeEles.dataset.id = lent[i].id;
+					nodeEles.dataset.id = lent[i].ID;
 					nodeEles.style.backgroundColor = "#fff";
 					nodeEles.style.boxSizing = "border-box"
 					nodeEles.style.width = "328px";
@@ -159,9 +202,9 @@ export default {
 					nodeTitle.style.color = "#000";
 					nodeTitle.style.fontSize = "14px";
 					// nodeEle.style.fontWeight = 'bolder';
-					nodeTitle.innerText = lent[i].name;
+					nodeTitle.innerText = lent[i].ProjectName;
 					//警情详情
-					if(lent[i].fire.flag){
+					// if(lent[i].fire.flag){
 						var nodeDL = document.createElement('dl');
 						nodeDL.style.color = "#a1a1a1";
 						nodeDL.style.margin = 0;
@@ -170,38 +213,53 @@ export default {
 						nodeDL.appendChild(nodeDT);
 						nodeDT.style.color = "#666";
 						nodeDT.style.fontFamily = "PFzc";
-						nodeDT.innerText = lent[i].fire.fireName;
+						nodeDT.innerText = '火灾自动报警系统';
 						nodeDT.style.marginBottom = "8px";
-						for (const key in lent[i].fire.conts) {
+						for (const key in lent[i].warningSystem) {
 							var nodeDD = document.createElement('dd');
 							nodeDD.style.display = "inline-block";
 							nodeDD.style.marginLeft = 0;
 							nodeDD.style.marginRight = "20px";
-							nodeDD.appendChild(document.createTextNode(key+":"));
+							let keyText = '';
+							switch(key){
+								case 'fireCount':
+									keyText = '火警';
+									break;
+								case 'troubleCount':
+									keyText = '故障';
+									break;
+								case 'startCount':
+									keyText = '启动';
+									break;
+								case 'feedBackCount':
+									keyText = '反馈';
+									break;
+							}
+							nodeDD.appendChild(document.createTextNode(keyText+":"));
 							var nodeDDSpanColor = '';
 							switch(key){
-								case '火警':
+								case 'fireCount':
 									nodeDDSpanColor = '#fe3939';
 									break;
-								case '故障':
+								case 'troubleCount':
 									nodeDDSpanColor = '#fe8a27';
 									break;
-								case '启动':
+								case 'startCount':
 									nodeDDSpanColor = '#2dcdcf';
 									break;
-								case '反馈':
+								case 'feedBackCount':
 									nodeDDSpanColor = '#29ca74';
 									break;
 							}
 							var nodeDDSpan = document.createElement('span');
 							nodeDDSpan.style.color = nodeDDSpanColor;
-							nodeDDSpan.innerText = lent[i].fire.conts[key];
+							nodeDDSpan.innerText = lent[i].warningSystem[key];
 							nodeDD.appendChild(nodeDDSpan);
 							nodeDL.appendChild(nodeDD);
 						}
-					}
+					// }
 //水压水位详情
-					if(lent[i].water.flag){
+					// if(lent[i].water.flag){
 						var nodewaterDL = document.createElement('dl');
 						nodewaterDL.style.color = "#a1a1a1";
 						nodewaterDL.style.margin = 0;
@@ -210,45 +268,67 @@ export default {
 						nodewaterDL.appendChild(nodewaterDT);
 						nodewaterDT.style.color = "#666";
 						nodewaterDT.style.fontFamily = "PFzc";
-						nodewaterDT.innerText = lent[i].water.waterName;
+						nodewaterDT.innerText = '水系统';
 						nodewaterDT.style.marginBottom = "8px";
-						for (const key in lent[i].water.conts) {
-							var nodewaterDD = document.createElement('dd');
-							nodewaterDD.style.display = "inline-block";
-							nodewaterDD.style.marginLeft = 0;
-							nodewaterDD.style.marginRight = "20px";
-							nodewaterDD.appendChild(document.createTextNode(key+":"));
-							var nodewaterDDSpanColor = '';
-							switch(key){
-								case '报警':
-									nodewaterDDSpanColor = '#fe3939';
-									break;
-								case '故障':
-									nodewaterDDSpanColor = '#fe8a27';
-									break;
-							}
-							var nodewaterDDSpan = document.createElement('span');
-							nodewaterDDSpan.style.color = nodewaterDDSpanColor;
-							nodewaterDDSpan.innerText = lent[i].water.conts[key];
-							nodewaterDD.appendChild(nodewaterDDSpan);
-							nodewaterDL.appendChild(nodewaterDD);
-						}
-					}
-					var mapSelectIcon = document.createElement('img');
-					mapSelectIcon.src = require("../../assets/images/Controller/mapSelectIcon.png");
-					mapSelectIcon.style.position = 'absolute';
-					mapSelectIcon.style.right = "20px";
-					mapSelectIcon.style.top = "12px";
+						for (const key in lent[i].waterSystem) {
+							if(key!=='waterLevelfireCount'&&key!=='waterLevelPresstroubleCount'){
+								var nodewaterDD = document.createElement('dd');
+								nodewaterDD.style.display = "inline-block";
+								nodewaterDD.style.marginLeft = 0;
+								nodewaterDD.style.marginRight = "20px";
+								let keyText = '';
+								switch(key){
+									case 'waterPressfireCount':
+										keyText = '报警';
+										break;
+									case 'waterPresstroubleCount':
+										keyText = '故障';
+										break;
+								}
+								nodewaterDD.appendChild(document.createTextNode(keyText+":"));
+								var nodewaterDDSpanColor = '';
+								switch(key){
+									case 'waterPressfireCount':
+										nodewaterDDSpanColor = '#fe3939';
+										break;
+									case 'waterPresstroubleCount':
+										nodewaterDDSpanColor = '#fe8a27';
+										break;
+								}
+								var nodewaterDDSpan = document.createElement('span');
+								nodewaterDDSpan.style.color = nodewaterDDSpanColor;
+								let textConts = 0;
 
-					div.appendChild(nodeEles);
-					nodeEles.appendChild(nodeTitle);
-					nodeEles.appendChild(nodeDL);
-					nodeEles.appendChild(nodewaterDL);
-					nodeEles.appendChild(mapSelectIcon);
-					nodeEles.addEventListener('click',function(e){
-						console.log(this.dataset.id);
-					});
-				}
+								switch(key){
+									case 'waterPressfireCount':
+										textConts = lent[i].waterSystem.waterPressfireCount+lent[i].waterSystem.waterLevelfireCount;
+										break;
+									case 'waterPresstroubleCount':
+										textConts = lent[i].waterSystem.waterPresstroubleCount+lent[i].waterSystem.waterLevelPresstroubleCount;
+										break;
+								}
+								nodewaterDDSpan.innerText = textConts;
+								nodewaterDD.appendChild(nodewaterDDSpan);
+								nodewaterDL.appendChild(nodewaterDD);
+							}
+						}
+						var mapSelectIcon = document.createElement('img');
+						mapSelectIcon.src = require("../../assets/images/Controller/mapSelectIcon.png");
+						mapSelectIcon.style.position = 'absolute';
+						mapSelectIcon.style.right = "20px";
+						mapSelectIcon.style.top = "12px";
+
+						div.appendChild(nodeEles);
+						nodeEles.appendChild(nodeTitle);
+						nodeEles.appendChild(nodeDL);
+						nodeEles.appendChild(nodewaterDL);
+						nodeEles.appendChild(mapSelectIcon);
+						nodeEles.addEventListener('click',function(e){
+							console.log(this.dataset.id);
+						});
+					}
+					
+				// }
 
 
 				// 添加文字说明
@@ -310,6 +390,8 @@ export default {
 			var myZoomCtrl = new ZoomControl();
 			// 添加到地图当中
 			map.addControl(myZoomCtrl);
+			},2000);
+
 		}
 	}
 }
