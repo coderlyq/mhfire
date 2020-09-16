@@ -116,9 +116,6 @@ created() {
 						data_info[k] = [currentLltude[0],currentLltude[1],_that.MapCompanyInfos[k].ProjectName];
 					}
 				}
-				console.log('&&&&&&&&&&');
-				console.log(data_info);
-				console.log('*************');
 				map.centerAndZoom(new BMap.Point(113.936543,22.538501), 15);
 			// var data_info = [[113.932904,22.589275,"汇聚创新园"],
 			// 				[113.929872,22.581628,"中粮商务公园"],
@@ -271,52 +268,47 @@ created() {
 						nodewaterDT.innerText = '水系统';
 						nodewaterDT.style.marginBottom = "8px";
 						for (const key in lent[i].waterSystem) {
-							if(key!=='waterLevelfireCount'&&key!=='waterLevelPresstroubleCount'){
-								var nodewaterDD = document.createElement('dd');
-								nodewaterDD.style.display = "inline-block";
-								nodewaterDD.style.marginLeft = 0;
-								nodewaterDD.style.marginRight = "20px";
-								let keyText = '';
-								switch(key){
-									case 'waterPressfireCount':
-										keyText = '报警';
-										break;
-									case 'waterPresstroubleCount':
-										keyText = '故障';
-										break;
-								}
-								nodewaterDD.appendChild(document.createTextNode(keyText+":"));
-								var nodewaterDDSpanColor = '';
-								switch(key){
-									case 'waterPressfireCount':
-										nodewaterDDSpanColor = '#fe3939';
-										break;
-									case 'waterPresstroubleCount':
-										nodewaterDDSpanColor = '#fe8a27';
-										break;
-								}
-								var nodewaterDDSpan = document.createElement('span');
-								nodewaterDDSpan.style.color = nodewaterDDSpanColor;
-								let textConts = 0;
-
-								switch(key){
-									case 'waterPressfireCount':
-										textConts = lent[i].waterSystem.waterPressfireCount+lent[i].waterSystem.waterLevelfireCount;
-										break;
-									case 'waterPresstroubleCount':
-										textConts = lent[i].waterSystem.waterPresstroubleCount+lent[i].waterSystem.waterLevelPresstroubleCount;
-										break;
-								}
-								nodewaterDDSpan.innerText = textConts;
-								nodewaterDD.appendChild(nodewaterDDSpan);
-								nodewaterDL.appendChild(nodewaterDD);
+							var nodewaterDD = document.createElement('dd');
+							nodewaterDD.style.display = "inline-block";
+							nodewaterDD.style.marginLeft = 0;
+							nodewaterDD.style.marginRight = "20px";
+							let keyText = '';
+							switch(key){
+								case 'waterFireCount':
+									keyText = '报警';
+									break;
+								case 'waterTroubleCount':
+									keyText = '故障';
+									break;
 							}
+							nodewaterDD.appendChild(document.createTextNode(keyText+":"));
+							var nodewaterDDSpanColor = '';
+							switch(key){
+								case 'waterFireCount':
+									nodewaterDDSpanColor = '#fe3939';
+									break;
+								case 'waterTroubleCount':
+									nodewaterDDSpanColor = '#fe8a27';
+									break;
+							}
+							var nodewaterDDSpan = document.createElement('span');
+							nodewaterDDSpan.style.color = nodewaterDDSpanColor;
+							nodewaterDDSpan.innerText = lent[i].waterSystem[key];
+							nodewaterDD.appendChild(nodewaterDDSpan);
+							nodewaterDL.appendChild(nodewaterDD);
 						}
 						var mapSelectIcon = document.createElement('img');
 						mapSelectIcon.src = require("../../assets/images/Controller/mapSelectIcon.png");
 						mapSelectIcon.style.position = 'absolute';
 						mapSelectIcon.style.right = "20px";
 						mapSelectIcon.style.top = "12px";
+						mapSelectIcon.dataset.Lltude = lent[i].Lltude;
+						mapSelectIcon.addEventListener('click',function(e){
+							console.log(this.dataset.Lltude);
+							let clickLltude = this.dataset.Lltude.split(',');
+							map.panTo(new BMap.Point(clickLltude[0],clickLltude[1]));
+							map.setZoom(18);
+						});
 
 						div.appendChild(nodeEles);
 						nodeEles.appendChild(nodeTitle);
