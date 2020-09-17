@@ -57,7 +57,8 @@ export default {
 			eventList:[{
 				
 			}],
-			MapCompanyInfos:{}
+			MapCompanyInfos: {},
+			mapCompanyList: {}
 		}
 	},
 	mounted () {
@@ -85,6 +86,7 @@ created() {
 			console.log(response);
 			console.log(response.data.data.result);
 			_this.MapCompanyInfos = response.data.data.result;
+			_this.mapCompanyList = response.data.data;
 	})
 	.catch(function(error){
 			console.log(error);
@@ -347,9 +349,9 @@ created() {
 				topRightDiv.style.right = "24px";
 				topRightDiv.style.top = "125px";
 				topRightDiv.addEventListener('click',function(){
-					document.getElementById('navContsNum').innerText = 100;
+					// document.getElementById('navContsNum').innerText = 100;
 				});
-
+//增加总数显示
 				var topRightNavConts = document.createElement('div');
 				topRightNavConts.style.margin = "0 auto";
 				topRightNavConts.style.width = "318px";
@@ -359,9 +361,22 @@ created() {
 				topRightNavConts.style.marginTop = "20px";
 				topRightNavConts.style.marginBottom = "20px";
 				topRightNavConts.style.backgroundColor = "#ffffff";
-				topRightNavConts.innerHTML = "火警故障事件<span id='navContsNum'>10</span>条";
-
+				topRightNavConts.innerHTML = "火警故障事件<span id='navContsNum'>"+_that.mapCompanyList.totalNum+"</span>条";
+				//增加公司事件列表
+				var topRightDivOl = document.createElement('ol');
+				for(var oli=0;oli<lent.length;oli++){
+					if(lent[oli].warningSystem.fireCount>0){
+						var topRightDivOlli = document.createElement("li");
+						// var topRightDivOlliImg = document.createElement('img');
+						// topRightDivOlliImg.src = require('../../assets/images/Controller/controllerFire.png');
+						// topRightDivOlli.appendChild(topRightDivOlliImg);
+						topRightDivOlli.style.listStyleType = "none";
+						topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerFire.png')+"' />报警系统："+lent[oli].ProjectName+"有火警"+lent[oli].warningSystem.fireCount+"条";
+						topRightDivOl.appendChild(topRightDivOlli);
+					}
+				}
 				topRightDiv.appendChild(topRightNavConts);
+				topRightDiv.appendChild(topRightDivOl);
 				var topRightAlert = document.createElement('div');
 				topRightAlert.style.width = "358px";
 				topRightAlert.style.height = "196px";
