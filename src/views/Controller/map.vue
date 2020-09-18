@@ -344,10 +344,12 @@ created() {
 				var topRightDiv = document.createElement('div');
 				topRightDiv.style.width = "366px";
 				topRightDiv.style.minHeight = "200px";
-				topRightDiv.style.backgroundColor = "rgba(255,255,255,.5)";
+				topRightDiv.style.backgroundColor = "rgba(255,255,255,.7)";
 				topRightDiv.style.position = 'absolute';
 				topRightDiv.style.right = "24px";
 				topRightDiv.style.top = "125px";
+				topRightDiv.style.paddingBottom = "30px";
+				topRightDiv.style.borderRadius = "5px";
 				topRightDiv.addEventListener('click',function(){
 					// document.getElementById('navContsNum').innerText = 100;
 				});
@@ -361,24 +363,72 @@ created() {
 				topRightNavConts.style.marginTop = "20px";
 				topRightNavConts.style.marginBottom = "20px";
 				topRightNavConts.style.backgroundColor = "#ffffff";
+				topRightNavConts.style.fontSize = "14px";
+				topRightNavConts.style.color = "#333";
+				topRightNavConts.style.fontFamily = 'PFz';
 				topRightNavConts.innerHTML = "火警故障事件<span id='navContsNum'>"+_that.mapCompanyList.totalNum+"</span>条";
 				//增加公司事件列表
 				var topRightDivOl = document.createElement('ol');
+				topRightDivOl.style.paddingLeft = 0;
+				topRightDivOl.style.cursor = "pointer";
+				topRightDivOl.style.maxHeight = "300px";
+				topRightDivOl.style.overflow = "auto";
+				topRightDivOl.style.width = "318px";
+				topRightDivOl.style.margin = "0 auto";
 				for(var oli=0;oli<lent.length;oli++){
-					if(lent[oli].warningSystem.fireCount>0){
-						var topRightDivOlli = document.createElement("li");
-						// var topRightDivOlliImg = document.createElement('img');
-						// topRightDivOlliImg.src = require('../../assets/images/Controller/controllerFire.png');
-						// topRightDivOlli.appendChild(topRightDivOlliImg);
-						topRightDivOlli.style.listStyleType = "none";
-						topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerFire.png')+"' />报警系统："+lent[oli].ProjectName+"有火警"+lent[oli].warningSystem.fireCount+"条";
+					for(var oliwarn in lent[oli].warningSystem){
+						if(lent[oli].warningSystem[oliwarn]>0){
+							var topRightDivOlli = document.createElement("li");
+							topRightDivOlli.style.listStyleType = "none";
+							if(oliwarn=='fireCount'){
+								topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerFire.png')+"'  style='margin-right:10px;margin-left:10px;'/>报警系统："+lent[oli].ProjectName+"有火警"+lent[oli].warningSystem[oliwarn]+"条";
+							}
+							if(oliwarn=='feedBackCount'){
+								topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"'  style='margin-right:10px;margin-left:10px;'/>报警系统："+lent[oli].ProjectName+"有反馈"+lent[oli].warningSystem[oliwarn]+"条";
+							}
+							if(oliwarn=='startCount'){
+								topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"'  style='margin-right:10px;margin-left:10px;'/>报警系统："+lent[oli].ProjectName+"有启动"+lent[oli].warningSystem[oliwarn]+"条";
+							}
+							if(oliwarn=='troubleCount'){
+								topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"'  style='margin-right:10px;margin-left:10px;'/>报警系统："+lent[oli].ProjectName+"有火警"+lent[oli].warningSystem[oliwarn]+"条";
+							}
+							
+						}
+						topRightDivOlli.style.color = "#666";
+						topRightDivOlli.style.fontFamily = "PFz";
+						topRightDivOlli.style.fontSize = "12px";
+						topRightDivOlli.style.height = "40px";
+						topRightDivOlli.style.lineHeight = "40px";
+						topRightDivOlli.style.backgroundColor = "#fff";
+						topRightDivOlli.style.borderRadius = "5px";
+						topRightDivOlli.style.marginBottom = '20px';
+						topRightDivOl.appendChild(topRightDivOlli);
+					}
+					for(var oliwater in lent[oli].waterSystem){
+						if(lent[oli].waterSystem[oliwater]>0){
+							var topRightDivOlli = document.createElement("li");
+							topRightDivOlli.style.listStyleType = "none";
+							if(oliwater=='waterFireCount'){
+								topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"'  style='margin-right:10px;margin-left:10px;'/>水系统："+lent[oli].ProjectName+"有水压/水位报警"+lent[oli].warningSystem[oliwater].fireCount+"条";
+							}
+							if(oliwater=='waterTroubleCount'){
+								topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"' style='margin-right:10px;margin-left:10px;'/>水系统："+lent[oli].ProjectName+"有水压/水位故障"+lent[oli].warningSystem[oliwater].fireCount+"条";
+							}
+						}
+						topRightDivOlli.style.color = "#666";
+						topRightDivOlli.style.fontFamily = "PFz";
+						topRightDivOlli.style.fontSize = "12px";
+						topRightDivOlli.style.height = "40px";
+						topRightDivOlli.style.lineHeight = "40px";
+						topRightDivOlli.style.backgroundColor = "#fff";
+						topRightDivOlli.style.borderRadius = "5px";
 						topRightDivOl.appendChild(topRightDivOlli);
 					}
 				}
 				topRightDiv.appendChild(topRightNavConts);
 				topRightDiv.appendChild(topRightDivOl);
 				var topRightAlert = document.createElement('div');
-				topRightAlert.style.width = "358px";
+				topRightAlert.style.width = "318px";
 				topRightAlert.style.height = "196px";
 				topRightAlert.style.backgroundColor = "rgba(255,255,255,.5)";
 				topRightAlert.style.position = 'absolute';
