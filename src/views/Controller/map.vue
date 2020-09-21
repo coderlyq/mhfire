@@ -1,3 +1,38 @@
+Skip to content
+Search or jump to…
+
+Pull requests
+Issues
+Marketplace
+Explore
+ 
+@coderlyq 
+coderlyq
+/
+mhfire
+1
+00
+Code
+Issues
+Pull requests
+Actions
+Projects
+Wiki
+Security
+1
+Insights
+Settings
+mhfire/src/views/Controller/map.vue
+@coderlyq
+coderlyq 2020.9.20
+Latest commit 694b9cb 11 hours ago
+ History
+ 1 contributor
+We found a potential security vulnerability in one of your dependencies.
+Only the owner of this repository can see this message.
+
+505 lines (492 sloc)  18.5 KB
+  
 <template>
 	<baidu-map class="bm-view" id="allmap">
 	</baidu-map>
@@ -57,7 +92,7 @@ export default {
 			eventList:[{
 				
 			}],
-			mapEventDetail: {},
+			mapEventDetail: '',
 			MapCompanyInfos: {},
 			mapCompanyList: {}
 		}
@@ -104,8 +139,6 @@ created() {
 			// map.centerAndZoom(point, 12)
 			// var marker = new BMap.Marker(point) // 创建标注
 			// map.addOverlay(marker)    // 将标注添加到地图中
-
-
 			// 百度地图API功能	
 			var map = new BMap.Map("allmap");
 			let _that = this;
@@ -149,7 +182,6 @@ created() {
 				var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象 
 				map.openInfoWindow(infoWindow,point); //开启信息窗口
 			}
-
 			// 定义一个控件类,即function
 			function ZoomControl(){
 				// 默认停靠位置和偏移量
@@ -165,6 +197,8 @@ created() {
 				// 创建一个DOM  topLeft元素
 				var div = document.createElement("div");
 				div.style.fontSize = '14px';
+				div.style.maxHeight = "620px";
+				div.style.overflow = 'auto';
 				var inputSearch = document.createElement("input");
 				inputSearch.style.display = "block";
 				inputSearch.style.width = "328px";
@@ -312,7 +346,6 @@ created() {
 							map.panTo(new BMap.Point(clickLltude[0],clickLltude[1]));
 							map.setZoom(18);
 						});
-
 						div.appendChild(nodeEles);
 						nodeEles.appendChild(nodeTitle);
 						nodeEles.appendChild(nodeDL);
@@ -324,8 +357,6 @@ created() {
 					}
 					
 				// }
-
-
 				// 添加文字说明
 				// div.appendChild(document.createTextNode(lent));
 				// 设置样式
@@ -333,14 +364,13 @@ created() {
 				div.style.backgroundColor = "white";
 				div.style.width = "380px";
 				div.style.height = "623px";
-				div.style.backgroundColor = "rgba(255,255,255,.5)";
+				div.style.backgroundColor = "rgba(255,255,255,.7)";
 				div.style.borderRadius = "10px";
 				map.enableScrollWheelZoom(true);
 				map.addEventListener("click",function(e){
 					// alert(e.point.lng + "," + e.point.lat);
 					map.setZoom(18);
 				});
-
 				//map topRight 
 				var topRightDiv = document.createElement('div');
 				topRightDiv.style.width = "366px";
@@ -408,11 +438,41 @@ created() {
 							topRightDivOlli.style.marginBottom = '20px';
 							topRightDivOlli.dataset.eventID = lent[oli].ID;
 							topRightDivOlli.dataset.clickEventType = clickEventType;
+							topRightDivOlli.dataset.eventCount = lent[oli].warningSystem[oliwarn];
 							topRightDivOlli.addEventListener('click',function(even){
-								console.log(even.target.dataset.eventID);
-								console.log(even.target.dataset.clickEventType);
+								let _this = this;
+								let companyId = sessionStorage.getItem('companyId');
+								let projectId = even.target.dataset.eventID;
+								let type = even.target.dataset.clickEventType;
+								let eventCount = even.target.dataset.eventCount;
+								axios.get('http://test.mhfire.cn/mhApi/Project/getMapEventDetail',{
+								// 参数1：token(用户登录token)，string类型，必填
+								// 参数2：companyId(公司ID)，int类型，必填
+								// 参数3：projectId(项目ID)，int类型，必填
+								// 参数3：type(事件类型)1火警，2故障，3反馈，4启动，int类型，必填
+									params: {
+										token: document.querySelector('#token').innerText,
+										companyId: companyId,
+										projectId: projectId,
+										type: type
+									}
+								})
+								.then(function(response){
+									console.log(response.data.data);
+									_that.mapEventDetail = response.data.data;
+									console.log('##############');
+									console.log(_that.mapEventDetail);
+									document.querySelector('#alertCurrentNum').innerText = 1;
+									document.querySelector('#topRightAlertTopRightContRight').innerText = _that.mapEventDetail.eventInfo.length;
+									document.getElementById('devideName').innerText = _that.mapEventDetail.eventInfo[0].Order;
+									document.querySelector('#projectMember').innerText = _that.mapEventDetail.UserName;
+									document.querySelector('#projectTel').innerText = _that.mapEventDetail.UserPhone;
+									document.querySelector('#projectAddress').innerText = _that.mapEventDetail.AddressDetail;
+								})
+								.catch(function(error){
+										console.log(error);
+								})
 								document.querySelector('#topRightAlert').style.display = 'block';
-
 							});
 							topRightDivOl.appendChild(topRightDivOlli);
 						}
@@ -441,6 +501,7 @@ created() {
 								let companyId = sessionStorage.getItem('companyId');
 								let projectId = even.target.dataset.eventID;
 								let type = even.target.dataset.clickEventType;
+								let eventCount = even.target.dataset.eventCount;
 								axios.get('http://test.mhfire.cn/mhApi/Project/getMapEventDetail',{
 								// 参数1：token(用户登录token)，string类型，必填
 								// 参数2：companyId(公司ID)，int类型，必填
@@ -452,14 +513,22 @@ created() {
 										projectId: projectId,
 										type: type
 									}
-							})
-							.then(function(response){
-								console.log(response.data.data);
-								_this.mapEventDetail = response.data.data;
-							})
-							.catch(function(error){
-									console.log(error);
-							})
+								})
+								.then(function(response){
+									console.log(response.data.data);
+									_that.mapEventDetail = response.data.data;
+									console.log('##############');
+									console.log(_that.mapEventDetail);
+									document.querySelector('#alertCurrentNum').innerText = 1;
+									document.querySelector('#topRightAlertTopRightContRight').innerText = _that.mapEventDetail.eventInfo.length;
+									document.getElementById('devideName').innerText = _that.mapEventDetail.eventInfo[0].Order;
+									document.querySelector('#projectMember').innerText = _that.mapEventDetail.UserName;
+									document.querySelector('#projectTel').innerText = _that.mapEventDetail.UserPhone;
+									document.querySelector('#projectAddress').innerText = _that.mapEventDetail.AddressDetail;
+								})
+								.catch(function(error){
+										console.log(error);
+								})
 								document.querySelector('#topRightAlert').style.display = 'block';
 							});
 							topRightDivOl.appendChild(topRightDivOlli);
@@ -472,12 +541,76 @@ created() {
 				topRightAlert.id = 'topRightAlert';
 				topRightAlert.style.width = "318px";
 				topRightAlert.style.height = "196px";
-				topRightAlert.style.backgroundColor = "rgba(255,255,255,.5)";
+				topRightAlert.style.borderRadius = "5px";
+				topRightAlert.style.backgroundColor = "rgba(255,255,255,.7)";
 				topRightAlert.style.position = 'absolute';
 				topRightAlert.style.right = "405px";
 				topRightAlert.style.top = "168px";
 				topRightAlert.style.display = 'none';
-
+				var topRightAlertTopRight = document.createElement('div');
+				topRightAlertTopRight.style.width = "85px";
+				topRightAlertTopRight.style.height = "10px";
+				topRightAlertTopRight.style.lineHeight = "10px";
+				topRightAlertTopRight.style.position = "absolute";
+				topRightAlertTopRight.style.right = 0;
+				topRightAlertTopRight.style.top = "30px";
+				var topRightAlertOl = document.createElement('ol');
+				topRightAlertOl.style.listStyle = 'none';
+				topRightAlertOl.innerHTML = "<li style='margin-top:30px;font-size:14px;color:"+"#333"+"font-family:"+"PFz"+"'>报警设备：<span id='devideName' style='color:"+"#666"+"'>aadaa</span></li><li style='margin-top:20px;font-size:14px;color:"+"#333"+"font-family:"+"PFz"+"'>项目负责人：<span id='projectMember' style='color:"+"#666"+"'></span></li><li style='margin-top:20px;font-size:14px;color:"+"#333"+"font-family:"+"PFz"+"'>负责人电话：<span id='projectTel' style='color:"+"#666"+"'></span></li><li style='margin-top:20px;font-size:14px;color:"+"#333"+"font-family:"+"PFz"+"'>项目地址：<span id='projectAddress' style='color:"+"#666"+"'></span></li>";
+				var topRightAlertTopRightImgLeft = document.createElement('img');
+				topRightAlertTopRightImgLeft.id = "topRightAlertTopRightImgLeft";
+				topRightAlertTopRightImgLeft.src = require("../../assets/images/Controller/mark.png");
+				topRightAlertTopRightImgLeft.style.cursor = "pointer";
+				topRightAlertTopRightImgLeft.style.height = '5px';
+				topRightAlertTopRightImgLeft.style.transform = "rotate(90deg)";
+				topRightAlertTopRightImgLeft.addEventListener('click',function(){
+					let eventInfoCount = _that.mapEventDetail.eventInfo.length;
+					let alertCurrentNum = document.getElementById('alertCurrentNum').innerText;
+					if(alertCurrentNum>1){
+						alertCurrentNum--;
+						document.getElementById('alertCurrentNum').innerText = alertCurrentNum;
+						document.getElementById('devideName').innerText = _that.mapEventDetail.eventInfo[--alertCurrentNum].Order;
+					}
+				});
+				topRightAlertTopRight.appendChild(topRightAlertTopRightImgLeft);
+				var topRightAlertTopRightCont = document.createElement('div');
+				topRightAlertTopRightCont.style.backgroundColor = "rgba(255,255,255,.7)";
+				topRightAlertTopRightCont.style.fontFamily = "PFz";
+				topRightAlertTopRightCont.style.fontSize = "12px";
+				topRightAlertTopRightCont.style.width = '35px';
+				topRightAlertTopRightCont.style.textAlign = "center";
+				topRightAlertTopRightCont.style.display = 'inline-block';
+				var topRightAlertTopRightContLeft = document.createElement('span');
+				topRightAlertTopRightContLeft.id = 'alertCurrentNum';
+				topRightAlertTopRightContLeft.innerText = '1';
+				var topRightAlertTopRightConts = document.createElement('span');
+				topRightAlertTopRightConts.id = 'topRightAlertTopRightConts';
+				topRightAlertTopRightConts.innerText = '/';
+				var topRightAlertTopRightContRight = document.createElement('span');
+				topRightAlertTopRightContRight.id = "topRightAlertTopRightContRight";
+				topRightAlertTopRightContRight.innerText = '3';
+				topRightAlertTopRightCont.appendChild(topRightAlertTopRightContLeft);
+				topRightAlertTopRightCont.appendChild(topRightAlertTopRightConts);
+				topRightAlertTopRightCont.appendChild(topRightAlertTopRightContRight);
+				topRightAlertTopRight.appendChild(topRightAlertTopRightCont);
+				var topRightAlertTopRightImgRight = document.createElement('img');
+				topRightAlertTopRightImgRight.id = "topRightAlertTopRightImgRight";
+				topRightAlertTopRightImgRight.style.cursor = 'pointer';
+				topRightAlertTopRightImgRight.src = require("../../assets/images/Controller/mark.png");
+				topRightAlertTopRightImgRight.style.height = '5px';
+				topRightAlertTopRightImgRight.style.transform = "rotate(-90deg)";
+				topRightAlertTopRightImgRight.addEventListener('click',function(){
+					let eventInfoCount = _that.mapEventDetail.eventInfo.length;
+					let alertCurrentNum = document.getElementById('alertCurrentNum').innerText;
+					if(alertCurrentNum<eventInfoCount){
+						alertCurrentNum++;
+						document.getElementById('alertCurrentNum').innerText = alertCurrentNum;
+						document.getElementById('devideName').innerText = _that.mapEventDetail.eventInfo[--alertCurrentNum].Order;
+					}
+				});
+				topRightAlertTopRight.appendChild(topRightAlertTopRightImgRight);
+				topRightAlert.appendChild(topRightAlertOl);
+				topRightAlert.appendChild(topRightAlertTopRight);
 				// 添加DOM元素到地图中
 				map.getContainer().appendChild(div);
 				map.getContainer().appendChild(topRightDiv);
@@ -491,7 +624,6 @@ created() {
 			// 添加到地图当中
 			map.addControl(myZoomCtrl);
 			},2000);
-
 		}
 	}
 }
@@ -503,3 +635,15 @@ width: 100%;
 height: 100%;
 }
 </style>
+© 2020 GitHub, Inc.
+Terms
+Privacy
+Security
+Status
+Help
+Contact GitHub
+Pricing
+API
+Training
+Blog
+About
