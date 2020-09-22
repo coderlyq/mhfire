@@ -196,11 +196,195 @@ created() {
 			ZoomControl.prototype.initialize = function(map){
 				// 创建一个DOM  topLeft元素
 				var div = document.createElement("div");
+				div.id = 'divLeft';
 				div.style.fontSize = '14px';
 				div.style.maxHeight = "620px";
 				div.style.overflow = 'auto';
+				div.addEventListener('compositionend',function(even){
+					console.log(even.target.value);
+					for(var ii = 0;ii<lent.length;ii++){
+						let currentValue = even.target.value;
+						if(lent[ii].ProjectName.indexOf(currentValue)>=0){
+							_that.MapCompanyInfos.unshift(_that.MapCompanyInfos[ii]);
+							_that.MapCompanyInfos.splice(ii+1,1);
+							console.log(_that.MapCompanyInfos);
+							let nodeElesAll = document.querySelectorAll('.nodeEles');
+							console.log(nodeElesAll);
+							for(var nodeEle = 0;nodeEle<nodeElesAll.length;nodeEle++){
+								console.log(nodeElesAll[nodeEle]);
+								nodeElesAll[nodeEle].remove();
+							}
+							let lent = 	_that.MapCompanyInfos;
+							for(var i = 0;i<lent.length;i++){
+								console.log(i);
+								console.log(lent[i].ProjectName);
+								var nodeEles = document.createElement('div');
+								nodeEles.className = 'nodeEles';
+								nodeEles.style.position = 'relative';
+								// nodeEles.dataset.id = lent[i].ID;
+								nodeEles.style.backgroundColor = "#fff";
+								nodeEles.style.boxSizing = "border-box"
+								nodeEles.style.width = "328px";
+								nodeEles.style.margin = "0 auto";
+								nodeEles.style.marginTop = "10px";
+								nodeEles.style.marginBottom = "10px";
+								nodeEles.style.paddingTop = "20px";
+								nodeEles.style.paddingBottom = "20px";
+								nodeEles.style.paddingLeft = "20px";
+								nodeEles.style.borderRadius = "10px";
+								// 列表标题
+								var nodeTitle = document.createElement("h2");
+								nodeTitle.style.fontFamily = "PFxi";
+								nodeTitle.style.margin = 0;
+								nodeTitle.style.color = "#000";
+								nodeTitle.style.fontSize = "14px";
+								// nodeEle.style.fontWeight = 'bolder';
+								nodeTitle.innerText = lent[i].ProjectName;
+								//警情详情
+								// if(lent[i].fire.flag){
+									var nodeDL = document.createElement('dl');
+									nodeDL.style.color = "#a1a1a1";
+									nodeDL.style.margin = 0;
+									nodeDL.style.marginTop = "16px";
+									var nodeDT = document.createElement('dt');
+									nodeDL.appendChild(nodeDT);
+									nodeDT.style.color = "#666";
+									nodeDT.style.fontFamily = "PFzc";
+									nodeDT.innerText = '火灾自动报警系统';
+									nodeDT.style.marginBottom = "8px";
+									for (const key in lent[i].warningSystem) {
+										var nodeDD = document.createElement('dd');
+										nodeDD.style.display = "inline-block";
+										nodeDD.style.marginLeft = 0;
+										nodeDD.style.marginRight = "20px";
+										let keyText = '';
+										switch(key){
+											case 'fireCount':
+												keyText = '火警';
+												break;
+											case 'troubleCount':
+												keyText = '故障';
+												break;
+											case 'startCount':
+												keyText = '启动';
+												break;
+											case 'feedBackCount':
+												keyText = '反馈';
+												break;
+										}
+										nodeDD.appendChild(document.createTextNode(keyText+":"));
+										var nodeDDSpanColor = '';
+										switch(key){
+											case 'fireCount':
+												nodeDDSpanColor = '#fe3939';
+												break;
+											case 'troubleCount':
+												nodeDDSpanColor = '#fe8a27';
+												break;
+											case 'startCount':
+												nodeDDSpanColor = '#2dcdcf';
+												break;
+											case 'feedBackCount':
+												nodeDDSpanColor = '#29ca74';
+												break;
+										}
+										var nodeDDSpan = document.createElement('span');
+										nodeDDSpan.style.color = nodeDDSpanColor;
+										nodeDDSpan.innerText = lent[i].warningSystem[key];
+										nodeDD.appendChild(nodeDDSpan);
+										nodeDL.appendChild(nodeDD);
+									}
+								// }
+				//水压水位详情
+								// if(lent[i].water.flag){
+									var nodewaterDL = document.createElement('dl');
+									nodewaterDL.style.color = "#a1a1a1";
+									nodewaterDL.style.margin = 0;
+									nodewaterDL.style.marginTop = "16px";
+									var nodewaterDT = document.createElement('dt');
+									nodewaterDL.appendChild(nodewaterDT);
+									nodewaterDT.style.color = "#666";
+									nodewaterDT.style.fontFamily = "PFzc";
+									nodewaterDT.innerText = '水系统';
+									nodewaterDT.style.marginBottom = "8px";
+									for (const key in lent[i].waterSystem) {
+										var nodewaterDD = document.createElement('dd');
+										nodewaterDD.style.display = "inline-block";
+										nodewaterDD.style.marginLeft = 0;
+										nodewaterDD.style.marginRight = "20px";
+										let keyText = '';
+										switch(key){
+											case 'waterFireCount':
+												keyText = '报警';
+												break;
+											case 'waterTroubleCount':
+												keyText = '故障';
+												break;
+										}
+										nodewaterDD.appendChild(document.createTextNode(keyText+":"));
+										var nodewaterDDSpanColor = '';
+										switch(key){
+											case 'waterFireCount':
+												nodewaterDDSpanColor = '#fe3939';
+												break;
+											case 'waterTroubleCount':
+												nodewaterDDSpanColor = '#fe8a27';
+												break;
+										}
+										var nodewaterDDSpan = document.createElement('span');
+										nodewaterDDSpan.style.color = nodewaterDDSpanColor;
+										nodewaterDDSpan.innerText = lent[i].waterSystem[key];
+										nodewaterDD.appendChild(nodewaterDDSpan);
+										nodewaterDL.appendChild(nodewaterDD);
+									}
+									var mapSelectIcon = document.createElement('img');
+									mapSelectIcon.src = require("../../assets/images/Controller/mapSelectIcon.png");
+									mapSelectIcon.style.position = 'absolute';
+									mapSelectIcon.style.right = "20px";
+									mapSelectIcon.style.top = "12px";
+									mapSelectIcon.dataset.Lltude = lent[i].Lltude;
+									mapSelectIcon.addEventListener('click',function(e){
+										console.log(this.dataset.Lltude);
+										let clickLltude = this.dataset.Lltude.split(',');
+										map.panTo(new BMap.Point(clickLltude[0],clickLltude[1]));
+										map.setZoom(18);
+									});
+									var mapunfoldIcon = document.createElement('div');
+									mapunfoldIcon.innerText = '查看详情 >>';
+									mapunfoldIcon.style.fontFamily = "PFz";
+									mapunfoldIcon.style.fontSize = "12px";
+									mapunfoldIcon.style.color = "#318CD9";
+									mapunfoldIcon.style.position = 'absolute';
+									mapunfoldIcon.style.width = "70px";
+									mapunfoldIcon.style.height = "20px";
+									mapunfoldIcon.style.right = "20px";
+									mapunfoldIcon.style.bottom = "12px";
+									mapunfoldIcon.dataset.id = lent[i].ID;;
+									mapunfoldIcon.addEventListener('click',function(event){
+										_that.$router.push({
+											path: '/Search',
+											name: 'Search',
+											params: {
+												projectId: event.target.dataset.id
+											}
+										})
+									});
+									div.appendChild(nodeEles);
+									nodeEles.appendChild(nodeTitle);
+									nodeEles.appendChild(nodeDL);
+									nodeEles.appendChild(nodewaterDL);
+									nodeEles.appendChild(mapSelectIcon);
+									nodeEles.appendChild(mapunfoldIcon);
+								}
+						}
+						// console.log(i);
+						// console.log(lent[i].ProjectName);
+					}
+				});
 				var inputSearch = document.createElement("input");
 				inputSearch.style.display = "block";
+				inputSearch.style.outline = 'none';
+				inputSearch.style.textIndent = "10px";
 				inputSearch.style.width = "328px";
 				inputSearch.style.height = "40px";
 				inputSearch.style.margin = "0 auto";
@@ -218,7 +402,7 @@ created() {
 					var nodeEles = document.createElement('div');
 					nodeEles.className = 'nodeEles';
 					nodeEles.style.position = 'relative';
-					nodeEles.dataset.id = lent[i].ID;
+					// nodeEles.dataset.id = lent[i].ID;
 					nodeEles.style.backgroundColor = "#fff";
 					nodeEles.style.boxSizing = "border-box"
 					nodeEles.style.width = "328px";
@@ -292,7 +476,7 @@ created() {
 							nodeDL.appendChild(nodeDD);
 						}
 					// }
-//水压水位详情
+	//水压水位详情
 					// if(lent[i].water.flag){
 						var nodewaterDL = document.createElement('dl');
 						nodewaterDL.style.color = "#a1a1a1";
@@ -346,17 +530,33 @@ created() {
 							map.panTo(new BMap.Point(clickLltude[0],clickLltude[1]));
 							map.setZoom(18);
 						});
+						var mapunfoldIcon = document.createElement('div');
+						mapunfoldIcon.innerText = '查看详情 >>';
+						mapunfoldIcon.style.fontFamily = "PFz";
+						mapunfoldIcon.style.fontSize = "12px";
+						mapunfoldIcon.style.color = "#318CD9";
+						mapunfoldIcon.style.position = 'absolute';
+						mapunfoldIcon.style.width = "70px";
+						mapunfoldIcon.style.height = "20px";
+						mapunfoldIcon.style.right = "20px";
+						mapunfoldIcon.style.bottom = "12px";
+						mapunfoldIcon.dataset.id = lent[i].ID;;
+						mapunfoldIcon.addEventListener('click',function(event){
+							_that.$router.push({
+								path: '/Search',
+								name: 'Search',
+								params: {
+									projectId: event.target.dataset.id
+								}
+							})
+						});
 						div.appendChild(nodeEles);
 						nodeEles.appendChild(nodeTitle);
 						nodeEles.appendChild(nodeDL);
 						nodeEles.appendChild(nodewaterDL);
 						nodeEles.appendChild(mapSelectIcon);
-						nodeEles.addEventListener('click',function(e){
-							console.log(this.dataset.id);
-						});
+						nodeEles.appendChild(mapunfoldIcon);
 					}
-					
-				// }
 				// 添加文字说明
 				// div.appendChild(document.createTextNode(lent));
 				// 设置样式
@@ -542,7 +742,7 @@ created() {
 				topRightAlert.style.width = "318px";
 				topRightAlert.style.height = "196px";
 				topRightAlert.style.borderRadius = "5px";
-				topRightAlert.style.backgroundColor = "rgba(255,255,255,.7)";
+				topRightAlert.style.backgroundColor = "rgba(255,255,255,.8)";
 				topRightAlert.style.position = 'absolute';
 				topRightAlert.style.right = "405px";
 				topRightAlert.style.top = "168px";

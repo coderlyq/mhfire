@@ -185,7 +185,6 @@ import axios from 'axios'
 			}
 		},
 		created(){
-			this.getHistoryEvent();
 			let _this = this;
 			let token = document.querySelector('#token').innerText;
 			axios.get('http://test.mhfire.cn/mhApi/Project/allProjectList',{
@@ -198,7 +197,12 @@ import axios from 'axios'
 			})
 			.then(function(response){
 				_this.allProjectList = response.data.data;
-				_this.projectvalue = _this.allProjectList[0].ProjectName;
+				if(_this.$route.params.projectId){
+					_this.projectvalue = _this.$route.params.projectId;
+				}else{
+					_this.projectvalue = _this.allProjectList[0].ID;
+				}
+				_this.getHistoryEvent();
 				console.log(response);
 			})
 			.catch(function(error){
