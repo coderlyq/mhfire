@@ -15,6 +15,7 @@
 						</ol>
 					</div>
 					<div class="layinfos">
+						<img class="warnImg" src="~@/assets/images/TopBar/warnImg.png" alt="" style="margin-right:15px;cursor:pointer;" @click="checkWarnInfos" v-show="warnImg">
 						<img style="cursor:pointer" class="personIcon" src="~@/assets/images/Person/personIcon.png" alt="" @click="getPersonInfos"><span style="vertical-align:center;" class="personTel">13455……</span>
 						<img style="cursor:pointer" class="layout" src="~@/assets/images/Lay/layout.png" alt="" @click="layout">
 					</div>
@@ -128,6 +129,7 @@ export default {
 			}
 		};
 		return {
+			warnImg: false,
 			token: '',
 			issuper: true,//topbar显示公司名字还是权限菜单
 			currendIndex: 0,
@@ -191,6 +193,15 @@ export default {
 		};
 	},
 	methods: {
+		checkWarnInfos(){
+			this.$router.push({
+				path: '/warnSearch',
+				name: 'warnSearch',
+				params: {
+					projectId: 'checkWarnInfos'
+				}
+			})
+		},
 		companyCheck(){
 			this.$router.push({
 					path: '/CompanyCheck',
@@ -356,6 +367,7 @@ export default {
 							_this.asideBoolean = true;
 							console.log('33333333333333333333333333333333333');
 							console.log(response);
+							document.querySelector('.warnImg').style.display = 'inline-block';
 							document.querySelector('.logodis').innerText = response.data.data.CompanyName;
 							document.querySelector('.logodis').style.display = 'block';
 							sessionStorage.setItem('companyId', response.data.data.CompanyID);
@@ -372,6 +384,7 @@ export default {
 						if(response.data.data.type==4){
 							_this.topBarBoolean = false;
 							_this.asideBoolean = true;
+							document.querySelector('.warnImg').style.display = 'inline-block';
 							document.querySelector('.logodis').innerText = response.data.data.CompanyName;
 							document.querySelector('.logodis').style.display = 'block';
 							sessionStorage.setItem('companyId', response.data.data.CompanyID);
@@ -466,6 +479,25 @@ export default {
 		if(localStorage.getItem('passLay')){
 			this.ruleFormLay.passLay = localStorage.getItem('passLay')
 		}
+		setInterval(function(){
+			// 参数1：token(用户登录token)，string类型，必填
+			// 参数2：companyId(公司ID)，int类型，必填
+			if(sessionStorage.getItem('companyId')){
+				axios.get('http://test.mhfire.cn/mhApi/Project/fireNoticeList',{
+						params: {
+							token: document.querySelector('#token').innerText,
+							companyId: sessionStorage.getItem('companyId')
+						}
+				})
+				.then(function(response){
+						if(response.data.data){
+							document.querySelector('.warnImg').src = require("./assets/images/TopBar/warnImgCount.png");
+						}
+				})
+				.catch(function(){
+				});
+			}
+		},3000);
 	}
 }
 </script>

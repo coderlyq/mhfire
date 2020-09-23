@@ -1,49 +1,13 @@
 <template>
   <el-container class="searchCont">
 		<el-header class="searchContTop">
-			<el-breadcrumb separator-class="el-icon-arrow-right" class="ProjectListTopTitle" v-show="mapInfos">
-				<el-breadcrumb-item :to="{ path: '/List' }">返回上层</el-breadcrumb-item>
+			<el-breadcrumb separator-class="el-icon-arrow-right" class="ProjectListTopTitle">
+				<el-breadcrumb-item style="font-size:16px;font-weight:bolder;font-family:'PFz';">报警列表</el-breadcrumb-item>
 			</el-breadcrumb>
-			<el-select v-model="projectvalue" placeholder="全部项目" @change="getHistoryEvent(event)">
-				<el-option
-					v-for="item in allProjectList"
-					:key="item.ProjectName"
-					:label="item.ProjectName"
-					:value="item.ID">
-				</el-option>
-			</el-select>
-			<el-select v-model="value1" placeholder="全部系统" style="display:none;">
-				<el-option
-					v-for="item in options"
-					:key="item.value"
-					:label="item.label"
-					:value="item.value">
-				</el-option>
-			</el-select>
-			<el-select v-model="value2" placeholder="全部事件类型" style="margin-right:30px;">
-				<el-option
-					v-for="item in options"
-					:key="item.value"
-					:label="item.label"
-					:value="item.value">
-				</el-option>
-			</el-select>
-			时间范围
-			<el-date-picker
-      v-model="value2"
-      type="daterange"
-      align="right"
-      unlink-panels
-      range-separator="至"
-      start-placeholder="开始日期"
-      end-placeholder="结束日期"
-      :picker-options="pickerOptions">
-    </el-date-picker>
-		<el-button type="primary">搜索</el-button>
 		</el-header>
 		<el-main>
 			<el-table
-				:data="historyEvent"
+				:data="fireNoticeList"
 				border
 				style="width: 100%">
 				<el-table-column
@@ -54,7 +18,7 @@
 				</el-table-column>
 				<el-table-column
 					prop="Tag"
-					label="设备位置"
+					label="设备类型"
 					width="410">
 				</el-table-column>
 				<el-table-column
@@ -71,18 +35,6 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<div class="navblock">
-				<el-pagination
-					hide-on-single-page=true
-					@size-change="handleSizeChange"
-					@current-change="handleCurrentChange"
-					:current-page="currentPage4"
-					:page-sizes="[100, 200, 300, 400]"
-					:page-size="100"
-					layout="total, sizes, prev, pager, next, jumper"
-					:total="400">
-				</el-pagination>
-			</div>
 		</el-main>
 </el-container>
 </template>
@@ -91,10 +43,9 @@
 // 引入axios
 import axios from 'axios'
   export default {
-		name: "Search",
+		name: "warnSearch",
 		data() {
       return {
-				mapInfos: true,
         pickerOptions: {
           shortcuts: [{
             text: '最近一周',
@@ -130,7 +81,7 @@ import axios from 'axios'
         currentPage2: 5,
         currentPage3: 5,
 				currentPage4: 4,
-				historyEvent: '',
+				fireNoticeList: '',
 				allProjectList: ''
       };
 		},
@@ -153,32 +104,18 @@ import axios from 'axios'
         console.log(`当前页: ${val}`);
 			},
 			getHistoryEvent(){
-				console.log(event.target.value);
 				let _this = this;
 				let token = document.querySelector('#token').innerText;
-				let projectId = this.projectvalue;
-				axios.get('http://test.mhfire.cn/mhApi/Project/getHistoryEvent',{
+				axios.get('http://test.mhfire.cn/mhApi/Project/fireNoticeList',{
 					// 参数1：token(用户登录token)，string类型，必填
 					// 参数2：companyId(公司id)，int类型，必填
-					// 参数3：projectId(项目ID)，int类型，必填
-					// 参数4：systemInfo(系统信息)，int类型，可选，传系统id过来
-					// 参数5：type(事件类型)，int类型，0全部，1火警，2故障，3反馈，4启动,可选
-					// 参数6：startTime(开始时间)，时间戳格式，将年月日转换成时间戳格式，int类型，可选
-					// 参数7：endTime(结束时间)，时间戳格式，将年月日转换成时间戳格式，int类型，可选
-					// 参数8：page(分页数)，int类型，默认为第1页
 						params: {
 							token: token,
-							companyId: sessionStorage.getItem('companyId'),
-							projectId: projectId,
-							systemInfo: '',
-							type: 0,
-							startTime: '',
-							endTime: '',
-							page: 1
+							companyId: sessionStorage.getItem('companyId')
 						}
 				})
 				.then(function(response){
-					_this.historyEvent = response.data.data.result;
+					_this.fireNoticeList = response.data.data;
 					console.log(response);
 				})
 				.catch(function(error){
@@ -200,7 +137,6 @@ import axios from 'axios'
 			.then(function(response){
 				_this.allProjectList = response.data.data;
 				if(_this.$route.params.projectId){
-					_this.mapInfos = false;
 					_this.projectvalue = _this.$route.params.projectId;
 				}else{
 					_this.projectvalue = _this.allProjectList[0].ID;

@@ -150,6 +150,7 @@ export default {
 	line-height: 40px;
 	float:left;
 	background-color: #ffffff;
+	cursor: pointer;
 }
 .hisbtnright{
 	float: right;
@@ -162,6 +163,7 @@ export default {
 	text-align: center;
 	margin-left: 30px;
 	background-color: #ffffff;
+	cursor: pointer;
 }
 .hisinfoscont{
 	width: 96%;
@@ -214,6 +216,6 @@ export default {
 }
 .hisinfosconts ol li{
 	float: left;
-	/* list-style: none; */
+	list-style: none;
 }
 </style>

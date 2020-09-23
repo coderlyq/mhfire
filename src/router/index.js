@@ -19,6 +19,7 @@ const SearchInfos = ()=> import('@/views/search/SearchInfos');
 const ProjectCreate =()=> import('@/views/ProjectControl/ProjectCreate');
 const PersonInfos =()=> import('@/views/person/PersonInfos');
 const CompanyCheck =()=> import('@/views/check/CompanyCheck');
+const warnSearch =()=> import('@/views/search/warnSearch');
 // 安装插件
 Vue.use(VueRouter)
 
@@ -47,6 +48,11 @@ const routes = [
 		path: '/Search',
 		name: 'Search',
 		component: Search
+	},
+	{
+		path: '/warnSearch',
+		name: 'warnSearch',
+		component: warnSearch
 	},
 	{
 		path: '/SearchInfos',

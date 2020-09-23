@@ -96,6 +96,7 @@ import axios from 'axios'
 			},
 			selectItem(index) {
 				document.querySelector('.leftSideBar').style.display = 'block';
+				document.querySelector('.warnImg').style.display = 'inline-block';
 				let _this = this;
 				sessionStorage.setItem('companyId',this.companyList[index].ID);
 				document.querySelector('.logodis').innerText = this.companyList[index].CompanyName;
