@@ -20,26 +20,28 @@
 					:value="item.value">
 				</el-option>
 			</el-select>
-			<el-select v-model="value2" placeholder="全部事件类型" style="margin-right:30px;">
+			<el-select v-model="eventType" placeholder="全部事件类型" style="margin-right:30px;">
 				<el-option
-					v-for="item in options"
-					:key="item.value"
-					:label="item.label"
-					:value="item.value">
+					v-for="item in eventTypeList"
+					:key="item.Name"
+					:label="item.Name"
+					:value="item.Type">
 				</el-option>
 			</el-select>
 			时间范围
 			<el-date-picker
-      v-model="value2"
+      v-model="eventTime"
       type="daterange"
       align="right"
       unlink-panels
       range-separator="至"
       start-placeholder="开始日期"
       end-placeholder="结束日期"
-      :picker-options="pickerOptions">
+      :picker-options="pickerOptions"
+			format="yyyy 年 MM 月 dd 日"
+      value-format="yyyy-MM-dd">
     </el-date-picker>
-		<el-button type="primary">搜索</el-button>
+		<el-button type="primary" @click="postSearch">搜索</el-button>
 		</el-header>
 		<el-main>
 			<el-table
@@ -125,16 +127,59 @@ import axios from 'axios'
 				options: [],
 				projectvalue: 0,
         value1: '',
-				value2: '',
+				eventType: '',
+				eventTime: '',
 				currentPage1: 5,
         currentPage2: 5,
         currentPage3: 5,
 				currentPage4: 4,
 				historyEvent: '',
-				allProjectList: ''
+				allProjectList: '',
+				eventTypeList: ''
       };
 		},
 		methods: {
+			postSearch(){
+				let _this = this;
+				let startTime = '';
+				let endTime = '';
+				let type = '';
+				if(this.eventTime){
+					startTime = new Date(this.eventTime[0]).getTime()/1000;
+					endTime = new Date(this.eventTime[1]).getTime()/1000;
+				}
+				if(this.eventType){
+					type = this.eventType;
+				}
+				let projectId = this.projectvalue;
+				axios.get('http://test.mhfire.cn/mhApi/Project/getHistoryEvent',{
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：companyId(公司id)，int类型，必填
+				// 参数3：projectId(项目ID)，int类型，必填
+				// 参数4：systemInfo(系统信息)，int类型，可选，传系统id过来
+				// 参数5：type(事件类型)，int类型，0全部，1火警，2故障，3反馈，4启动,可选
+				// 参数6：startTime(开始时间)，时间戳格式，将年月日转换成时间戳格式，int类型，可选
+				// 参数7：endTime(结束时间)，时间戳格式，将年月日转换成时间戳格式，int类型，可选
+				// 参数8：page(分页数)，int类型，默认为第1页
+					params: {
+						token: document.querySelector('#token').innerText,
+						companyId: sessionStorage.getItem('companyId'),
+						projectId: projectId,
+						systemInfo: '',
+						type: type,
+						startTime: startTime,
+						endTime: endTime,
+						page: 1
+					}
+			})
+			.then(function(response){
+				_this.historyEvent = response.data.data.result;
+				console.log(response);
+			})
+			.catch(function(error){
+					console.log(error);
+			})
+		},
 			historyClick(row) {
 				this.$router.push({
 					path: '/SearchInfos',
@@ -153,7 +198,6 @@ import axios from 'axios'
         console.log(`当前页: ${val}`);
 			},
 			getHistoryEvent(){
-				console.log(event.target.value);
 				let _this = this;
 				let token = document.querySelector('#token').innerText;
 				let projectId = this.projectvalue;
@@ -187,6 +231,8 @@ import axios from 'axios'
 			}
 		},
 		created(){
+			console.log("sdkfjksldafjskldafjk;lsdjfk;lsdafjklsdajkf;lsdajk");
+			console.log(sessionStorage.getItem('companyId'));
 			let _this = this;
 			let token = document.querySelector('#token').innerText;
 			axios.get('http://test.mhfire.cn/mhApi/Project/allProjectList',{
@@ -194,7 +240,7 @@ import axios from 'axios'
 				// 参数2：companyId(公司id)，int类型，必填
 				params: {
 					token: token,
-					companyId: sessionStorage.getItem('companyId'),
+					companyId: sessionStorage.getItem('companyId')
 				}
 			})
 			.then(function(response){
@@ -206,6 +252,20 @@ import axios from 'axios'
 					_this.projectvalue = _this.allProjectList[0].ID;
 				}
 				_this.getHistoryEvent();
+				console.log(response);
+			})
+			.catch(function(error){
+					console.log(error);
+			})
+			// 获取事件列表
+			axios.get('http://test.mhfire.cn/mhApi/Project/getEventType',{
+				// 参数1：token(用户登录token)，string类型，必填
+				params: {
+					token: token
+				}
+			})
+			.then(function(response){
+				_this.eventTypeList = response.data.data;
 				console.log(response);
 			})
 			.catch(function(error){

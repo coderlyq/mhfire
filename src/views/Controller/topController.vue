@@ -137,7 +137,7 @@ export default {
 	//方法集合
 	methods: {
     gotMap(){
-		this.$router.push({
+			this.$router.push({
 				path: '/Map',
 				name: 'Map',
 				params: {

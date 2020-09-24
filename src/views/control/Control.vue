@@ -6,7 +6,7 @@
 			<div class="controllerAreaCont">
 				<div class="controllerTopleft">
 					事件概览
-					<el-button plain >查看地图监控</el-button>
+					<el-button plain @click="gotMap">查看地图监控</el-button>
 				</div>
 				<div class="controllerTopRight">
 					<el-select v-model="projectvalue" placeholder="全部项目"  @change="getProjectEcharsData()">
@@ -138,6 +138,14 @@ export default {
 	watch: {},
 	//方法集合
 	methods: {
+		gotMap(){
+			this.$router.push({
+				path: '/Map',
+				name: 'Map',
+				params: {
+				}
+			})
+		},
     getProjectEcharsData(){
 			let _this = this;
 			let projectId = this.projectvalue;
@@ -152,8 +160,6 @@ export default {
 					}
 			})
 			.then(function(response){
-				console.log('12312344335435');
-				console.log(response.data);
 				_this.warningSystem = response.data.data.warningSystem;
 				_this.chartLineDatas[0].dlcount = _this.warningSystem.fireCount
 				_this.chartLineDatas[1].dlcount = _this.warningSystem.troubleCount;
@@ -182,9 +188,7 @@ export default {
 				_this.feedBackpercent = _this.warningSystem.feedBackpercent;
 				_this.startpercent = _this.warningSystem.startpercent;
 				_this.troublecent = _this.warningSystem.troublecent;
-	console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
-	console.log(_this.feedBackpercent);
-	console.log(_this.monthArr);
+
 				_this.waterSystem = response.data.data.waterSystem;
 				_this.chartWaterLineDatas[0].dlcount = _this.waterSystem.pressureFireCount
 				_this.chartWaterLineDatas[1].dlcount = _this.waterSystem.pressureTroubleCount;
@@ -205,22 +209,20 @@ export default {
 				_this.pressureTrouble = pressureTrouble;
 				_this.waterLevelFire = waterLevelFire;
 				_this.waterLevelTrouble = waterLevelTrouble;
-				console.log('+++++++++++++++++++++++++++++');
-				console.log(_this.waterSystem.monthInfo);
+				_this.drawProjectEcharts();
 			})
 			.catch(function(error){
 					console.log(error);
 			})
-			this.drawProjectEcharts();
 		},
 		drawProjectEcharts(){
-			let _this = this;
+			console.log('draw');
+			
 			setTimeout(()=>{
+				let _this = this;
 			// 以下三步即可完成echarts的初始化使用,代码注释的详解别忘了看看
 			const myCharts = this.$echarts.init(this.$refs.myCharts);
 			// let monthArr = this.monthArr;
-			console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
-			console.log(_this.pressureFireNum);
 			let options = {
 							title: { 
 								text: '趋势图',//图表顶部的标题 
@@ -546,8 +548,6 @@ export default {
 	},
 	//生命周期 - 创建完成（可以访问当前this实例）
 	created() {
-		console.log('6666666666666666666666666666666666666666');
-		console.log(sessionStorage.getItem('companyId'));
 		let _this = this;
 		axios.get('http://test.mhfire.cn/mhApi/Project/getSupperConsoleManger',{
 			// 参数1：token(用户登录token)，string类型，必填
@@ -560,8 +560,6 @@ export default {
 				}
 		})
 		.then(function(response){
-			console.log('12312344335435');
-			console.log(response.data);
 			_this.warningSystem = response.data.data.warningSystem;
 			_this.chartLineDatas[0].dlcount = _this.warningSystem.fireCount
 			_this.chartLineDatas[1].dlcount = _this.warningSystem.troubleCount;
@@ -590,9 +588,7 @@ export default {
       _this.feedBackpercent = _this.warningSystem.feedBackpercent;
 			_this.startpercent = _this.warningSystem.startpercent;
 			_this.troublecent = _this.warningSystem.troublecent;
-console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
-console.log(_this.feedBackpercent);
-console.log(_this.monthArr);
+ 
 			_this.waterSystem = response.data.data.waterSystem;
 			_this.chartWaterLineDatas[0].dlcount = _this.waterSystem.pressureFireCount
 			_this.chartWaterLineDatas[1].dlcount = _this.waterSystem.pressureTroubleCount;
@@ -613,8 +609,6 @@ console.log(_this.monthArr);
 			_this.pressureTrouble = pressureTrouble;
 			_this.waterLevelFire = waterLevelFire;
 			_this.waterLevelTrouble = waterLevelTrouble;
-			console.log('+++++++++++++++++++++++++++++');
-			console.log(_this.waterSystem.monthInfo);
 		})
 		.catch(function(error){
 				console.log(error);
@@ -657,7 +651,7 @@ console.log(_this.monthArr);
 	.controllerTopleft{
 		float: left;
 	}
-	.controllerTopleft .el-button{
+	.controllerTop .controllerTopleft .el-button{
 		box-sizing: border-box;
 		width: 150px;
 		height: 30px;
@@ -672,7 +666,7 @@ console.log(_this.monthArr);
 		font-size: 12px;
 		/* color: #666666; */
 	}
-	.el-button.is-plain:focus, .el-button.is-plain:hover{
+	.controllerTop .el-button.is-plain:focus, .el-button.is-plain:hover{
 		background: url('~@/assets/images/Controller/inputiconselect.png') 125px center no-repeat;
 	}
 	.controllerTopRight{

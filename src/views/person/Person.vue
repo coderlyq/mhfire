@@ -147,7 +147,7 @@ import Qs from 'qs'
     },
 		methods: {
 			setMemberProject(index){
-				console.log(index);
+				sessionStorage.setItem('projectId',this.memberProjectList[index].ID);
 				this.$router.push({
 					path: '/ProjectPerson',
 					name: 'ProjectPerson',
@@ -339,9 +339,9 @@ import Qs from 'qs'
 </script>
 
 <style>
-		@font-face{
-     font-family: 'PF'; 
-     src:url('~@/assets/font/苹方黑体-极细-简.ttf') format('truetype');
+	@font-face{
+		font-family: 'PF'; 
+		src:url('~@/assets/font/苹方黑体-极细-简.ttf') format('truetype');
 	}
 .personImg{
 	width: 328px;
@@ -416,10 +416,7 @@ import Qs from 'qs'
 		margin-right: 20px;
 	}
 	.personBarBut{
-
 		font-weight:bold;
-
-
 		padding:0;
 	}
 	.personBarBut .el-button{
