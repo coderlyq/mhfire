@@ -218,7 +218,7 @@ export default {
 		drawProjectEcharts(){
 			console.log('draw');
 			
-			setTimeout(()=>{
+			// setTimeout(()=>{
 				let _this = this;
 			// 以下三步即可完成echarts的初始化使用,代码注释的详解别忘了看看
 			const myCharts = this.$echarts.init(this.$refs.myCharts);
@@ -543,7 +543,7 @@ export default {
 							]}
 
 				myWaterCharts.setOption(optionsWater);
-			},3000);
+			// },3000);
 		}
 	},
 	//生命周期 - 创建完成（可以访问当前this实例）
@@ -632,7 +632,10 @@ export default {
 	},
 	//生命周期 - 挂载完成（可以访问DOM元素）
 	mounted() {
-		this.drawProjectEcharts();
+		let _this = this;
+		setTimeout(function(){
+			_this.drawProjectEcharts();
+		},3000);
 	}
 }
 </script>

@@ -9,12 +9,12 @@
 					<el-button plain @click="gotMap">查看地图监控</el-button>
 				</div>
 				<div class="controllerTopRight">
-					<el-select v-model="value" placeholder="全部项目">
+					<el-select v-model="projectvalue" placeholder="全部项目" @change="getProjectEcharsData()">
 							<el-option
-								v-for="item in options"
-								:key="item.value"
-								:label="item.label"
-								:value="item.value">
+								v-for="item in allProjectList"
+								:key="item.ProjectName"
+								:label="item.ProjectName"
+								:value="item.ID">
 							</el-option>
 						</el-select>
 				</div>
@@ -113,8 +113,8 @@ export default {
 				dlname:'水位故障数',
 				dlcount:4
 			}],
-			options: '',
-			value: '',
+			allProjectList: '',
+			projectvalue: '',
 			fireMonth: '',
 			troubleMonth: '',
 			startMonth: '',
@@ -143,92 +143,12 @@ export default {
 				params: {
 				}
 			})
-		}
-	},
-	//生命周期 - 创建完成（可以访问当前this实例）
-	created() {
-		let _this = this;
-		axios.get('http://test.mhfire.cn/mhApi/Project/getSupperConsoleManger',{
-			// 参数1：token(用户登录token)，string类型，必填
-			// 参数2：projectId(项目ID)，int类型，选填，默认为0
-			// 参数3：companyId(公司id)，int类型，必填，默认为0
-				params: {
-					token: document.querySelector('#token').innerText,
-					projectId: 0,
-					companyId: 0
-				}
-		})
-		.then(function(response){
-			console.log('12312344335435');
-			console.log(response.data);
-			_this.warningSystem = response.data.data.warningSystem;
-			_this.chartLineDatas[0].dlcount = _this.warningSystem.fireCount
-			_this.chartLineDatas[1].dlcount = _this.warningSystem.troubleCount;
-			_this.chartLineDatas[2].dlcount = _this.warningSystem.startCount;
-			_this.chartLineDatas[3].dlcount = _this.warningSystem.feedBackCount;
-			let warningSystemMonthInfo = _this.warningSystem.monthInfo;
-			let fireMonth = [];
-			let troubleMonth = [];
-			let startMonth = [];
-			let feebackMonth = [];
-			let monthArr = [];
-			for(let i = 0;i<warningSystemMonthInfo.length;i++){
-				fireMonth[i] = warningSystemMonthInfo[i].fireNum;
-				troubleMonth[i] = warningSystemMonthInfo[i].troubleNum;
-				startMonth[i] = warningSystemMonthInfo[i].feekbackNum;
-				feebackMonth[i] = warningSystemMonthInfo[i].startNum;
-				monthArr[i] = warningSystemMonthInfo[i].date;
-			}
-			_this.fireMonth = fireMonth;
-			_this.troubleMonth = troubleMonth;
-			_this.startMonth = startMonth;
-			_this.feebackMonth = feebackMonth;
-			_this.monthArr = monthArr;
-						// 饼状图
-			_this.firepercent = _this.warningSystem.firepercent;
-      _this.feedBackpercent = _this.warningSystem.feedBackpercent;
-			_this.startpercent = _this.warningSystem.startpercent;
-			_this.troublecent = _this.warningSystem.troublecent;
-console.log('&&&&&&&&&&&&&&&&&&&&&&&&&&&&&');
-console.log(_this.feedBackpercent);
-console.log(_this.monthArr);
-			_this.waterSystem = response.data.data.waterSystem;
-			_this.chartWaterLineDatas[0].dlcount = _this.waterSystem.pressureFireCount
-			_this.chartWaterLineDatas[1].dlcount = _this.waterSystem.pressureTroubleCount;
-			_this.chartWaterLineDatas[2].dlcount = _this.waterSystem.waterLevelFireCount;
-			_this.chartWaterLineDatas[3].dlcount = _this.waterSystem.waterLevelTroubleCount;
-			let waterSystemMonthInfo = _this.waterSystem.monthInfo;
-			let pressureFire = [];
-			let pressureTrouble = [];
-			let waterLevelFire = [];
-			let waterLevelTrouble = [];
-			for(let j = 0;j<waterSystemMonthInfo.length;j++){
-				pressureFire[j] = waterSystemMonthInfo[j].pressureFireNum;
-				pressureTrouble[j] = waterSystemMonthInfo[j].pressureTroubleNum;
-				waterLevelFire[j] = waterSystemMonthInfo[j].waterLevelFireNum;
-				waterLevelTrouble[j] = waterSystemMonthInfo[j].waterLevelTroubleNum;
-			}
-			_this.pressureFire = pressureFire;
-			_this.pressureTrouble = pressureTrouble;
-			_this.waterLevelFire = waterLevelFire;
-			_this.waterLevelTrouble = waterLevelTrouble;
-			console.log('+++++++++++++++++++++++++++++');
-			console.log(_this.waterSystem.monthInfo);
-		})
-		.catch(function(error){
-				console.log(error);
-		})
-	},
-	//生命周期 - 挂载完成（可以访问DOM元素）
-	mounted() {
-		let _this = this;
-		setTimeout(()=>{
-
+		},
+		drawProjectEcharts(){
+let _this = this;
 // 以下三步即可完成echarts的初始化使用,代码注释的详解别忘了看看
 	const myCharts = this.$echarts.init(this.$refs.myCharts);
 	// let monthArr = this.monthArr;
-	console.log('^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^');
-	console.log(_this.pressureFireNum);
    let options = {
           title: { 
 						text: '趋势图',//图表顶部的标题 
@@ -548,7 +468,168 @@ console.log(_this.monthArr);
             }
           ]}
 
-		myWaterCharts.setOption(optionsWater);
+			myWaterCharts.setOption(optionsWater);
+		},
+		getProjectEcharsData(){
+			let _this = this;
+			let projectId = this.projectvalue;
+			axios.get('http://test.mhfire.cn/mhApi/Project/getSupperConsoleManger',{
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：projectId(项目ID)，int类型，选填，默认为0
+				// 参数3：companyId(公司id)，int类型，必填，默认为0
+					params: {
+						token: document.querySelector('#token').innerText,
+						projectId: projectId,
+						companyId: sessionStorage.getItem('companyId')
+					}
+			})
+			.then(function(response){
+				_this.warningSystem = response.data.data.warningSystem;
+				_this.chartLineDatas[0].dlcount = _this.warningSystem.fireCount
+				_this.chartLineDatas[1].dlcount = _this.warningSystem.troubleCount;
+				_this.chartLineDatas[2].dlcount = _this.warningSystem.startCount;
+				_this.chartLineDatas[3].dlcount = _this.warningSystem.feedBackCount;
+				let warningSystemMonthInfo = _this.warningSystem.monthInfo;
+				let fireMonth = [];
+				let troubleMonth = [];
+				let startMonth = [];
+				let feebackMonth = [];
+				let monthArr = [];
+				for(let i = 0;i<warningSystemMonthInfo.length;i++){
+					fireMonth[i] = warningSystemMonthInfo[i].fireNum;
+					troubleMonth[i] = warningSystemMonthInfo[i].troubleNum;
+					startMonth[i] = warningSystemMonthInfo[i].feekbackNum;
+					feebackMonth[i] = warningSystemMonthInfo[i].startNum;
+					monthArr[i] = warningSystemMonthInfo[i].date;
+				}
+				_this.fireMonth = fireMonth;
+				_this.troubleMonth = troubleMonth;
+				_this.startMonth = startMonth;
+				_this.feebackMonth = feebackMonth;
+				_this.monthArr = monthArr;
+							// 饼状图
+				_this.firepercent = _this.warningSystem.firepercent;
+				_this.feedBackpercent = _this.warningSystem.feedBackpercent;
+				_this.startpercent = _this.warningSystem.startpercent;
+				_this.troublecent = _this.warningSystem.troublecent;
+
+				_this.waterSystem = response.data.data.waterSystem;
+				_this.chartWaterLineDatas[0].dlcount = _this.waterSystem.pressureFireCount
+				_this.chartWaterLineDatas[1].dlcount = _this.waterSystem.pressureTroubleCount;
+				_this.chartWaterLineDatas[2].dlcount = _this.waterSystem.waterLevelFireCount;
+				_this.chartWaterLineDatas[3].dlcount = _this.waterSystem.waterLevelTroubleCount;
+				let waterSystemMonthInfo = _this.waterSystem.monthInfo;
+				let pressureFire = [];
+				let pressureTrouble = [];
+				let waterLevelFire = [];
+				let waterLevelTrouble = [];
+				for(let j = 0;j<waterSystemMonthInfo.length;j++){
+					pressureFire[j] = waterSystemMonthInfo[j].pressureFireNum;
+					pressureTrouble[j] = waterSystemMonthInfo[j].pressureTroubleNum;
+					waterLevelFire[j] = waterSystemMonthInfo[j].waterLevelFireNum;
+					waterLevelTrouble[j] = waterSystemMonthInfo[j].waterLevelTroubleNum;
+				}
+				_this.pressureFire = pressureFire;
+				_this.pressureTrouble = pressureTrouble;
+				_this.waterLevelFire = waterLevelFire;
+				_this.waterLevelTrouble = waterLevelTrouble;
+				_this.drawProjectEcharts();
+			})
+			.catch(function(error){
+					console.log(error);
+			})
+		}
+	},
+	//生命周期 - 创建完成（可以访问当前this实例）
+	created() {
+		let _this = this;
+		axios.get('http://test.mhfire.cn/mhApi/Project/getSupperConsoleManger',{
+			// 参数1：token(用户登录token)，string类型，必填
+			// 参数2：projectId(项目ID)，int类型，选填，默认为0
+			// 参数3：companyId(公司id)，int类型，必填，默认为0
+				params: {
+					token: document.querySelector('#token').innerText,
+					projectId: 0,
+					companyId: 0
+				}
+		})
+		.then(function(response){
+			_this.warningSystem = response.data.data.warningSystem;
+			_this.chartLineDatas[0].dlcount = _this.warningSystem.fireCount
+			_this.chartLineDatas[1].dlcount = _this.warningSystem.troubleCount;
+			_this.chartLineDatas[2].dlcount = _this.warningSystem.startCount;
+			_this.chartLineDatas[3].dlcount = _this.warningSystem.feedBackCount;
+			let warningSystemMonthInfo = _this.warningSystem.monthInfo;
+			let fireMonth = [];
+			let troubleMonth = [];
+			let startMonth = [];
+			let feebackMonth = [];
+			let monthArr = [];
+			for(let i = 0;i<warningSystemMonthInfo.length;i++){
+				fireMonth[i] = warningSystemMonthInfo[i].fireNum;
+				troubleMonth[i] = warningSystemMonthInfo[i].troubleNum;
+				startMonth[i] = warningSystemMonthInfo[i].feekbackNum;
+				feebackMonth[i] = warningSystemMonthInfo[i].startNum;
+				monthArr[i] = warningSystemMonthInfo[i].date;
+			}
+			_this.fireMonth = fireMonth;
+			_this.troubleMonth = troubleMonth;
+			_this.startMonth = startMonth;
+			_this.feebackMonth = feebackMonth;
+			_this.monthArr = monthArr;
+						// 饼状图
+			_this.firepercent = _this.warningSystem.firepercent;
+      _this.feedBackpercent = _this.warningSystem.feedBackpercent;
+			_this.startpercent = _this.warningSystem.startpercent;
+			_this.troublecent = _this.warningSystem.troublecent;
+
+			_this.waterSystem = response.data.data.waterSystem;
+			_this.chartWaterLineDatas[0].dlcount = _this.waterSystem.pressureFireCount
+			_this.chartWaterLineDatas[1].dlcount = _this.waterSystem.pressureTroubleCount;
+			_this.chartWaterLineDatas[2].dlcount = _this.waterSystem.waterLevelFireCount;
+			_this.chartWaterLineDatas[3].dlcount = _this.waterSystem.waterLevelTroubleCount;
+			let waterSystemMonthInfo = _this.waterSystem.monthInfo;
+			let pressureFire = [];
+			let pressureTrouble = [];
+			let waterLevelFire = [];
+			let waterLevelTrouble = [];
+			for(let j = 0;j<waterSystemMonthInfo.length;j++){
+				pressureFire[j] = waterSystemMonthInfo[j].pressureFireNum;
+				pressureTrouble[j] = waterSystemMonthInfo[j].pressureTroubleNum;
+				waterLevelFire[j] = waterSystemMonthInfo[j].waterLevelFireNum;
+				waterLevelTrouble[j] = waterSystemMonthInfo[j].waterLevelTroubleNum;
+			}
+			_this.pressureFire = pressureFire;
+			_this.pressureTrouble = pressureTrouble;
+			_this.waterLevelFire = waterLevelFire;
+			_this.waterLevelTrouble = waterLevelTrouble;
+		})
+		.catch(function(error){
+				console.log(error);
+		})
+		let companyId = sessionStorage.getItem('companyId')!=" "?sessionStorage.getItem('companyId'):0;
+		axios.get('http://test.mhfire.cn/mhApi/Project/allProjectList',{
+			// 参数1：token(用户登录token)，string类型，必填
+			// 参数2：companyId(公司id)，int类型，必填
+			params: {
+				token: document.querySelector('#token').innerText,
+				companyId: companyId
+			}
+		})
+		.then(function(response){
+			_this.allProjectList = response.data.data;
+			// _this.projectvalue = _this.allProjectList[0].ProjectName;
+			console.log(response);
+		})
+		.catch(function(error){
+				console.log(error);
+		})
+	},
+	//生命周期 - 挂载完成（可以访问DOM元素）
+	mounted() {
+		let _this = this;
+		setTimeout(()=>{
+			_this.drawProjectEcharts();
 	},3000);
 	}
 }

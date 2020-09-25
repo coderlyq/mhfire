@@ -29,8 +29,8 @@
 			</el-container>
 		</div>
 		<div class='lay' v-show="isshowLay">
-			<img src="~@/assets/images/Lay/bottomRight.png" alt="" class="bottomRight">
-			<img src="~@/assets/images/Lay/topRightImg.png" alt="" class="topRightImg">
+			<!-- <img src="~@/assets/images/Lay/bottomRight.png" alt="" class="bottomRight">
+			<img src="~@/assets/images/Lay/topRightImg.png" alt="" class="topRightImg"> -->
 			<div class="layConts">
 				<div class="layContsCenter">
 					<ol class="layContsOl"><li @click="lay" :class="{checkTopBar:isLay}">登录</li><li :class="{checkTopBar:!isLay}" @click="layIn">注册</li></ol>
@@ -608,7 +608,7 @@ export default {
 .lay{
 	width: 100%;
 	height: 100%;
-	background-image: url('~@/assets/images/Lay/topRightBack.png');
+	background-image: url('~@/assets/images/Lay/layBack.png');
 	background-position: right top;
 	background-repeat: no-repeat;
 }
@@ -628,12 +628,13 @@ export default {
 .layConts{
 	width: 470px;
 	position: absolute;
-	right: 236px;
+	right: 266px;
 	top: 320px;
 	margin-left: -235px;
 	background-color: #ffffff;
 	border-radius: 10px;
 	padding-bottom: 40px;
+	box-shadow: 0 0 15px #cccccc;
 }
 .layContsCenter{
 	width: 392px;

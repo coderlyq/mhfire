@@ -162,7 +162,7 @@ created() {
 				token: token,
 				page: 1,
 				companyName:'',
-				status: 1
+				status: 0
 			}
 	})
 	.then(function(response){

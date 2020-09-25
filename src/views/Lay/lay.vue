@@ -1,8 +1,8 @@
 <!--  -->
 <template>
 <div class='lay'>
-	<img src="~@/assets/images/Lay/bottomRight.png" alt="" class="bottomRight">
-	<img src="~@/assets/images/Lay/topRightImg.png" alt="" class="topRightImg">
+	<!-- <img src="~@/assets/images/Lay/bottomRight.png" alt="" class="bottomRight">
+	<img src="~@/assets/images/Lay/topRightImg.png" alt="" class="topRightImg"> -->
 	<div class="layConts">
 		<div class="layContsCenter">
 			<ol class="layContsOl"><li @click="lay" :class="{checkTopBar:isLay}">登录</li><li :class="{checkTopBar:!isLay}" @click="layIn">注册</li></ol>
@@ -17,7 +17,7 @@
 					<el-input v-model="imgCode" placeholder="请输入验证码" class="imgCode"></el-input><img :src="imgSrc" @click="changeImgSrc" alt="" class="checkImg">
 				</el-form-item>
 				<el-form-item>
-					<el-button type="primary" @click="submitLay('ruleFormLay')" class="submitBtn">提交</el-button>
+					<el-button type="primary" @click="submitLay('ruleFormLay')" class="submitBtn">提交22</el-button>
 				</el-form-item>
 				<!-- `checked` 为 true 或 false -->
 				<el-checkbox v-model="checked">下次自动登录</el-checkbox>
@@ -287,7 +287,7 @@ data() {
 .lay{
 	width: 100%;
 	height: 100%;
-	background-image: url('~@/assets/images/Lay/topRightBack.png');
+	background-image: url('~@/assets/images/Lay/layBack.png');
 	background-position: right top;
 	background-repeat: no-repeat;
 }

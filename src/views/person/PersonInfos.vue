@@ -198,6 +198,7 @@ methods: {
 		this.dialogFormPersonInfosTel = true;
 	}, 
 	updateMemberName(){
+		console.log('122');
 		this.dialogmemberName = true;
 	},
 	dialogmemberNameModify(){
@@ -275,7 +276,10 @@ methods: {
 		});
 	},
 	updateCompanyAddress(){
+		console.log(this.dialogFormcompanyAddress);
 		this.dialogFormcompanyAddress = true;
+		console.log('9999999999999999');
+		console.log(this.dialogFormcompanyAddress);
 	},
 	dialogFormcompanyAddressModify(){
 		let _this = this;
@@ -411,6 +415,7 @@ created() {
 			}
 	})
 	.then(function(response){
+		console.log("%%%%%%%%%%%%%%%%%%%%%");
 			console.log(response);
 			_this.baseInfo = response.data.data.baseInfo;
 			_this.companyAuthInfo = response.data.data.companyAuthInfo;
