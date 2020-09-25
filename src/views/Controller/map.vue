@@ -1,38 +1,3 @@
-Skip to content
-Search or jump to…
-
-Pull requests
-Issues
-Marketplace
-Explore
- 
-@coderlyq 
-coderlyq
-/
-mhfire
-1
-00
-Code
-Issues
-Pull requests
-Actions
-Projects
-Wiki
-Security
-1
-Insights
-Settings
-mhfire/src/views/Controller/map.vue
-@coderlyq
-coderlyq 2020.9.20
-Latest commit 694b9cb 11 hours ago
- History
- 1 contributor
-We found a potential security vulnerability in one of your dependencies.
-Only the owner of this repository can see this message.
-
-505 lines (492 sloc)  18.5 KB
-  
 <template>
 	<baidu-map class="bm-view" id="allmap">
 	</baidu-map>
