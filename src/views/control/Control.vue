@@ -654,7 +654,7 @@ export default {
 	.controllerTopleft{
 		float: left;
 	}
-	.controllerTop .controllerTopleft .el-button{
+	.controllerTop .controllerAreaCont .controllerTopleft .el-button{
 		box-sizing: border-box;
 		width: 150px;
 		height: 30px;
@@ -669,7 +669,10 @@ export default {
 		font-size: 12px;
 		/* color: #666666; */
 	}
-	.controllerTop .el-button.is-plain:focus, .el-button.is-plain:hover{
+	.controllerTop .controllerAreaCont .el-button.is-plain:hover{
+		background: url('~@/assets/images/Controller/inputiconselect.png') 125px center no-repeat;
+	}
+	.controllerTop .controllerAreaCont .el-button.is-plain:focus{
 		background: url('~@/assets/images/Controller/inputiconselect.png') 125px center no-repeat;
 	}
 	.controllerTopRight{

@@ -287,7 +287,7 @@
 				:before-close="handleClose" class="changeCollectorDialog">
 				<el-input v-model="projectDetail.proCollector.CollectorNum" placeholder="请输入内容"></el-input>
 				<span slot="footer" class="dialog-footer">
-					<el-button @click="dialogVisible = false">取 消</el-button>
+					<el-button @click="dialogChangeCollectorVisible = false">取 消</el-button>
 					<el-button type="primary" @click="changeCollector">确 定</el-button>
 				</span>
 			</el-dialog>
@@ -596,7 +596,7 @@ created() {
 	.memberDialog .ProjectElementItem{
 		padding-left: 25px;
 	}
-	.changeCollectorDialog{
+	.changeCollectorDialog>div{
 		width: 436px;
 	}
 	.ProjectListBarHead{
