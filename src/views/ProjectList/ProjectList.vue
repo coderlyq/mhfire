@@ -8,12 +8,12 @@
 				<el-breadcrumb-item>项目信息管理</el-breadcrumb-item>
 			</el-breadcrumb>
 			<!-- <span class="ProjectListTopTitle">项目信息管理</span> -->
-			<el-select style="font-family:'Microsoft YaHei';font-size:12px;color:#666;font-weight:bold;" v-model="value" placeholder="全部项目">
+			<el-select style="font-family:'Microsoft YaHei';font-size:12px;color:#666;font-weight:bold;" v-model="projectvalue" placeholder="全部项目" @change="getProjectEcharsData()">
 				<el-option
-					v-for="item in options"
-					:key="item.value"
-					:label="item.label"
-					:value="item.value">
+					v-for="item in allProjectList"
+					:key="item.ProjectName"
+					:label="item.ProjectName"
+					:value="item.ID">
 				</el-option>
 			</el-select>
 		</el-header>
@@ -310,28 +310,14 @@ data() {
 	//这里存放数据
 	return {
 		dialogBaseInfos: false,
-		options: [{
-			value: '选项1',
-			label: '黄金糕'
-		}, {
-			value: '选项2',
-			label: '双皮奶'
-		}, {
-			value: '选项3',
-			label: '蚵仔煎'
-		}, {
-			value: '选项4',
-			label: '龙须面'
-		}, {
-			value: '选项5',
-			label: '北京烤鸭'
-		}],
+		allProjectList: '',
 		ProjectListPower:'',//项目负责人
 		dialogTableVisible: false,
 		dialogChangeCollectorVisible: false,
 		value: '',
 		memberList: '',
 		projectDetail: '',
+		projectvalue: '',
 		fileList: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
 	};
 },
@@ -343,6 +329,47 @@ methods: {
 				done(_);
 			})
 			.catch(_ => {_});
+	},
+	getProjectEcharsData(){
+		let _this = this;
+		let token = document.querySelector('#token').innerText;
+		let projectId = this.projectvalue;
+		let companyId = sessionStorage.getItem('companyId')!=" "?sessionStorage.getItem('companyId'):0;
+		axios.get('http://test.mhfire.cn/mhApi/Project/projectDetail',{
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：companyId(公司ID)，int类型，必填
+		// 参数3：projectId(项目ID)，int类型，必填
+			params: {
+				token: token,
+				companyId: companyId,
+				projectId: projectId
+			}
+		})
+		.then(function(response){
+			console.log(response.data.data);
+			_this.projectDetail = response.data.data;
+			_this.ProjectListPower = response.data.data.projectResponsible;
+		})
+		.catch(function(error){
+				console.log(error);
+		})
+		axios.get('http://test.mhfire.cn/mhApi/Project/memberList',{
+			// 参数1：token(用户登录token)，string类型，必填
+			// 参数2：companyId(公司ID)，int类型，必填
+			// 参数3：projectId(项目ID)，int类型，必填
+				params: {
+					token: token,
+					companyId: companyId,
+					projectId: projectId
+				}
+		})
+		.then(function(response){
+			console.log(response.data.data);
+			_this.memberList = response.data.data;
+		})
+		.catch(function(error){
+				console.log(error);
+		})
 	},
 	BaseInfosSubmit(){
 		let _this = this;
@@ -514,8 +541,25 @@ methods: {
 created() {
 	let _this = this;
 	let token = document.querySelector('#token').innerText;
-	let companyId = sessionStorage.getItem('companyId');
 	let projectId = sessionStorage.getItem('projectId');
+
+	let companyId = sessionStorage.getItem('companyId')!=" "?sessionStorage.getItem('companyId'):0;
+	axios.get('http://test.mhfire.cn/mhApi/Project/allProjectList',{
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：companyId(公司id)，int类型，必填
+		params: {
+			token: document.querySelector('#token').innerText,
+			companyId: companyId
+		}
+	})
+	.then(function(response){
+		_this.allProjectList = response.data.data;
+		// _this.projectvalue = _this.allProjectList[0].ProjectName;
+		console.log(response);
+	})
+	.catch(function(error){
+			console.log(error);
+	})
 	axios.get('http://test.mhfire.cn/mhApi/Project/projectDetail',{
 		// 参数1：token(用户登录token)，string类型，必填
 		// 参数2：companyId(公司ID)，int类型，必填

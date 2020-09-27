@@ -607,13 +607,13 @@ let _this = this;
 		.catch(function(error){
 				console.log(error);
 		})
-		let companyId = sessionStorage.getItem('companyId')!=" "?sessionStorage.getItem('companyId'):0;
+		// let companyId = sessionStorage.getItem('companyId')!=" "?sessionStorage.getItem('companyId'):0;
 		axios.get('http://test.mhfire.cn/mhApi/Project/allProjectList',{
 			// 参数1：token(用户登录token)，string类型，必填
 			// 参数2：companyId(公司id)，int类型，必填
 			params: {
 				token: document.querySelector('#token').innerText,
-				companyId: companyId
+				companyId: 0
 			}
 		})
 		.then(function(response){
