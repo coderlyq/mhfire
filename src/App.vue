@@ -5,8 +5,8 @@
 				<el-header style="height: 6.45vh;line-height: 6.45vh;">
 					<div style="display:none;"><span id="token">{{token}}</span></div>
 					<div id='logotext'>
-						<img src="~@/assets/images/TopBar/logo.png" alt="">
-						<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;" @click="companyCheck">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
+						<img src="~@/assets/images/TopBar/accIcon.png" alt="" style="width:41px;">
+						<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;" @click="companyCheck">消防云平台</span><span id="topbarpre"></span>
 						<span class="logodis" style="display:none;margin-right:25px;"></span>
 						<ol id="logoList" v-show="topBarBoolean">
 							<li v-for="(item,index) in logoList" @click="topclick(index)" :key="item.name" :class="{clickBackColor:index===currendIndex}">
@@ -490,7 +490,9 @@ export default {
 						}
 				})
 				.then(function(response){
-						if(response.data.data){
+					console.log("teststestststst");
+					console.log(response.data.data);
+						if(response.data.data.length!=0){
 							document.querySelector('.warnImg').src = require("./assets/images/TopBar/warnImgCount.png");
 						}
 				})
