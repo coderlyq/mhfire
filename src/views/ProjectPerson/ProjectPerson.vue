@@ -23,12 +23,12 @@
 						<el-breadcrumb-item>项目人员管理</el-breadcrumb-item>
 					</el-breadcrumb>
 					<!-- <span class="ProjectPersonTopTitle">项目人员管理</span> -->
-					<el-select style="font-family:'Microsoft YaHei';font-size:12px;color:#666;font-weight:bold;" v-model="value" placeholder="全部项目">
+					<el-select style="font-family:'Microsoft YaHei';font-size:12px;color:#666;font-weight:bold;" v-model="projectID" placeholder="全部项目" @change="getPersonLevel()">
 						<el-option
-							v-for="item in options"
-							:key="item.value"
-							:label="item.label"
-							:value="item.value">
+							v-for="item in allProjectList"
+							:key="item.ProjectName"
+							:label="item.ProjectName"
+							:value="item.ID">
 						</el-option>
 					</el-select>
 					<el-popconfirm
@@ -47,14 +47,13 @@
 					<div class="ProjectDefaultItem">
 						<span>默认功能项</span>
 						<ol>
-							<li style="margin-top:30px;">
-								查看项目信息
+							<li v-for="item in projectMemberModuleList.defaultResult" :key="item.id" style="margin-top:30px;" >
+								{{item.name}}
 								<ol style="margin-top:30px;font-family:'PFxi';font-size:14px;color:#666;">
-									<li>查看项目的概况信息</li>
-									<li>查看项目的档案文件</li>
+									<li v-for="itemcont in item.child" :key="itemcont.id">{{itemcont.name}}</li>
 								</ol>
 							</li>
-							<li style="margin-top:50px;">
+							<!-- <li style="margin-top:50px;">
 								火灾自动报警系统功能
 								<ol style="margin-top:30px;font-family:'PFxi';font-size:14px;color:#666;">
 									<li>系统事件查询功能</li>
@@ -64,28 +63,29 @@
 									<li>查看项目主机信息</li>
 									<li>回路设备信息查询</li>
 								</ol>
-							</li>
+							</li> -->
 						</ol>
 					</div>
 					<div class="ProjectDefaultCheckBox">
 						<span>可选功能权限项</span>
 						<ol class="ProjectCheckBoxol1">
-							<li>1.值班功能模块
+							<li v-for="(item,itemIndex) in projectMemberModuleList.selectResult" :key="item.id">{{item.name}}
 								<ol class="ProjectCheckBoxol2">
-									<li>值班情况记录</li>
-									<li>火灾报警控制器主动上传事件记录</li>
+									<li v-for="itemcont in item.child" :key="itemcont.id">{{itemcont.name}}</li>
+									<!-- <li>火灾报警控制器主动上传事件记录</li>
 									<li>火灾报警控制器检查情况记录</li>
 									<li>火灾报警控制器运动情况记录（人工）</li>
 									<li>控制室内其他消防系统运行情况记录</li>
-									<li>消防设施故障维修记录</li>
+									<li>消防设施故障维修记录</li> -->
 								</ol>
 								<el-switch
-									v-model="switchwork"
+									@change="switchStatus(itemIndex)"
+									v-model="item.status"
 									active-color="#13ce66"
 									inactive-color="#dddddd">
 								</el-switch>
 							</li>
-							<li>2.NFC打卡功能模块
+							<!-- <li>2.NFC打卡功能模块
 								<ol class="ProjectCheckBoxol2">
 									<li>提交打卡记录</li>
 								</ol>
@@ -134,7 +134,7 @@
 									active-color="#13ce66"
 									inactive-color="#dddddd">
 								</el-switch>
-							</li>
+							</li> -->
 						</ol>
 					</div>
 				</el-main>
@@ -148,6 +148,8 @@
 //例如：import 《组件名称》 from '《组件路径》';
 // 引入axios
 import axios from 'axios'
+// 引入qs对axios上传数据解析
+import Qs from 'qs'
 // import PersonItem from '@/views/person/PersonItem.vue'
 export default {
 //import引入的组件需要注入到对象中才能使用
@@ -162,37 +164,113 @@ data() {
 		switchcheck: true,
 		switchfix: true,
 		switchword: true,
-		options: [{
-			value: '选项1',
-			label: '黄金糕'
-		}, {
-			value: '选项2',
-			label: '双皮奶'
-		}, {
-			value: '选项3',
-			label: '蚵仔煎'
-		}, {
-			value: '选项4',
-			label: '龙须面'
-		}, {
-			value: '选项5',
-			label: '北京烤鸭'
-		}],
-		value: '',
-		memberList: ''
+		allProjectList: {},
+		projectID: '',
+		memberList: '',
+		projectMemberModuleList: ''
 	};
 },
 //方法集合
 methods: {
-	// selectProjectPerson(index){
-
-	// }
+	switchStatus(index){
+		console.log(index);
+		console.log(this.selectResult[index].status);
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：companyId(公司id)，int类型，必填
+		// 参数3：projectId(项目ID)，int类型，必填
+		// 参数4：fid(功能模块ID，传父级功能模块id，开关按钮是针对于父级功能模块使用的)，int类型，必填
+		// 参数5：status(状态)，int类型，必填,1开启，0关闭
+		// let _this = this;
+		let currentStatus = '';
+		if(this.selectResult[index].status){
+			currentStatus = 1
+		}else{
+			currentStatus = 0
+		}
+		let currentUid = sessionStorage.getItem('uid')!=" "?sessionStorage.getItem('uid'):0;
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：companyId(公司id)，int类型，必填
+		// 参数3：projectId(项目ID)，int类型，必填
+		// 参数4：uid(用户ID)，int类型，必填
+		// 参数5：fid(功能模块ID，传父级功能模块id，开关按钮是针对于父级功能模块使用的)，int类型，必填
+		// 参数6：status(状态)，int类型，必填,1开启，0关闭
+		let setProjectMemberModuleData = {
+			token: document.querySelector('#token').innerText,
+			companyId: sessionStorage.getItem('companyId'),
+			projectId: sessionStorage.getItem('projectId'),
+			uid: currentUid,
+			fid: this.selectResult[index].id,
+			status: currentStatus
+		}
+		axios.post('http://test.mhfire.cn/mhApi/Project/setProjectMemberModule',Qs.stringify(setProjectMemberModuleData),{
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+		})
+		.then(function(response){
+				console.log(response);
+		})
+		.catch(function(error){
+			console.log(error);
+		});
+	},
+	selectProjectPerson(index){
+		let uid = this.memberList[index].ID;
+		sessionStorage.setItem('uid',uid);
+	},
+	getDefaultPersonLevel(){
+		let _this = this;
+		axios.get('http://test.mhfire.cn/mhApi/Project/projectMemberModuleList',{
+			// 参数1：token(用户登录token)，string类型，必填
+			// 参数2：companyId(公司id)，int类型，必填
+			// 参数3：projectId(项目ID)，int类型，必填
+			// 参数4：uid（员工用户id），int类型，选填
+			params: {
+				token: document.querySelector('#token').innerText,
+				companyId: sessionStorage.getItem('companyId'),
+				projectId: sessionStorage.getItem('projectId'),
+				uid: 0,
+			}
+		})
+		.then(function(response){
+			_this.projectMemberModuleList = response.data.data;
+			console.log('#$%^&%)$*((^*($)$(%)%(%');
+			console.log(response);
+		})
+		.catch(function(error){
+				console.log(error);
+		})
+	},
+	getPersonLevel(){
+		let _this = this;
+		let currentUid = sessionStorage.getItem('uid')!=" "?sessionStorage.getItem('uid'):0;
+		sessionStorage.setItem('currentProjectID',this.projectID);
+		axios.get('http://test.mhfire.cn/mhApi/Project/projectMemberModuleList',{
+			// 参数1：token(用户登录token)，string类型，必填
+			// 参数2：companyId(公司id)，int类型，必填
+			// 参数3：projectId(项目ID)，int类型，必填
+			// 参数4：uid（员工用户id），int类型，选填
+			params: {
+				token: document.querySelector('#token').innerText,
+				companyId: sessionStorage.getItem('companyId'),
+				projectId: sessionStorage.getItem('currentProjectID'),
+				uid: currentUid,
+			}
+		})
+		.then(function(response){
+			_this.projectMemberModuleList = response.data.data;
+			console.log('1111111111111#$%^&%)$*((^*($)$(%)%(%');
+			console.log(response);
+		})
+		.catch(function(error){
+				console.log(error);
+		})
+	}
 },
 created(){
 	let _this = this;
 	let token = document.querySelector('#token').innerText;
 	let companyId = sessionStorage.getItem('companyId');
 	let projectId = sessionStorage.getItem('projectId');
+	this.getDefaultPersonLevel();
 	axios.get('http://test.mhfire.cn/mhApi/Project/memberList',{
 		// 参数1：token(用户登录token)，string类型，必填
 		// 参数2：companyId(公司ID)，int类型，必填
@@ -205,6 +283,22 @@ created(){
 	})
 	.then(function(response){
 		_this.memberList = response.data.data;
+		console.log(response);
+	})
+	.catch(function(error){
+			console.log(error);
+	})
+	axios.get('http://test.mhfire.cn/mhApi/Project/allProjectList',{
+	// 参数1：token(用户登录token)，string类型，必填
+	// 参数2：companyId(公司ID)，int类型，必填
+		params: {
+			token: document.querySelector('#token').innerText,
+			companyId: sessionStorage.getItem('companyId')
+		}
+	})
+	.then(function(response){
+		_this.allProjectList = response.data.data;
+		console.log("?????????????????????????????");
 		console.log(response);
 	})
 	.catch(function(error){
@@ -337,9 +431,9 @@ created(){
 		font-size: 18px;
 		color: #333;
 	}
-	.ProjectDefaultCheckBox .ProjectCheckBoxol1{
+	/* .ProjectDefaultCheckBox .ProjectCheckBoxol1{
 		list-style-type: none;
-	}
+	} */
 	.ProjectDefaultCheckBox .ProjectCheckBoxol1 .ProjectCheckBoxol2{
 		width: 700px;
 		list-style-type:decimal;

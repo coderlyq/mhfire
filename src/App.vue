@@ -490,8 +490,6 @@ export default {
 						}
 				})
 				.then(function(response){
-					console.log("teststestststst");
-					console.log(response.data.data);
 						if(response.data.data.length!=0){
 							document.querySelector('.warnImg').src = require("./assets/images/TopBar/warnImgCount.png");
 						}
