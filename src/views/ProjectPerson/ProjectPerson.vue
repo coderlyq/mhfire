@@ -69,9 +69,9 @@
 					<div class="ProjectDefaultCheckBox">
 						<span>可选功能权限项</span>
 						<ol class="ProjectCheckBoxol1">
-							<li v-for="(item,itemIndex) in projectMemberModuleList.selectResult" :key="item.id">{{item.name}}
+							<li v-for="(itemSelect,itemSelectIndex) in projectMemberModuleList.selectResult" :key="itemSelect.id">{{itemSelect.name}}
 								<ol class="ProjectCheckBoxol2">
-									<li v-for="itemcont in item.child" :key="itemcont.id">{{itemcont.name}}</li>
+									<li v-for="itemSelectcont in itemSelect.child" :key="itemSelectcont.id">{{itemSelectcont.name}}</li>
 									<!-- <li>火灾报警控制器主动上传事件记录</li>
 									<li>火灾报警控制器检查情况记录</li>
 									<li>火灾报警控制器运动情况记录（人工）</li>
@@ -79,8 +79,8 @@
 									<li>消防设施故障维修记录</li> -->
 								</ol>
 								<el-switch
-									@change="switchStatus(itemIndex)"
-									v-model="item.status"
+									@change="switchStatus(itemSelectIndex)"
+									v-model="itemSelect.status"
 									active-color="#13ce66"
 									inactive-color="#dddddd">
 								</el-switch>
@@ -174,7 +174,7 @@ data() {
 methods: {
 	switchStatus(index){
 		console.log(index);
-		console.log(this.selectResult[index].status);
+		console.log(this.projectMemberModuleList.selectResult[index].status);
 		// 参数1：token(用户登录token)，string类型，必填
 		// 参数2：companyId(公司id)，int类型，必填
 		// 参数3：projectId(项目ID)，int类型，必填
@@ -182,7 +182,7 @@ methods: {
 		// 参数5：status(状态)，int类型，必填,1开启，0关闭
 		// let _this = this;
 		let currentStatus = '';
-		if(this.selectResult[index].status){
+		if(this.projectMemberModuleList.selectResult[index].status){
 			currentStatus = 1
 		}else{
 			currentStatus = 0
@@ -199,7 +199,7 @@ methods: {
 			companyId: sessionStorage.getItem('companyId'),
 			projectId: sessionStorage.getItem('projectId'),
 			uid: currentUid,
-			fid: this.selectResult[index].id,
+			fid: this.projectMemberModuleList.selectResult[index].id,
 			status: currentStatus
 		}
 		axios.post('http://test.mhfire.cn/mhApi/Project/setProjectMemberModule',Qs.stringify(setProjectMemberModuleData),{
@@ -215,6 +215,7 @@ methods: {
 	selectProjectPerson(index){
 		let uid = this.memberList[index].ID;
 		sessionStorage.setItem('uid',uid);
+		this.getPersonLevel();
 	},
 	getDefaultPersonLevel(){
 		let _this = this;
@@ -242,7 +243,13 @@ methods: {
 	getPersonLevel(){
 		let _this = this;
 		let currentUid = sessionStorage.getItem('uid')!=" "?sessionStorage.getItem('uid'):0;
-		sessionStorage.setItem('currentProjectID',this.projectID);
+		let currentProjectID = sessionStorage.getItem('projectId');
+		if(this.projectID){
+			console.log('kljl');
+			sessionStorage.setItem('currentProjectID',this.projectID);
+			currentProjectID = this.projectID;
+		}
+		console.log(this.projectID);
 		axios.get('http://test.mhfire.cn/mhApi/Project/projectMemberModuleList',{
 			// 参数1：token(用户登录token)，string类型，必填
 			// 参数2：companyId(公司id)，int类型，必填
@@ -251,7 +258,7 @@ methods: {
 			params: {
 				token: document.querySelector('#token').innerText,
 				companyId: sessionStorage.getItem('companyId'),
-				projectId: sessionStorage.getItem('currentProjectID'),
+				projectId: currentProjectID,
 				uid: currentUid,
 			}
 		})
