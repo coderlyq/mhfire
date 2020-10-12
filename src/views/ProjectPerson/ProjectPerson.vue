@@ -188,6 +188,7 @@ methods: {
 			currentStatus = 0
 		}
 		let currentUid = sessionStorage.getItem('uid')!=" "?sessionStorage.getItem('uid'):0;
+		let currentProjectID = this.projectID!=" "?this.projectID:sessionStorage.getItem('projectId');
 		// 参数1：token(用户登录token)，string类型，必填
 		// 参数2：companyId(公司id)，int类型，必填
 		// 参数3：projectId(项目ID)，int类型，必填
@@ -197,7 +198,7 @@ methods: {
 		let setProjectMemberModuleData = {
 			token: document.querySelector('#token').innerText,
 			companyId: sessionStorage.getItem('companyId'),
-			projectId: sessionStorage.getItem('projectId'),
+			projectId: currentProjectID,
 			uid: currentUid,
 			fid: this.projectMemberModuleList.selectResult[index].id,
 			status: currentStatus
@@ -265,6 +266,24 @@ methods: {
 		.then(function(response){
 			_this.projectMemberModuleList = response.data.data;
 			console.log('1111111111111#$%^&%)$*((^*($)$(%)%(%');
+			console.log(response);
+		})
+		.catch(function(error){
+				console.log(error);
+		})
+
+		axios.get('http://test.mhfire.cn/mhApi/Project/memberList',{
+		// 参数1：token(用户登录token)，string类型，必填
+		// 参数2：companyId(公司ID)，int类型，必填
+		// 参数3：projectId(项目ID)，int类型，必填
+			params: {
+				token: document.querySelector('#token').innerText,
+				companyId: sessionStorage.getItem('companyId'),
+				projectId: this.projectID
+			}
+		})
+		.then(function(response){
+			_this.memberList = response.data.data;
 			console.log(response);
 		})
 		.catch(function(error){
