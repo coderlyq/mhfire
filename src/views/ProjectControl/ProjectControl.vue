@@ -8,7 +8,7 @@
 				<el-breadcrumb-item>项目功能管理</el-breadcrumb-item>
 			</el-breadcrumb>
 			<!-- <span class="ProjectControlTopTitle">项目功能管理</span> -->
-			<el-select style="font-family:'Microsoft YaHei';font-size:12px;color:#666;font-weight:bold;" v-model="value" placeholder="全部项目">
+			<el-select style="font-family:'Microsoft YaHei';font-size:12px;color:#666;font-weight:bold;" v-model="projectID" placeholder="全部项目" @change="getProjectLevel()">
 				<el-option
 					v-for="item in allProjectList"
 					:key="item.ProjectName"
@@ -80,7 +80,8 @@ data() {
 		projectModuleList: '',
 		defaultResult: '',
 		selectResult: '',
-		allProjectList: ''
+		allProjectList: '',
+		projectID: " "
 	};
 },
 //方法集合
@@ -100,10 +101,11 @@ methods: {
 		}else{
 			currentStatus = 0
 		}
+		let currentProjectID = this.projectID!=" "?this.projectID:sessionStorage.getItem('projectId');
 		let setProjectModuleData = {
 			token: document.querySelector('#token').innerText,
 			companyId: sessionStorage.getItem('companyId'),
-			projectId: sessionStorage.getItem('projectId'),
+			projectId: currentProjectID,
 			fid: this.selectResult[index].id,
 			status: currentStatus
 		}
@@ -116,6 +118,30 @@ methods: {
 		.catch(function(error){
 			console.log(error);
 		});
+	},
+	getProjectLevel(){
+		let _this = this;
+		let token = document.querySelector('#token').innerText;
+		axios.get('http://test.mhfire.cn/mhApi/Project/projectModuleList',{
+			// 参数1：token(用户登录token)，string类型，必填
+			// 参数2：companyId(公司id)，int类型，必填
+			// 参数3：projectId(项目ID)，int类型，必填
+			params: {
+				token: token,
+				companyId: sessionStorage.getItem('companyId'),
+				projectId: this.projectID,
+			}
+		})
+		.then(function(response){
+			_this.projectModuleList = response.data.data;
+			_this.defaultResult = response.data.data.defaultResult
+			_this.selectResult = response.data.data.selectResult;
+			console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+			console.log(response);
+		})
+		.catch(function(error){
+				console.log(error);
+		})
 	}
 },
 mounted(){

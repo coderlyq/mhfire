@@ -3,7 +3,7 @@
 <div class='ProjectPerson'>
 	<el-container id="ProjectPerson" style="height: 93.55vh;">
 		<el-aside style="width:374px;padding:0;background-color:#ffffff;">
-			<div class='personImg' v-for="(item,index) in memberList" :key="item.UserName" @click="selectProjectPerson(index)">
+			<div class='personImg' v-for="(item,index) in memberList" :key="item.UserName" @click="selectProjectPerson(index)" :style="{activeStyle:isActiveIndex==index}">
 				<img src="~@/assets/images/Person/bigicon.png" slot="personitemImg">
 				<dl>
 					<dt></dt>
@@ -165,9 +165,11 @@ data() {
 		switchfix: true,
 		switchword: true,
 		allProjectList: {},
-		projectID: '',
+		projectID: ' ',
 		memberList: '',
-		projectMemberModuleList: ''
+		projectMemberModuleList: '',
+		isActive:false,
+		isActiveIndex: 0
 	};
 },
 //方法集合
@@ -189,6 +191,7 @@ methods: {
 		}
 		let currentUid = sessionStorage.getItem('uid')!=" "?sessionStorage.getItem('uid'):0;
 		let currentProjectID = this.projectID!=" "?this.projectID:sessionStorage.getItem('projectId');
+		console.log(this.projectID);
 		// 参数1：token(用户登录token)，string类型，必填
 		// 参数2：companyId(公司id)，int类型，必填
 		// 参数3：projectId(项目ID)，int类型，必填
@@ -207,16 +210,17 @@ methods: {
 			headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
 		})
 		.then(function(response){
-				console.log(response);
+			console.log(response);
 		})
 		.catch(function(error){
 			console.log(error);
 		});
 	},
 	selectProjectPerson(index){
+		this.isActiveIndex = index;
 		let uid = this.memberList[index].ID;
 		sessionStorage.setItem('uid',uid);
-		this.getPersonLevel();
+		this.getUidLevel();
 	},
 	getDefaultPersonLevel(){
 		let _this = this;
@@ -241,11 +245,44 @@ methods: {
 				console.log(error);
 		})
 	},
+	getUidLevel(){
+		let _this = this;
+		let currentUid = sessionStorage.getItem('uid')!=" "?sessionStorage.getItem('uid'):0;
+		let currentProjectID = sessionStorage.getItem('projectId');
+		console.log(currentProjectID);
+		if(this.projectID!=" "){
+			console.log('kljl');
+			sessionStorage.setItem('currentProjectID',this.projectID);
+			currentProjectID = this.projectID;
+		}
+		console.log(this.projectID);
+		axios.get('http://test.mhfire.cn/mhApi/Project/projectMemberModuleList',{
+			// 参数1：token(用户登录token)，string类型，必填
+			// 参数2：companyId(公司id)，int类型，必填
+			// 参数3：projectId(项目ID)，int类型，必填
+			// 参数4：uid（员工用户id），int类型，选填
+			params: {
+				token: document.querySelector('#token').innerText,
+				companyId: sessionStorage.getItem('companyId'),
+				projectId: currentProjectID,
+				uid: currentUid,
+			}
+		})
+		.then(function(response){
+			_this.projectMemberModuleList = response.data.data;
+			console.log('1111111111111#$%^&%)$*((^*($)$(%)%(%');
+			console.log(response);
+		})
+		.catch(function(error){
+				console.log(error);
+		})
+	},
 	getPersonLevel(){
 		let _this = this;
 		let currentUid = sessionStorage.getItem('uid')!=" "?sessionStorage.getItem('uid'):0;
 		let currentProjectID = sessionStorage.getItem('projectId');
-		if(this.projectID){
+		console.log(currentProjectID);
+		if(this.projectID!=" "){
 			console.log('kljl');
 			sessionStorage.setItem('currentProjectID',this.projectID);
 			currentProjectID = this.projectID;
@@ -291,6 +328,11 @@ methods: {
 		})
 	}
 },
+// computed: {
+// 	activeStyle() {
+// 		return this.isActive ? {color: "#ffffff",backgroundColor:"#1c4ded"} : {color: "#4159a6"}
+// 	}
+// },
 created(){
 	let _this = this;
 	let token = document.querySelector('#token').innerText;
@@ -355,6 +397,9 @@ created(){
 	font-size: 14px;
 	color: #666666;
 	cursor: pointer;
+}
+.ProjectPerson .activeStyle{
+	background-color: red;
 }
 .personImg .personitemMark{
 	position: absolute;
