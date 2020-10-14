@@ -3,7 +3,7 @@
 <div class='ProjectPerson'>
 	<el-container id="ProjectPerson" style="height: 93.55vh;">
 		<el-aside style="width:374px;padding:0;background-color:#ffffff;">
-			<div class='personImg' v-for="(item,index) in memberList" :key="item.UserName" @click="selectProjectPerson(index)" :style="{activeStyle:isActiveIndex==index}">
+			<div class='personImg' v-for="(item,index) in memberList" :key="item.UserName" @click="selectProjectPerson(index)" :class="{activeStyle:isActiveIndex==index}">
 				<img src="~@/assets/images/Person/bigicon.png" slot="personitemImg">
 				<dl>
 					<dt></dt>
@@ -399,7 +399,7 @@ created(){
 	cursor: pointer;
 }
 .ProjectPerson .activeStyle{
-	background-color: red;
+	box-shadow: 0 0 15px#666666;
 }
 .personImg .personitemMark{
 	position: absolute;

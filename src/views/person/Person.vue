@@ -1,7 +1,7 @@
 <template>
 	<el-container id="person" style="height: 93.55vh;">
 		<el-aside style="width:374px;padding:0;background-color:#ffffff;">
-			<div class='personImg' v-for="(item,index) in allMemberList" :key="item.UserName" @click="selectMember(index)">
+			<div class='personImg' v-for="(item,index) in allMemberList" :key="item.UserName" @click="selectMember(index)" :class="{activeStyle:isActiveIndex==index}">
 				<img src="~@/assets/images/Person/bigicon.png" slot="personitemImg">
 				<dl>
 					<dt></dt>
@@ -141,7 +141,9 @@ import Qs from 'qs'
 				memberProjectList: '',
 				selectUID: '',
 				selectIndex: '',
-				allProjectList:'',
+				allProjectList:'',		
+				activeStyle:false,
+				isActiveIndex: 0,
 				currenRole: ''//负责或者隶属板块
       }
     },
@@ -267,6 +269,7 @@ import Qs from 'qs'
 			},
 			selectMember(index){
 				let _this = this;
+				this.isActiveIndex = index;
 				let token = document.querySelector('#token').innerText;
 				let companyId = sessionStorage.getItem('companyId');
 				// 选择人员ID
@@ -387,6 +390,9 @@ import Qs from 'qs'
 	align-items: flex-start;
 	/* align-items: flex-start; */
 	justify-content: center
+}
+#person .activeStyle{
+	box-shadow: 0 0 15px#666666;
 }
 	ol{
 		list-style: none;
