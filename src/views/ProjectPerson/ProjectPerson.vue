@@ -53,17 +53,6 @@
 									<li v-for="itemcont in item.child" :key="itemcont.id">{{itemcont.name}}</li>
 								</ol>
 							</li>
-							<!-- <li style="margin-top:50px;">
-								火灾自动报警系统功能
-								<ol style="margin-top:30px;font-family:'PFxi';font-size:14px;color:#666;">
-									<li>系统事件查询功能</li>
-									<li>主机采集器传输状态监测</li>
-									<li>报警系统运行分析</li>
-									<li>查看系统运行数据报表</li>
-									<li>查看项目主机信息</li>
-									<li>回路设备信息查询</li>
-								</ol>
-							</li> -->
 						</ol>
 					</div>
 					<div class="ProjectDefaultCheckBox">
@@ -72,11 +61,6 @@
 							<li v-for="(itemSelect,itemSelectIndex) in projectMemberModuleList.selectResult" :key="itemSelect.id">{{itemSelect.name}}
 								<ol class="ProjectCheckBoxol2">
 									<li v-for="itemSelectcont in itemSelect.child" :key="itemSelectcont.id">{{itemSelectcont.name}}</li>
-									<!-- <li>火灾报警控制器主动上传事件记录</li>
-									<li>火灾报警控制器检查情况记录</li>
-									<li>火灾报警控制器运动情况记录（人工）</li>
-									<li>控制室内其他消防系统运行情况记录</li>
-									<li>消防设施故障维修记录</li> -->
 								</ol>
 								<el-switch
 									@change="switchStatus(itemSelectIndex)"
@@ -85,56 +69,6 @@
 									inactive-color="#dddddd">
 								</el-switch>
 							</li>
-							<!-- <li>2.NFC打卡功能模块
-								<ol class="ProjectCheckBoxol2">
-									<li>提交打卡记录</li>
-								</ol>
-								<el-switch
-									v-model="switchamark"
-									active-color="#13ce66"
-									inactive-color="#dddddd">
-								</el-switch>
-							</li>
-							<li>3.工单功能模块
-								<ol class="ProjectCheckBoxol2">
-									<li>提交打卡记录</li>
-								</ol>
-								<el-switch
-									v-model="switchlists"
-									active-color="#13ce66"
-									inactive-color="#dddddd">
-								</el-switch>
-							</li>
-							<li>4.巡查报表功能模块
-								<ol class="ProjectCheckBoxol2">
-									<li>提交巡查报表</li>
-								</ol>
-								<el-switch
-									v-model="switchcheck"
-									active-color="#13ce66"
-									inactive-color="#dddddd">
-								</el-switch>
-							</li>
-							<li>5.保养报表功能模块
-								<ol class="ProjectCheckBoxol2">
-									<li>提交保养报表</li>
-								</ol>
-								<el-switch
-									v-model="switchfix"
-									active-color="#13ce66"
-									inactive-color="#dddddd">
-								</el-switch>
-							</li>
-							<li>6.报表发送功能
-								<ol class="ProjectCheckBoxol2">
-									<li>提交保养报表</li>
-								</ol>
-								<el-switch
-									v-model="switchword"
-									active-color="#13ce66"
-									inactive-color="#dddddd">
-								</el-switch>
-							</li> -->
 						</ol>
 					</div>
 				</el-main>

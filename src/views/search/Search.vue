@@ -75,14 +75,12 @@
 			</el-table>
 			<div class="navblock">
 				<el-pagination
-					hide-on-single-page=true
 					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
-					:current-page="currentPage4"
-					:page-sizes="[100, 200, 300, 400]"
+					:current-page.sync="currentPage3"
 					:page-size="100"
-					layout="total, sizes, prev, pager, next, jumper"
-					:total="400">
+					layout="prev, pager, next, jumper"
+					:total="1000">
 				</el-pagination>
 			</div>
 		</el-main>
