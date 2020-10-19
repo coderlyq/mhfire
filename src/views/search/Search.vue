@@ -73,14 +73,16 @@
 					</template>
 				</el-table-column>
 			</el-table>
+			<div></div>
 			<div class="navblock">
 				<el-pagination
 					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
 					:current-page.sync="currentPage3"
-					:page-size="100"
+					:page-size="10"
+					:hide-on-single-page="true"
 					layout="prev, pager, next, jumper"
-					:total="1000">
+					:total="historyEveCount">
 				</el-pagination>
 			</div>
 		</el-main>
@@ -133,7 +135,8 @@ import axios from 'axios'
 				currentPage4: 4,
 				historyEvent: '',
 				allProjectList: '',
-				eventTypeList: ''
+				eventTypeList: '',
+				historyEveCount: 0
       };
 		},
 		methods: {
@@ -193,7 +196,47 @@ import axios from 'axios'
         console.log(`每页 ${val} 条`);
       },
       handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+				console.log(`当前页: ${val}`);
+				let _this = this;
+				let startTime = '';
+				let endTime = '';
+				let type = '';
+				let currentPage = val;
+				if(this.eventTime){
+					startTime = new Date(this.eventTime[0]).getTime()/1000;
+					endTime = new Date(this.eventTime[1]).getTime()/1000;
+				}
+				if(this.eventType){
+					type = this.eventType;
+				}
+				let projectId = this.projectvalue;
+				axios.get('http://test.mhfire.cn/mhApi/Project/getHistoryEvent',{
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：companyId(公司id)，int类型，必填
+				// 参数3：projectId(项目ID)，int类型，必填
+				// 参数4：systemInfo(系统信息)，int类型，可选，传系统id过来
+				// 参数5：type(事件类型)，int类型，0全部，1火警，2故障，3反馈，4启动,可选
+				// 参数6：startTime(开始时间)，时间戳格式，将年月日转换成时间戳格式，int类型，可选
+				// 参数7：endTime(结束时间)，时间戳格式，将年月日转换成时间戳格式，int类型，可选
+				// 参数8：page(分页数)，int类型，默认为第1页
+					params: {
+						token: document.querySelector('#token').innerText,
+						companyId: sessionStorage.getItem('companyId'),
+						projectId: projectId,
+						systemInfo: '',
+						type: type,
+						startTime: startTime,
+						endTime: endTime,
+						page: currentPage
+					}
+				})
+				.then(function(response){
+					_this.historyEvent = response.data.data.result;
+					console.log(response);
+				})
+				.catch(function(error){
+						console.log(error);
+				})
 			},
 			getHistoryEvent(){
 				let _this = this;
@@ -221,7 +264,9 @@ import axios from 'axios'
 				})
 				.then(function(response){
 					_this.historyEvent = response.data.data.result;
+					_this.historyEveCount = response.data.data.count;
 					console.log(response);
+					console.log(_this.historyEveCount);
 				})
 				.catch(function(error){
 						console.log(error);
