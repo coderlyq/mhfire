@@ -297,7 +297,7 @@ export default {
 								name: "单位/个",
 								type : 'value',
 								axisLabel : {
-									formatter: '{value} °C'
+									formatter: '{value}'
 								},
 								axisLine:{       //y轴
 									"show":false,
@@ -480,7 +480,7 @@ export default {
 								name: "单位/个",
 								type : 'value',
 								axisLabel : {
-									formatter: '{value} °C'
+									formatter: '{value}'
 								},
 								axisLine:{       //y轴
 									"show":false,

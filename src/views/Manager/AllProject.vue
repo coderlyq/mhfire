@@ -34,15 +34,14 @@
 		
 			</ul>
 			<div class="managernavblock">
-				<span class="demonstration">完整功能</span>
 				<el-pagination
 					@size-change="handleSizeChange"
-					@current-change="handleCurrentChange"
-					:current-page="currentPage4"
-					:page-sizes="[100, 200, 300, 400]"
-					:page-size="100"
-					layout="total, sizes, prev, pager, next, jumper"
-					:total="400">
+					@current-change="handleCurrentProjectChange"
+					:current-page.sync="currentPage3"
+					:page-size="10"
+					:hide-on-single-page="true"
+					layout="prev, pager, next, jumper"
+					:total="projectListCount">
 				</el-pagination>
 			</div>
 		</el-main>
@@ -66,7 +65,8 @@ import axios from 'axios'
 				asideBoolean: this.$route.params.asideBoolean,
 				companyList: '123',
 				restaurantsProject: [],
-        stateProject: '',
+				stateProject: '',
+				projectListCount: 0
 			}
 		},
 		methods: {
@@ -91,8 +91,41 @@ import axios from 'axios'
 			handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
       },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+      handleCurrentProjectChange(val) {
+				console.log(`当前页: ${val}`);
+				let _this = this;
+				let currentPage = val;
+				axios.get('http://test.mhfire.cn/mhApi/Company/companyList',{
+					// 参数1：token(用户登录token)，string类型，必填
+					// 参数2：page(分页数)，int类型，选填，默认为1
+					// 参数3：companyName(公司名称)，string类型，选填
+						params: {
+							token: document.querySelector('#token').innerText,
+							page: currentPage,
+							companyName:''
+						}
+				})
+				.then(function(response){
+					console.log('123455678890');
+					let asideShow = _this.$route.params.asideShow;
+					console.log(response);
+					document.querySelector('.leftSideBar').style.display = asideShow;
+
+					_this.companyList = response.data.data.result;
+					let restaurantsProjectArr = [];
+					for(let i = 0;i<_this.companyList.length;i++){
+						// console.log(restaurantsProject);
+						restaurantsProjectArr[i] = {};
+						restaurantsProjectArr[i].value = _this.companyList[i].CompanyName;
+						restaurantsProjectArr[i].ID = _this.companyList[i].ID;
+						restaurantsProjectArr[i].index = i;
+					}
+					_this.restaurantsProject = restaurantsProjectArr;
+					_this.projectListCount = response.data.data.count;
+				})
+				.catch(function(error){
+						console.log(error);
+				})
 			},
 			selectItem(index) {
 				document.querySelector('.leftSideBar').style.display = 'block';
@@ -143,6 +176,7 @@ import axios from 'axios'
 					restaurantsProjectArr[i].index = i;
 				}
 				_this.restaurantsProject = restaurantsProjectArr;
+				_this.projectListCount = response.data.data.count;
 			})
 			.catch(function(error){
 					console.log(error);
