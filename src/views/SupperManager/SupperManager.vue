@@ -45,16 +45,15 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<div class="suppernavblock">
+					<div class="navblock">
 					<el-pagination
-						hide-on-single-page=true
 						@size-change="handleSizeChange"
-						@current-change="handleCurrentChange"
-						:current-page="currentPage4"
-						:page-sizes="[100, 200, 300, 400]"
-						:page-size="100"
-						layout="total, sizes, prev, pager, next, jumper"
-						:total="400">
+						@current-change="handleManagerChange"
+						:current-page.sync="currentPage3"
+						:page-size="10"
+						:hide-on-single-page="true"
+						layout="prev, pager, next, jumper"
+						:total="managerCount">
 					</el-pagination>
 				</div>
 				<el-dialog
@@ -161,8 +160,26 @@ methods: {
 	handleSizeChange(val) {
 		console.log(`每页 ${val} 条`);
 	},
-	handleCurrentChange(val) {
+	handleManagerChange(val) {
 		console.log(`当前页: ${val}`);
+		let _this = this;
+		let currentPage = val;
+		let token = document.querySelector('#token').innerText;
+		axios.get('http://test.mhfire.cn/mhApi/Admin/adminList',{
+			// 参数1：token(用户登录token)，string类型，必填
+			// 参数2：page(分页数)，int类型，选填，默认为1
+				params: {
+					token: token,
+					page: currentPage
+				}
+		})
+		.then(function(response){
+			_this.adminList = response.data.data.result;
+			console.log(response);
+		})
+		.catch(function(error){
+				console.log(error);
+		})
 	},
 	supperClickEdit(str){
 		console.log(str);
@@ -281,6 +298,7 @@ created() {
 	})
 	.then(function(response){
 		_this.adminList = response.data.data.result;
+		_this.managerCount = response.data.data.count;
 		console.log(response);
 	})
 	.catch(function(error){

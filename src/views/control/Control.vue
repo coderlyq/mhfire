@@ -609,6 +609,7 @@ export default {
 			_this.pressureTrouble = pressureTrouble;
 			_this.waterLevelFire = waterLevelFire;
 			_this.waterLevelTrouble = waterLevelTrouble;
+			_this.drawProjectEcharts();
 		})
 		.catch(function(error){
 				console.log(error);
@@ -632,10 +633,10 @@ export default {
 	},
 	//生命周期 - 挂载完成（可以访问DOM元素）
 	mounted() {
-		let _this = this;
-		setTimeout(function(){
-			_this.drawProjectEcharts();
-		},3000);
+		// let _this = this;
+		// setTimeout(function(){
+		// 	_this.drawProjectEcharts();
+		// },3000);
 	}
 }
 </script>

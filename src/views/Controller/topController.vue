@@ -603,6 +603,7 @@ let _this = this;
 			_this.pressureTrouble = pressureTrouble;
 			_this.waterLevelFire = waterLevelFire;
 			_this.waterLevelTrouble = waterLevelTrouble;
+			_this.drawProjectEcharts();
 		})
 		.catch(function(error){
 				console.log(error);
@@ -627,10 +628,10 @@ let _this = this;
 	},
 	//生命周期 - 挂载完成（可以访问DOM元素）
 	mounted() {
-		let _this = this;
-		setTimeout(()=>{
-			_this.drawProjectEcharts();
-	},3000);
+	// 	let _this = this;
+	// 	setTimeout(()=>{
+	// 		_this.drawProjectEcharts();
+	// },3000);
 	}
 }
 </script>

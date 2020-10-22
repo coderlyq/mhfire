@@ -63,7 +63,7 @@ export default {
 		}
 	},
 	mounted () {
-		// setTimeout(()=>this.baiduMap(),2000);
+		// setTimeout(()=>this.baiduMap(),200);
 		this.baiduMap();
 	},
 	//生命周期 - 创建完成（可以访问当前this实例）

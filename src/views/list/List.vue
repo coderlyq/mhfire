@@ -19,6 +19,17 @@
 					<el-button type="primary" @click="clickProject(index)">项目设置</el-button>
 				</li>
 			</ul>
+			<div class="managernavblock">
+				<el-pagination
+					@size-change="handleSizeChange"
+					@current-change="handleListChange"
+					:current-page.sync="currentPage3"
+					:page-size="10"
+					:hide-on-single-page="true"
+					layout="prev, pager, next, jumper"
+					:total="listCount">
+				</el-pagination>
+			</div>
 		</el-main>
 	</el-container>
 </template>
@@ -30,7 +41,8 @@ import axios from 'axios'
 		name: "List",
 		data() {
 			return {
-				projectLists:''
+				projectLists:'',
+				listCount: 0
 			}
 		},
 		//生命周期 - 创建完成（可以访问当前this实例）
@@ -59,12 +71,39 @@ import axios from 'axios'
 			.then(function(response){
 				console.log(response.data.data.result);
 				_this.projectLists = response.data.data.result;
+				_this.listCount = response.data.data.count;
 			})
 			.catch(function(error){
 					console.log(error);
 			})
 		},
 		methods: {
+			handleListChange(val){
+				let token = document.querySelector('#token').innerText;
+				let companyId = sessionStorage.getItem('companyId');
+				let currentPage = val;
+				let _this = this;
+				axios.get('http://test.mhfire.cn/mhApi/Project/projectList',{
+					// 参数1：token(用户登录token)，string类型，必填
+					// 参数2：companyId(公司ID)，int类型，必填
+					// 参数3：projectName(项目名称)，string类型，选填
+					// 参数4：page(分页数)，int类型，选填，默认为1
+						params: {
+							token: token,
+							companyId: companyId,
+							projectName:'',
+							page:currentPage
+						}
+				})
+				.then(function(response){
+					console.log(response.data.data.result);
+					_this.projectLists = response.data.data.result;
+					_this.listCount = response.data.data.count;
+				})
+				.catch(function(error){
+						console.log(error);
+				})
+			},
 			clickProject(index){
 				let projectId = this.projectLists[index].ID;
 				document.querySelector('.siderBarTop').style.display = 'none';

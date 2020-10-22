@@ -230,16 +230,46 @@ import Qs from 'qs'
 					headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
 				})
 				.then(function(response){
-					let level = '';
-					if(_this.levelvalue==1){
-						level = 1;
+					if(response.data.ret_code==0){
+						let level = '';
+						if(_this.levelvalue==1){
+							level = 1;
+						}
+						if(_this.levelvalue==2){
+							level = 0;
+						}
+						console.log(level);
+						_this.allMemberList[_this.selectIndex].isResponseFlag = level;
+					}else{
+						switch(response.data.ret_code){
+							case 106:
+								_this.$message.error('您还未绑定负责项目，请先绑定负责项目');
+								break;
+							case 101:
+								_this.$message.error('公司id不能为空');
+								break;
+							case 102:
+								_this.$message.error('无访问权限');
+								break;
+							case 103:
+								_this.$message.error('用户id不能为空');
+								break;
+							case 104:
+								_this.$message.error('人员类型参数值有误');
+								break;
+							case 105:
+								_this.$message.error('等级信息切换失败');
+								break;
+							case 201:
+								_this.$message.error('token参数不正确');
+								break;
+							case 202:
+								_this.$message.error('用户未登录或登录已失效');
+								break;
+						}
 					}
-					if(_this.levelvalue==2){
-						level = 0;
-					}
-					console.log(level);
-					_this.allMemberList[_this.selectIndex].isResponseFlag = level;
-						console.log(response);
+					
+					console.log(response);
 				})
 				.catch(function(error){
 						console.log(error);
