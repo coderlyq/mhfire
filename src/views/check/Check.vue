@@ -51,16 +51,15 @@
 					</template>
 				</el-table-column>
 			</el-table>
-			<div class="checknavblock">
+			<div class="navblock">
 				<el-pagination
-					hide-on-single-page=true
 					@size-change="handleSizeChange"
-					@current-change="handleCurrentChange"
-					:current-page="currentPage4"
-					:page-sizes="[100, 200, 300, 400]"
-					:page-size="100"
-					layout="total, sizes, prev, pager, next, jumper"
-					:total="400">
+					@current-change="handleCheckChange"
+					:current-page.sync="currentPage3"
+					:page-size="10"
+					:hide-on-single-page="true"
+					layout="prev, pager, next, jumper"
+					:total="checkEveCount">
 				</el-pagination>
 			</div>
 		</el-main>
@@ -76,23 +75,6 @@ import Qs from 'qs'
 		name: "Search",
 		data() {
       return {
-				tableData: [{
-          eleTime: '2016-05-02',
-          elename: '王小虎',
-          eletel: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          eleTime: '2016-05-02',
-          elename: '王小虎',
-          eletel: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          eleTime: '2016-05-02',
-          elename: '王小虎',
-          eletel: '上海市普陀区金沙江路 1518 弄'
-        }, {
-          eleTime: '2016-05-02',
-          elename: '王小虎',
-          eletel: '上海市普陀区金沙江路 1518 弄'
-				}],
 				currentPage1: 5,
         currentPage2: 5,
         currentPage3: 5,
@@ -109,7 +91,8 @@ import Qs from 'qs'
         }],
 				checkvalue: '待审核',
 				inputcheck: '',
-				memberList: ''
+				memberList: '',
+				checkEveCount: 0
       };
 		},
 		methods: {
@@ -119,8 +102,35 @@ import Qs from 'qs'
 			handleSizeChange(val) {
         console.log(`每页 ${val} 条`);
       },
-      handleCurrentChange(val) {
-        console.log(`当前页: ${val}`);
+      handleCheckChange(val) {
+				console.log(`当前页: ${val}`);
+				let _this = this;
+				let currentPage = val;
+				let token = document.querySelector('#token').innerText;
+				let status = this.checkvalue==='待审核'?1:this.checkvalue;
+				axios.get('http://test.mhfire.cn/mhApi/Member/checkMemberList',{
+					// 参数1：token(用户登录token)，string类型，必填
+					// 参数2：companyId(公司ID)，int类型，必填
+					// 参数3：keyword(关键字)，（员工姓名、电话）string类型，选填
+					// 参数4：page(分页数)，int类型，选填，默认为1
+					// 参数5：status（审核状态）,1审核中，2审核通过，3审核失败，int类型，必选
+					params: {
+						token: token,
+						companyId: sessionStorage.getItem('companyId'),
+						keyword: this.inputcheck,
+						page: currentPage,
+						status: status
+					}
+				})
+				.then(function(response){
+					_this.memberList = response.data.data.result;
+					_this.checkEveCount = response.data.data.count;
+					console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
+					console.log(response);
+				})
+				.catch(function(error){
+						console.log(error);
+				})
 			},
 			checkMemberList(){
 				console.log(this.checkvalue);
@@ -144,6 +154,7 @@ import Qs from 'qs'
 				})
 				.then(function(response){
 					_this.memberList = response.data.data.result;
+					_this.checkEveCount = response.data.data.count;
 					console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
 					console.log(response);
 				})
