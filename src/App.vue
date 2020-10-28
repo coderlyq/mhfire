@@ -504,9 +504,9 @@ export default {
 
 <style>
 @import '~@/assets/css/common/normalize.css';
-#app {
+/* #app {
 
-}
+} */
 .layout{
 	width: 23px;
 	height: 22px;

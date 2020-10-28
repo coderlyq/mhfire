@@ -32,7 +32,7 @@
 			<el-menu-item path="/ProjectList">
 				<img slot="item-icon" src="~@/assets/images/SiderBar/listdefault.png" alt="">
 				<img slot="item-icon-active" src="~@/assets/images/SiderBar/listchecked.png" alt="">
-				<span slot="item-text">项目信息管理1</span>
+				<span slot="item-text">项目信息管理</span>
 			</el-menu-item>
 			<el-menu-item path="/ProjectControl">
 				<img slot="item-icon" src="~@/assets/images/SiderBar/settingdefault.png" alt="">
@@ -43,6 +43,11 @@
 				<img slot="item-icon" src="~@/assets/images/TopBar/person.png" alt="">
 				<img slot="item-icon-active" src="~@/assets/images/TopBar/personed.png" alt="">
 				<span slot="item-text">项目人员管理</span>
+			</el-menu-item>
+			<el-menu-item path="/DevideManage">
+				<img slot="item-icon" src="~@/assets/images/TopBar/devide.png" alt="">
+				<img slot="item-icon-active" src="~@/assets/images/TopBar/devideed.png" alt="">
+				<span slot="item-text">物联设备管理</span>
 			</el-menu-item>
 			<el-menu-item path="/Search">
 				<img slot="item-icon" src="~@/assets/images/TopBar/search.png" alt="">

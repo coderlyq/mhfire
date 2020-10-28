@@ -20,6 +20,7 @@ const ProjectCreate =()=> import('@/views/ProjectControl/ProjectCreate');
 const PersonInfos =()=> import('@/views/person/PersonInfos');
 const CompanyCheck =()=> import('@/views/check/CompanyCheck');
 const warnSearch =()=> import('@/views/search/warnSearch');
+const DevideManage =()=> import('@/views/Devide/DevideManage');
 // 安装插件
 Vue.use(VueRouter)
 
@@ -118,6 +119,11 @@ const routes = [
 		path: '/CompanyCheck',
 		name: 'CompanyCheck',
 		component: CompanyCheck
+	},
+	{
+		path: 'DevideManage',
+		name: 'DevideManage',
+		component: DevideManage
 	}
 ]
 
