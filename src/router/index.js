@@ -121,7 +121,7 @@ const routes = [
 		component: CompanyCheck
 	},
 	{
-		path: 'DevideManage',
+		path: '/DevideManage',
 		name: 'DevideManage',
 		component: DevideManage
 	}
