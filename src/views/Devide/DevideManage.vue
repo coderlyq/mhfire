@@ -5,10 +5,10 @@
 			<el-header class="devideContTop">
 				<div class="devideLeft">物联设备管理</div>
 				<div class="devideRight"  @compositionend="checkDevideList">
-					<el-input placeholder="通过设备名称/地址/IMEI查找设备" v-model="inputDevideCheck" suffix-icon="el-icon-search">
+					<el-input placeholder="通过设备名称/地址/IMEI查找设备" v-model="inputDevideCheck">
 						<!-- <el-button slot="append" icon="el-icon-search"></el-button> -->
 					</el-input>
-					<el-button type="primary" @click="addTab(editableTabsValue)">新增设备<i slot="suffix" class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
+					<el-button type="primary" @click="addTab()">新增设备<i class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
 				</div>
 			</el-header>
 			<el-main class="devideInfos">
@@ -56,21 +56,34 @@ export default {
 	watch: {},
 	//方法集合
 	methods: {
-		addTab(targetName) {
+		addTab() {
+			this.$prompt('请输入邮箱', '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消'
+			}).then(({ value }) => {
+				this.$message({
+					type: 'success',
+					message: '你的邮箱是: ' + value
+				});
+				this.addTabIndex(value);
+			}).catch(() => {
+				this.$message({
+					type: 'info',
+					message: '取消输入'
+				});       
+			});
+		},
+		addTabIndex(value) {
 			let newTabName = ++this.tabIndex + '';
 			this.editableTabs.push({
-				title: 'New Tab',
+				title: value,
 				name: newTabName,
 				content: 'New Tab content'
 			});
 			this.editableTabsValue = newTabName;
-			console.log(targetName);
+			console.log(value);
 		},
 		removeTab(targetName) {
-			console.log("123");
-						console.log(this.editableTabs);
-			console.log(this.editableTabsValue);
-						console.log("121344455567788");
 			let tabs = this.editableTabs;
 			let activeName = this.editableTabsValue;
 			console.log(activeName);
@@ -133,17 +146,21 @@ export default {
 		flex-direction: row;
 		justify-content: flex-end;
 		align-items: center;
+		font-size: 12px;
 	}
 	.devideManage .devideRight .el-input input{
 		width: 270px;
 		height: 30px;
-		padding-right: 20px;
+		padding: 0;
+		background: url('~@/assets/images/DevideManage/searchIcon.png') 244px center no-repeat;
+		text-indent: 10px;
 	}
 	.devideManage .devideRight .el-button{
 		width: 106px;
 		height: 30px;
 		line-height: 30px;
 		padding: 0;
+		font-size: 12px;
 	}
 	.devideManage .devideInfos{
 		background-color: #ffffff;

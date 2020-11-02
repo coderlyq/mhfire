@@ -39,7 +39,7 @@
 					<div id="myChartsPie" ref="myChartsPie" style="height:390px;"></div>
 				</div>
 				<div class="chartWaterLineArea">
-					<div class="chartLineText">火灾自动报警系统</div>
+					<div class="chartLineText">消防水系统</div>
 					<ol>
 						<li v-for="item in chartWaterLineDatas" :key="item.dlname" :style="{backgroundImage:item.liBackImg}">
 							<img :src="item.contImg" alt="">
