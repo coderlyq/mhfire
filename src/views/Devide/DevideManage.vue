@@ -8,20 +8,43 @@
 					<el-input placeholder="通过设备名称/地址/IMEI查找设备" v-model="inputDevideCheck">
 						<!-- <el-button slot="append" icon="el-icon-search"></el-button> -->
 					</el-input>
-					<el-button type="primary" @click="addTab()">新增设备<i class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
+					<el-button type="primary">新增设备<i class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
 				</div>
 			</el-header>
 			<el-main class="devideInfos">
-				<el-tabs v-model="editableTabsValue" type="card" closable @tab-remove="removeTab">
+				<el-tabs v-model="editableTabsValue" type="card" :closable="closableBoolean" @tab-remove="removeTab">
 					<el-tab-pane
 						v-for="item in editableTabs"
 						:key="item.name"
 						:label="item.title"
 						:name="item.name"
 					>
-						{{item.content}}
 					</el-tab-pane>
 				</el-tabs>
+				<div class="devideTopRight">
+					<el-button type="danger" class="devideTopRightDelete" @click="deleteTab()">删除分组</el-button>
+					<el-button type="primary" class="devideTopRightAdd" @click="addTab()">添加新分组<i class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
+				</div>
+				<el-table
+					:data="tableData"
+					height="250"
+					border
+					style="width: 100%">
+					<el-table-column
+						prop="date"
+						label="日期"
+						width="180">
+					</el-table-column>
+					<el-table-column
+						prop="name"
+						label="姓名"
+						width="180">
+					</el-table-column>
+					<el-table-column
+						prop="address"
+						label="地址">
+					</el-table-column>
+				</el-table>
 			</el-main>
 		</el-container>
 	</div>
@@ -37,6 +60,7 @@ export default {
 	data() {
 		//这里存放数据
 		return {
+			closableBoolean: false,
 			editableTabsValue: '2',
 			editableTabs: [{
 				title: 'Tab 1',
@@ -56,14 +80,18 @@ export default {
 	watch: {},
 	//方法集合
 	methods: {
+		deleteTab(){
+			this.closableBoolean = true;
+		},
 		addTab() {
-			this.$prompt('请输入邮箱', '提示', {
+			this.$prompt('添加新分组', {
 				confirmButtonText: '确定',
-				cancelButtonText: '取消'
+				cancelButtonText: '取消',
+				inputPlaceholder: '输入新分组名称'
 			}).then(({ value }) => {
 				this.$message({
 					type: 'success',
-					message: '你的邮箱是: ' + value
+					message: '您的新分组是: ' + value
 				});
 				this.addTabIndex(value);
 			}).catch(() => {
@@ -141,6 +169,9 @@ export default {
 		justify-content: space-between;
 		align-items: stretch;
 	}
+	.devideManage .el-tabs__header{
+		margin-bottom: 0;
+	}
 	.devideManage .devideRight{
 		display: flex;
 		flex-direction: row;
@@ -168,5 +199,29 @@ export default {
 		height: 97%;
 		margin: 20px;
 		border-radius: 10px;
+		padding: 50px;
+		position: relative;
+	}
+	.devideManage .el-message-box__message p{
+		font-family: "PF";
+		font-weight: bolder;
+		font-size: 16px;
+	}
+	.devideManage .devideTopRight{
+		position: absolute;
+		top: 50px;
+		right: 60px;
+	}
+	.devideManage .devideTopRight .devideTopRightDelete{
+		height: 30px;
+		/* line-height: 30px; */
+		padding-top: 0;
+		padding-bottom: 0;
+	}
+	.devideManage .devideTopRight .devideTopRightAdd{
+		height: 30px;
+		line-height: 30px;
+		padding-top: 0;
+		padding-bottom: 0;
 	}
 </style>
