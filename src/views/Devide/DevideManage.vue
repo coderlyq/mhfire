@@ -26,25 +26,50 @@
 					<el-button type="primary" class="devideTopRightAdd" @click="addTab()">添加新分组<i class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
 				</div>
 				<el-table
-					:data="tableData"
-					height="250"
-					border
+					:data="devideInfosTableData"
 					style="width: 100%">
 					<el-table-column
-						prop="date"
-						label="日期"
-						width="180">
+						prop="NBType"
+						label="NB感烟探测器"
+						align="center">
 					</el-table-column>
 					<el-table-column
-						prop="name"
-						label="姓名"
-						width="180">
+						prop="NBMark"
+						label="设备备注"
+						align="center">
 					</el-table-column>
 					<el-table-column
-						prop="address"
-						label="地址">
+						prop="NBStatus"
+						label="设备状态"
+						align="center">
+					</el-table-column>
+					<el-table-column
+						prop="NBImei"
+						label="设备IMEI"
+						align="center">
+					</el-table-column>
+					<el-table-column
+						prop="NBAddress"
+						label="设备地址"
+						align="center">
+					</el-table-column>
+					<el-table-column
+						prop="NBOperate"
+						label="操作"
+						align="center"> 
 					</el-table-column>
 				</el-table>
+				<div class="devidePage">
+					<el-pagination
+						@size-change="handleSizeChange"
+						@current-change="handleCurrentChange"
+						:current-page.sync="currentPage3"
+						:page-size="10"
+						:hide-on-single-page="true"
+						layout="prev, pager, next, jumper"
+						:total="historyEveCount">
+					</el-pagination>
+				</div>
 			</el-main>
 		</el-container>
 	</div>
@@ -71,7 +96,45 @@ export default {
 				name: '2',
 				content: 'Tab 2 content'
 			}],
-			tabIndex: 2
+			tabIndex: 2,
+			devideInfosTableData:[
+				{
+					NBType: "NB烟感探测器",
+					NBMark: "厨房",
+					NBStatus: "正常",
+					NBImei: "123445543654642",
+					NBAddress: "汇聚创新园A栋403室"
+				},
+				{
+					NBType: "NB烟感探测器",
+					NBMark: "厨房",
+					NBStatus: "正常",
+					NBImei: "123445543654642",
+					NBAddress: "汇聚创新园A栋403室"
+				},
+				{
+					NBType: "NB烟感探测器",
+					NBMark: "厨房",
+					NBStatus: "正常",
+					NBImei: "123445543654642",
+					NBAddress: "汇聚创新园A栋403室"
+				},
+				{
+					NBType: "NB烟感探测器",
+					NBMark: "厨房",
+					NBStatus: "正常",
+					NBImei: "123445543654642",
+					NBAddress: "汇聚创新园A栋403室"
+				},
+				{
+					NBType: "NB烟感探测器",
+					NBMark: "厨房",
+					NBStatus: "正常",
+					NBImei: "123445543654642",
+					NBAddress: "汇聚创新园A栋403室"
+				}
+			],
+			historyEveCount: 100
 		};
 	},
 	//监听属性 类似于data概念
@@ -223,5 +286,19 @@ export default {
 		line-height: 30px;
 		padding-top: 0;
 		padding-bottom: 0;
+	}
+	.devideManage .devideInfos .el-table{
+		border-left: 1px solid #E4E7ED;
+		border-right: 1px solid #E4E7ED;
+	}
+	.devideManage .devideInfos th{
+		color: #666;
+		font-family: "PFxi";
+		font-size: 18px;
+	}
+	.devideManage .devideInfos .devidePage{
+		position: absolute;
+		bottom: 50px;
+		right: 60px;
 	}
 </style>
