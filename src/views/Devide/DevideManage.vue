@@ -27,7 +27,9 @@
 				</div>
 				<el-table
 					:data="devideInfosTableData"
-					style="width: 100%">
+					style="width: 100%"
+					@row-click="rowClick()"
+					>
 					<el-table-column
 						prop="NBType"
 						label="NB感烟探测器"
@@ -56,7 +58,21 @@
 					<el-table-column
 						prop="NBOperate"
 						label="操作"
-						align="center"> 
+						align="center"
+						>
+						<template slot-scope="scope">
+							<el-popconfirm
+								confirm-button-text='好的'
+								cancel-button-text='不用了'
+								icon="el-icon-info"
+								icon-color="red"
+								title="确定在该组中移除此设备？
+								如需找回，可在所有设备组中找回"
+							>
+								<el-button @click="deleteSingleDevide(scope.row)" type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">删除</el-button>
+							</el-popconfirm>
+							<el-button @click="editSingleDevide(scope.row)" style="text-decoration:underline" type="text" size="small">编辑</el-button>
+						</template>
 					</el-table-column>
 				</el-table>
 				<div class="devidePage">
@@ -70,6 +86,27 @@
 						:total="historyEveCount">
 					</el-pagination>
 				</div>
+<!-- 弹框 -->
+				<el-dialog class="devEditDialog" title="编辑设备信息" :visible.sync="editSingleDevideDialog">
+					<el-form :model="devForm">
+						<el-form-item label="设备备注" :label-width="formLabelWidth">
+							<el-input v-model="devForm.devName" autocomplete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="设备地址" :label-width="formLabelWidth">
+							<el-input v-model="devForm.devAddress" autocomplete="off"></el-input>
+						</el-form-item>
+						<el-form-item label="修改分组" :label-width="formLabelWidth">
+							<el-select v-model="devForm.devGroup" placeholder="默认分组">
+								<el-option label="区域一" value="shanghai"></el-option>
+								<el-option label="区域二" value="beijing"></el-option>
+							</el-select>
+						</el-form-item>
+					</el-form>
+					<div slot="footer" class="dialog-footer">
+						<el-button @click="editSingleDevideDialog = false">取 消</el-button>
+						<el-button type="primary" @click="editSingleDevideDialog = false">确 定</el-button>
+					</div>
+				</el-dialog>
 			</el-main>
 		</el-container>
 	</div>
@@ -85,6 +122,7 @@ export default {
 	data() {
 		//这里存放数据
 		return {
+			editSingleDevideDialog: false,
 			closableBoolean: false,
 			editableTabsValue: '2',
 			editableTabs: [{
@@ -134,7 +172,13 @@ export default {
 					NBAddress: "汇聚创新园A栋403室"
 				}
 			],
-			historyEveCount: 100
+			historyEveCount: 100,
+			formLabelWidth: '75px',
+			devForm: {
+          devName: '',
+          devAddress: '',
+          devGroup: ''
+        },
 		};
 	},
 	//监听属性 类似于data概念
@@ -194,6 +238,18 @@ export default {
 		},
 		checkDevideList(){
 			console.log('checkDevideList');
+		},
+		deleteSingleDevide(){
+						event.stopPropagation( );
+			console.log(this.editSingleDevideDialog);
+		},
+		editSingleDevide(row){
+			this.editSingleDevideDialog = true;
+			console.log(this.editSingleDevideDialog);
+			console.log(row);
+		},
+		rowClick(){
+			console.log('rowClick');
 		}
 	},
 	//生命周期 - 创建完成（可以访问当前this实例）
@@ -300,5 +356,13 @@ export default {
 		position: absolute;
 		bottom: 50px;
 		right: 60px;
+	}
+	.devideManage .devEditDialog .el-dialog{
+		width: 569px;
+		border-radius: 5px;
+	}
+	.devideManage .devEditDialog .el-dialog .el-input__inner{
+		width: 385px;
+		text-align: center;
 	}
 </style>
