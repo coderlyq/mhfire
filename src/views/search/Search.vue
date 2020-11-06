@@ -190,7 +190,6 @@ import axios from 'axios'
 						ProjectID: row.ProjectID
 					}
 				})
-				console.log(row);
 			},
 			handleSizeChange(val) {
         console.log(`每页 ${val} 条`);

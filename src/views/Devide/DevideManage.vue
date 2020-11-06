@@ -27,8 +27,8 @@
 				</div>
 				<el-table
 					:data="devideInfosTableData"
-					style="width: 100%"
-					@row-click="rowClick()"
+					style="width: 100%;cursor: pointer;"
+					@current-change="rowClick"
 					>
 					<el-table-column
 						prop="NBType"
@@ -137,6 +137,7 @@ export default {
 			tabIndex: 2,
 			devideInfosTableData:[
 				{
+					NBID: 1,
 					NBType: "NB烟感探测器",
 					NBMark: "厨房",
 					NBStatus: "正常",
@@ -144,6 +145,7 @@ export default {
 					NBAddress: "汇聚创新园A栋403室"
 				},
 				{
+					NBID: 2,
 					NBType: "NB烟感探测器",
 					NBMark: "厨房",
 					NBStatus: "正常",
@@ -151,6 +153,7 @@ export default {
 					NBAddress: "汇聚创新园A栋403室"
 				},
 				{
+					NBID: 3,
 					NBType: "NB烟感探测器",
 					NBMark: "厨房",
 					NBStatus: "正常",
@@ -158,6 +161,7 @@ export default {
 					NBAddress: "汇聚创新园A栋403室"
 				},
 				{
+					NBID: 4,
 					NBType: "NB烟感探测器",
 					NBMark: "厨房",
 					NBStatus: "正常",
@@ -165,6 +169,7 @@ export default {
 					NBAddress: "汇聚创新园A栋403室"
 				},
 				{
+					NBID: 5,
 					NBType: "NB烟感探测器",
 					NBMark: "厨房",
 					NBStatus: "正常",
@@ -248,8 +253,16 @@ export default {
 			console.log(this.editSingleDevideDialog);
 			console.log(row);
 		},
-		rowClick(){
+		rowClick(row){
+			this.$router.push({
+				path: '/DevideInfos',
+				name: 'DevideInfos',
+				params: {
+					messageId:row.NBID,
+				}
+			});
 			console.log('rowClick');
+			console.log(row);
 		}
 	},
 	//生命周期 - 创建完成（可以访问当前this实例）
