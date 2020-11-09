@@ -15,12 +15,31 @@
 				</div>
 				<div class="devideInfosMainBottom">
 					<div class="devideInfosMainBottomLeft">
-						<div class="devideInfosMainBottom"></div>
-						<div class="devideInfosMainBottom"></div>
+						<div class="devideInfosMainBottomLCont">
+							<div class="devideInfosMainBottomLT">
+								<h4>设备信息</h4>
+								<div class="devideInfosMainBottomLTCont">
+									<dl>
+										<dt></dt>
+										<dd><span>设备类型：</span>NB烟感探测器</dd>
+										<dd><span>系统事件：</span>火警</dd>
+										<dd><span>报警时间：</span>2020年10月22日</dd>
+										<dd><span>设备备注：</span>厨房</dd>
+										<dd><span>设备IMEI：</span>554645321365</dd>
+										<dd><span>拆除状态：</span>拆除</dd>
+										<dd><span>电量状态：</span>正常</dd>
+										<dd><span>信号强度：</span>一般</dd>
+										<dd><span>设备位置：</span>汇聚创新园地下室一层</dd>
+									</dl>
+									<img src="~@/assets/images/DevideManage/devideModel.png" alt="">
+								</div>
+							</div>
+							<div class="devideInfosMainBottomLB"></div>
+						</div>	
 					</div>
 					<div class="devideInfosMainBottomRight">
-						<div class="devideInfosMainBottom"></div>
-						<div class="devideInfosMainBottom"></div>
+						<div class="devideInfosMainBottomRT"></div>
+						<div class="devideInfosMainBottomRB"></div>
 					</div>
 				</div>
 			</el-main>
@@ -70,11 +89,11 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 	.devideInfos{
 		background-color: #f2f4fa;
 		width: 100%;
-		height: 100%;
+		height: auto;
 	}
 	.devideInfos .devideInfosCont{
 		width: 100%;
-		height: 100%;
+		height: auto;
 	}
 	.devideInfos .devideInfosContTop{
 		height: 60px;
@@ -104,6 +123,10 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 		background-color: #ffffff;
 		border-radius: 5px;
 	}
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLCont{
+		width: 911px;
+		margin: 0 auto;
+	}
 	.devideInfos .devideInfosMainTop .devideInfosMainTopRight{
 		display: flex;
 		flex-direction: row;
@@ -117,5 +140,66 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 		text-align: center;
 		background-color: #ffffff;
 		border-radius: 5px;
+	}
+	.devideInfos .devideInfosMainTopRight .devideNext{
+		margin-left: 30px;
+	}
+	.devideInfos .devideInfosMainBottom{
+		overflow: hidden;
+		padding-top: 20px;
+	}
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLeft{
+		width: 1003px;
+		height: 830px;
+		background-color: #ffffff;
+		float: left;
+		border-radius: 5px;
+	}
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLT h4{
+		height: 60px;
+		line-height: 60px;
+		color: #333;
+		font-family: PFc;
+		letter-spacing: 2px;
+		border-bottom: 1px solid #e6e6e6;
+	}
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLTCont{
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: stretch;
+		/* overflow: hidden; */
+	}
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLT img{
+		/* display: flex;
+		flex-direction: row;
+		justify-content: flex-start; */
+		/* align-items: stretch; */
+		/* float: left; */
+		width: 120px;
+		height: 120px;
+	}
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLT dl{
+		width: 421px;
+		box-sizing: border-box;
+		padding-left: 50px;
+		/* float: left; */
+	}
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLT dl dd{
+		font-family: PFxi;
+		color: #666;
+		letter-spacing: 2px;
+	}
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLT dl dd span{
+		font-family: PFz;
+		color: #333;
+		letter-spacing: 2px;
+	}
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomRight{
+		width: 613px;
+		height: 830px;
+		background-color: #ffffff;
+		float: right;
+		border-radius: 10px;
 	}
 </style>
