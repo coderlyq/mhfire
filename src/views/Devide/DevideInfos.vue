@@ -34,11 +34,54 @@
 									<img src="~@/assets/images/DevideManage/devideModel.png" alt="">
 								</div>
 							</div>
-							<div class="devideInfosMainBottomLB"></div>
+							<div class="devideInfosMainBottomLB">
+								<h4>绑定人员</h4>
+								<div class="devideInfosMainBottomLBCont">
+									<div class="devideInfosMainBottomLBContSide">
+										<img class="devideManagerPhoto" src="~@/assets/images/DevideManage/devideModel.png" alt="">
+										<span>WCY</span>
+										<img src="~@/assets/images/DevideManage/devideDelete.png" alt="">
+									</div>
+									<div class="devideInfosMainBottomLBContSide">
+										<img class="devideManagerPhoto" src="~@/assets/images/DevideManage/devideModel.png" alt="">
+										<span>WCY</span>
+										<img src="~@/assets/images/DevideManage/devideDelete.png" alt="">
+									</div>
+									<div class="devideInfosMainBottomLBContSide">
+										<img class="devideManagerPhoto" src="~@/assets/images/DevideManage/devideModel.png" alt="">
+										<span>WCY</span>
+										<img src="~@/assets/images/DevideManage/devideDelete.png" alt="">
+									</div>
+									<div class="devideInfosMainBottomLBContSide">
+										<img class="devideManagerPhoto" src="~@/assets/images/DevideManage/devideModel.png" alt="">
+										<span>WCY</span>
+										<img src="~@/assets/images/DevideManage/devideDelete.png" alt="">
+									</div>
+								</div>
+							</div>
 						</div>	
 					</div>
 					<div class="devideInfosMainBottomRight">
-						<div class="devideInfosMainBottomRT"></div>
+						<div class="devideInfosMainBottomRT">
+							<div class="devideInfosMainBottomRTCont">
+								<h4>历史事件</h4>
+								<ol class="devideInfosMainBottomRTSide">
+									<li><span>设备类型：</span>NB感烟探测器</li>
+									<li><span>系统事件：</span>火警</li>
+									<li><span>报警时间：</span>2020年10月22日</li>
+								</ol>
+								<ol class="devideInfosMainBottomRTSide">
+									<li><span>设备类型：</span>NB感烟探测器</li>
+									<li><span>系统事件：</span>火警</li>
+									<li><span>报警时间：</span>2020年10月22日</li>
+								</ol>
+								<ol class="devideInfosMainBottomRTSide">
+									<li><span>设备类型：</span>NB感烟探测器</li>
+									<li><span>系统事件：</span>火警</li>
+									<li><span>报警时间：</span>2020年10月22日</li>
+								</ol>
+							</div>
+						</div>
 						<div class="devideInfosMainBottomRB"></div>
 					</div>
 				</div>
@@ -162,38 +205,78 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 		font-family: PFc;
 		letter-spacing: 2px;
 		border-bottom: 1px solid #e6e6e6;
+		margin: 0;
 	}
 	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLTCont{
 		display: flex;
 		flex-direction: row;
 		justify-content: flex-start;
-		align-items: stretch;
+		align-items: center;
+		font-family: PFc;
+		font-size: 14px;
 		/* overflow: hidden; */
-	}
-	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLT img{
-		/* display: flex;
-		flex-direction: row;
-		justify-content: flex-start; */
-		/* align-items: stretch; */
-		/* float: left; */
-		width: 120px;
-		height: 120px;
 	}
 	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLT dl{
 		width: 421px;
 		box-sizing: border-box;
 		padding-left: 50px;
+		margin: 0;
+		margin-top: 30px;
 		/* float: left; */
 	}
 	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLT dl dd{
 		font-family: PFxi;
 		color: #666;
 		letter-spacing: 2px;
+		margin: 0;
+		margin-bottom: 20px;
 	}
 	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLT dl dd span{
-		font-family: PFz;
+		font-family: PFzc;
 		color: #333;
 		letter-spacing: 2px;
+	}
+
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLB{
+		margin-top: 68px;
+	}
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLB h4{
+		height: 60px;
+		line-height: 60px;
+		color: #333;
+		font-family: PFc;
+		letter-spacing: 2px;
+		border-bottom: 1px solid #e6e6e6;
+		margin: 0;
+		margin-bottom: 20px;
+	}
+	.devideInfos .devideInfosMainBottomLBCont{
+		overflow: hidden;
+	}
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLBContSide{
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: center;
+		width: 304px;
+		height: 99px;
+		float: left;
+		border: 1px solid #9dc2e1;
+		border-radius: 5px;
+		padding-left: 30px;
+		background-color: #f1f4f9;
+		margin-left: 50px;
+		margin-bottom: 40px;
+		box-sizing: border-box;
+	}
+	.devideInfos .devideInfosMainBottomLBContSide span{
+		display: inline-block;
+		width: 130px;
+	}
+	.devideInfos .devideInfosMainBottomLBContSide .devideManagerPhoto{
+		width: 72px;
+		height: 72px;
+		margin-right: 10px;
 	}
 	.devideInfos .devideInfosMainBottom .devideInfosMainBottomRight{
 		width: 613px;
@@ -201,5 +284,41 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 		background-color: #ffffff;
 		float: right;
 		border-radius: 10px;
+	}
+	.devideInfos .devideInfosMainBottom .devideInfosMainBottomRT{
+		height: 505px;
+	}
+	.devideInfos .devideInfosMainBottomRTCont{
+		width: 522px;
+		margin: 0 auto;
+	}
+	.devideInfos .devideInfosMainBottomRT h4{
+		height: 60px;
+		line-height: 60px;
+		color: #333;
+		font-family: PFc;
+		letter-spacing: 2px;
+		border-bottom: 1px solid #e6e6e6;
+		margin: 0;
+		margin-bottom: 20px;
+	}
+	.devideInfos .devideInfosMainBottomRTSide{
+		list-style: none;
+		font-size: 14px;
+		border: 1px solid #dddddd;
+		border-radius: 5px;
+		padding-top: 20px;
+	}
+	.devideInfos .devideInfosMainBottomRTSide li{
+		font-family: PFxi;
+		color: #666;
+		letter-spacing: 2px;
+		margin: 0;
+		margin-bottom: 20px;
+	}
+	.devideInfos .devideInfosMainBottomRTSide li span{
+		font-family: PFzc;
+		color: #333;
+		letter-spacing: 2px;
 	}
 </style>
