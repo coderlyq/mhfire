@@ -273,8 +273,6 @@ import axios from 'axios'
 			}
 		},
 		created(){
-			console.log("sdkfjksldafjskldafjk;lsdjfk;lsdafjklsdajkf;lsdajk");
-			console.log(sessionStorage.getItem('companyId'));
 			let _this = this;
 			let token = document.querySelector('#token').innerText;
 			axios.get('http://test.mhfire.cn/mhApi/Project/allProjectList',{
@@ -294,7 +292,6 @@ import axios from 'axios'
 					_this.projectvalue = _this.allProjectList[0].ID;
 				}
 				_this.getHistoryEvent();
-				console.log(response);
 			})
 			.catch(function(error){
 					console.log(error);

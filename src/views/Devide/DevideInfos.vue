@@ -82,7 +82,17 @@
 								</ol>
 							</div>
 						</div>
-						<div class="devideInfosMainBottomRB"></div>
+						<div class="devideInfosMainBottomRB">
+							<div class="devideInfosMainBottomRBCont">
+								<h4>地址</h4>
+								<div class="devideInfosMap">
+									<div class="devideInfosMapTopLeft"></div>
+									<div class="devideInfosMapTopRight"></div>
+									<div class="devideInfosMapBottomLeft"></div>
+									<div class="devideInfosMapBottomRight"></div>
+								</div>
+							</div>
+						</div>
 					</div>
 				</div>
 			</el-main>
@@ -165,6 +175,13 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 		/* padding:15px 30px; */
 		background-color: #ffffff;
 		border-radius: 5px;
+	}
+	.devideInfos .devideInfosMainTop div{
+		color: #666;
+		font-family: PFZ;
+		letter-spacing: 3px;
+		font-size: 18px;
+		cursor: pointer;
 	}
 	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLCont{
 		width: 911px;
@@ -307,7 +324,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 		font-size: 14px;
 		border: 1px solid #dddddd;
 		border-radius: 5px;
-		padding-top: 20px;
+		padding-top: 20px;box-shadow: 0 0 10px #ddd;
 	}
 	.devideInfos .devideInfosMainBottomRTSide li{
 		font-family: PFxi;
@@ -320,5 +337,21 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 		font-family: PFzc;
 		color: #333;
 		letter-spacing: 2px;
+	}
+	.devideInfos .devideInfosMainBottomRBCont{
+		width: 522px;
+		margin: 0 auto;
+		margin-top: 20px;
+		box-sizing: border-box;
+	}
+	.devideInfos .devideInfosMainBottomRB h4{
+		height: 60px;
+		line-height: 60px;
+		color: #333;
+		font-family: PFc;
+		letter-spacing: 2px;
+		border-bottom: 1px solid #e6e6e6;
+		margin: 0;
+		margin-bottom: 20px;
 	}
 </style>

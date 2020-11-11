@@ -115,7 +115,8 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+	// 引入axios
+	import axios from 'axios'
 export default {
 	name: "DevideManage",
 	//import引入的组件需要注入到对象中才能使用
@@ -267,7 +268,27 @@ export default {
 	},
 	//生命周期 - 创建完成（可以访问当前this实例）
 	created() {
-		
+		let token = document.querySelector('#token').innerText;
+		axios.get('http://test.mhfire.cn/mhApi/Device/deviceList',{
+			// 参数1：token(用户token)，string类型，必填
+			// 参数2：keyword(设备名称或者地址或者imei号)，string类型，选填
+			// 参数3：projectId（项目id）,int类型，必填
+			// 参数4：groupId（分组id）,int类型，选填，默认为0
+			// 参数5：page（分页数）,int类型，选填，默认为1
+			params: {
+				token: token,
+				keyword: " ",
+				projectId: sessionStorage.getItem('projectId'),
+				groupId: 0,
+				page: 1
+			}
+		})
+		.then(function(response){
+			console.log(response);
+		})
+		.catch(function(error){
+			console.log(error);
+		})
 	},
 	//生命周期 - 挂载完成（可以访问DOM元素）
 	mounted() {
@@ -300,6 +321,11 @@ export default {
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: stretch;
+	}
+	.devideManage .devideLeft{
+		color: #333;
+    font-family: "PFxi";
+    font-size: 18px;
 	}
 	.devideManage .el-tabs__header{
 		margin-bottom: 0;
@@ -355,6 +381,12 @@ export default {
 		line-height: 30px;
 		padding-top: 0;
 		padding-bottom: 0;
+	}
+	.devideManage .devideInfos .is-active{
+		font-weight: bold;
+	}
+	.devideManage .devideInfos .el-tabs__item{
+		font-weight: bold;
 	}
 	.devideManage .devideInfos .el-table{
 		border-left: 1px solid #E4E7ED;
