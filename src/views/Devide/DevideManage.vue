@@ -4,8 +4,8 @@
 		<el-container class="devideCont">
 			<el-header class="devideContTop">
 				<div class="devideLeft">物联设备管理</div>
-				<div class="devideRight"  @compositionend="checkDevideList">
-					<el-input placeholder="通过设备名称/地址/IMEI查找设备" v-model="inputDevideCheck">
+				<div class="devideRight" @input="checkDevideList" @compositionend="checkDevideList">
+					<el-input placeholder="通过设备名称/地址/IMEI查找设备" v-model="inputDevideCheck" id="inputDevideCheck">
 						<!-- <el-button slot="append" icon="el-icon-search"></el-button> -->
 					</el-input>
 					<el-button type="primary">新增设备<i class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
@@ -26,32 +26,32 @@
 					<el-button type="primary" class="devideTopRightAdd" @click="addTab()">添加新分组<i class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
 				</div>
 				<el-table
-					:data="devideInfosTableData"
+					:data="deviceList"
 					style="width: 100%;cursor: pointer;"
 					@current-change="rowClick"
 					>
 					<el-table-column
-						prop="NBType"
+						prop="typename"
 						label="NB感烟探测器"
 						align="center">
 					</el-table-column>
 					<el-table-column
-						prop="NBMark"
+						prop="remark"
 						label="设备备注"
 						align="center">
 					</el-table-column>
 					<el-table-column
-						prop="NBStatus"
+						prop="status"
 						label="设备状态"
 						align="center">
 					</el-table-column>
 					<el-table-column
-						prop="NBImei"
+						prop="devid"
 						label="设备IMEI"
 						align="center">
 					</el-table-column>
 					<el-table-column
-						prop="NBAddress"
+						prop="address"
 						label="设备地址"
 						align="center">
 					</el-table-column>
@@ -75,17 +75,16 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<div class="devidePage">
+				<!-- <div class="devidePage">
 					<el-pagination
-						@size-change="handleSizeChange"
-						@current-change="handleCurrentChange"
+						@current-change="handleDevideChange"
 						:current-page.sync="currentPage3"
 						:page-size="10"
 						:hide-on-single-page="true"
 						layout="prev, pager, next, jumper"
-						:total="historyEveCount">
+						:total="deviceListCount">
 					</el-pagination>
-				</div>
+				</div> -->
 <!-- 弹框 -->
 				<el-dialog class="devEditDialog" title="编辑设备信息" :visible.sync="editSingleDevideDialog">
 					<el-form :model="devForm">
@@ -123,6 +122,7 @@ export default {
 	data() {
 		//这里存放数据
 		return {
+			inputDevideCheck: "",
 			editSingleDevideDialog: false,
 			closableBoolean: false,
 			editableTabsValue: '2',
@@ -136,48 +136,10 @@ export default {
 				content: 'Tab 2 content'
 			}],
 			tabIndex: 2,
-			devideInfosTableData:[
-				{
-					NBID: 1,
-					NBType: "NB烟感探测器",
-					NBMark: "厨房",
-					NBStatus: "正常",
-					NBImei: "123445543654642",
-					NBAddress: "汇聚创新园A栋403室"
-				},
-				{
-					NBID: 2,
-					NBType: "NB烟感探测器",
-					NBMark: "厨房",
-					NBStatus: "正常",
-					NBImei: "123445543654642",
-					NBAddress: "汇聚创新园A栋403室"
-				},
-				{
-					NBID: 3,
-					NBType: "NB烟感探测器",
-					NBMark: "厨房",
-					NBStatus: "正常",
-					NBImei: "123445543654642",
-					NBAddress: "汇聚创新园A栋403室"
-				},
-				{
-					NBID: 4,
-					NBType: "NB烟感探测器",
-					NBMark: "厨房",
-					NBStatus: "正常",
-					NBImei: "123445543654642",
-					NBAddress: "汇聚创新园A栋403室"
-				},
-				{
-					NBID: 5,
-					NBType: "NB烟感探测器",
-					NBMark: "厨房",
-					NBStatus: "正常",
-					NBImei: "123445543654642",
-					NBAddress: "汇聚创新园A栋403室"
-				}
-			],
+			deviceList: [],
+			keyword: " ",
+			groupId: 0,
+			page: 1,
 			historyEveCount: 100,
 			formLabelWidth: '75px',
 			devForm: {
@@ -227,8 +189,6 @@ export default {
 		removeTab(targetName) {
 			let tabs = this.editableTabs;
 			let activeName = this.editableTabsValue;
-			console.log(activeName);
-			console.log(targetName);
 			if (activeName === targetName) {
 				tabs.forEach((tab, index) => {
 					if (tab.name === targetName) {
@@ -243,10 +203,12 @@ export default {
 			this.editableTabs = tabs.filter(tab => tab.name !== targetName);
 		},
 		checkDevideList(){
-			console.log('checkDevideList');
+			this.keyword = document.querySelector('#inputDevideCheck').value;
+			// this.keyword = this.inputDevideCheck;
+			this.devideSearch();
 		},
 		deleteSingleDevide(){
-						event.stopPropagation( );
+			event.stopPropagation( );
 			console.log(this.editSingleDevideDialog);
 		},
 		editSingleDevide(row){
@@ -264,31 +226,46 @@ export default {
 			});
 			console.log('rowClick');
 			console.log(row);
+		},
+		handleDevideChange(val){
+			this.page = val;
+			this.devideSearch();
+		},
+		devideSearch(){
+			console.log(this.keyword+'');
+			let _this = this;
+			let token = document.querySelector('#token').innerText;
+			axios.get('http://test.mhfire.cn/mhApi/Device/deviceList',{
+				// 参数1：token(用户token)，string类型，必填
+				// 参数2：keyword(设备名称或者地址或者imei号)，string类型，选填
+				// 参数3：projectId（项目id）,int类型，必填
+				// 参数4：groupId（分组id）,int类型，选填，默认为0
+				// 参数5：page（分页数）,int类型，选填，默认为1
+				params: {
+					token: token,
+					keyword: _this.keyword,
+					projectId: sessionStorage.getItem('projectId'),
+					groupId: _this.groupId,
+					page: _this.page
+				}
+			})
+			.then(function(response){
+				if(response.data.ret_code==0){
+				_this.deviceListCount = response.data.data.count;
+				_this.deviceList= response.data.data.result;
+				}else{
+					console.log(response.data.message);
+				}
+				console.log(response);
+			})
+			.catch(function(error){
+				console.log(error);
+			})
 		}
 	},
 	//生命周期 - 创建完成（可以访问当前this实例）
 	created() {
-		let token = document.querySelector('#token').innerText;
-		axios.get('http://test.mhfire.cn/mhApi/Device/deviceList',{
-			// 参数1：token(用户token)，string类型，必填
-			// 参数2：keyword(设备名称或者地址或者imei号)，string类型，选填
-			// 参数3：projectId（项目id）,int类型，必填
-			// 参数4：groupId（分组id）,int类型，选填，默认为0
-			// 参数5：page（分页数）,int类型，选填，默认为1
-			params: {
-				token: token,
-				keyword: " ",
-				projectId: sessionStorage.getItem('projectId'),
-				groupId: 0,
-				page: 1
-			}
-		})
-		.then(function(response){
-			console.log(response);
-		})
-		.catch(function(error){
-			console.log(error);
-		})
+		this.devideSearch();
 	},
 	//生命周期 - 挂载完成（可以访问DOM元素）
 	mounted() {
