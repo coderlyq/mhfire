@@ -14,10 +14,10 @@
 			<el-main class="devideInfos">
 				<el-tabs v-model="editableTabsValue" type="card" :closable="closableBoolean" @tab-remove="removeTab">
 					<el-tab-pane
-						v-for="item in editableTabs"
-						:key="item.name"
-						:label="item.title"
-						:name="item.name"
+						v-for="item in allGroup"
+						:key="item.id"
+						:label="item.name"
+						:name="item.id"
 					>
 					</el-tab-pane>
 				</el-tabs>
@@ -75,7 +75,7 @@
 						</template>
 					</el-table-column>
 				</el-table>
-				<!-- <div class="devidePage">
+				<div class="devidePage">
 					<el-pagination
 						@current-change="handleDevideChange"
 						:current-page.sync="currentPage3"
@@ -84,7 +84,7 @@
 						layout="prev, pager, next, jumper"
 						:total="deviceListCount">
 					</el-pagination>
-				</div> -->
+				</div>
 <!-- 弹框 -->
 				<el-dialog class="devEditDialog" title="编辑设备信息" :visible.sync="editSingleDevideDialog">
 					<el-form :model="devForm">
@@ -114,8 +114,10 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-	// 引入axios
-	import axios from 'axios'
+// 引入axios
+import axios from 'axios'
+// 引入qs对axios上传数据解析
+import Qs from 'qs'
 export default {
 	name: "DevideManage",
 	//import引入的组件需要注入到对象中才能使用
@@ -123,18 +125,10 @@ export default {
 		//这里存放数据
 		return {
 			inputDevideCheck: "",
+			allGroup: [],
 			editSingleDevideDialog: false,
 			closableBoolean: false,
-			editableTabsValue: '2',
-			editableTabs: [{
-				title: 'Tab 1',
-				name: '1',
-				content: 'Tab 1 content'
-			}, {
-				title: 'Tab 2',
-				name: '2',
-				content: 'Tab 2 content'
-			}],
+			editableTabsValue: '1',
 			tabIndex: 2,
 			deviceList: [],
 			keyword: " ",
@@ -158,17 +152,67 @@ export default {
 		deleteTab(){
 			this.closableBoolean = true;
 		},
+		getAllGroup(){
+			let _this = this;
+			axios.get('http://test.mhfire.cn/mhApi/Device/getAllGroup',{
+				// 参数1：token(用户token)，string类型，必填
+				// 参数2：projectId（项目id），int类型，必填
+				params: {
+					token: document.querySelector('#token').innerText,
+					projectId: sessionStorage.getItem('projectId')
+				}
+			})
+			.then(function(response){
+				if(response.data.ret_code==0){
+					console.log(response.data.data);
+					_this.allGroup = response.data.data;
+				}else{
+					_this.$message({
+						type: 'info',
+						message: response.data.message
+					});
+				}
+				console.log(response);
+			})
+			.catch(function(error){
+				console.log(error);
+			})
+		},
 		addTab() {
+			let _this = this;
 			this.$prompt('添加新分组', {
 				confirmButtonText: '确定',
 				cancelButtonText: '取消',
 				inputPlaceholder: '输入新分组名称'
 			}).then(({ value }) => {
-				this.$message({
-					type: 'success',
-					message: '您的新分组是: ' + value
-				});
-				this.addTabIndex(value);
+				let addGroupData = {
+					token: document.querySelector('#token').innerText,
+					projectId: sessionStorage.getItem('projectId'),
+					name: value
+				};
+				axios.post('http://test.mhfire.cn/mhApi/Device/addGroup',Qs.stringify(addGroupData),{
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+						// 参数1：token(用户token)，string类型，必填
+						// 参数2：projectId（项目id）,int类型，必填
+						// 参数3：name（分组名称），string类型，必填
+				})
+				.then(function(response){
+					if(response.data.ret_code==0){
+						_this.$message({
+							type: 'success',
+							message: '您的新分组是: ' + value
+						});
+						_this.getAllGroup();
+					}else{
+						_this.$message({
+							type: 'info',
+							message: response.data.message
+						});
+					}
+				})
+				.catch(function(error){
+					console.log(error);
+				})
 			}).catch(() => {
 				this.$message({
 					type: 'info',
@@ -176,31 +220,61 @@ export default {
 				});       
 			});
 		},
-		addTabIndex(value) {
-			let newTabName = ++this.tabIndex + '';
-			this.editableTabs.push({
-				title: value,
-				name: newTabName,
-				content: 'New Tab content'
-			});
-			this.editableTabsValue = newTabName;
-			console.log(value);
-		},
+		// addTabIndex(value) {
+		// 	let newTabName = ++this.tabIndex + '';
+		// 	this.allGroup.push({
+		// 		id: value,
+		// 		name: newTabName,
+		// 		content: 'New Tab content'
+		// 	});
+		// 	this.editableTabsValue = newTabName;
+		// 	console.log(value);
+		// },
 		removeTab(targetName) {
-			let tabs = this.editableTabs;
-			let activeName = this.editableTabsValue;
-			if (activeName === targetName) {
-				tabs.forEach((tab, index) => {
-					if (tab.name === targetName) {
-						let nextTab = tabs[index + 1] || tabs[index - 1];
-						if (nextTab) {
-							activeName = nextTab.name;
-						}
-					}
-				});
-			}
-			this.editableTabsValue = activeName;
-			this.editableTabs = tabs.filter(tab => tab.name !== targetName);
+			let _this = this;
+			let delGroup = {
+				token: document.querySelector('#token').innerText,
+				groupId: targetName,
+				projectId: sessionStorage.getItem('projectId')
+			};
+			axios.post('http://test.mhfire.cn/mhApi/Device/delGroup',Qs.stringify(delGroup),{
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+					// 参数1：token(用户token)，string类型，必填
+					// 参数2：groupId（分组id）,int类型，必填
+					// 参数3：projectId（项目id）,int类型，必填
+			})
+			.then(function(response){
+				if(response.data.ret_code==0){
+					_this.$message({
+						type: 'success',
+						message: '分组删除成功'
+					});
+					_this.getAllGroup();
+				}else{
+					_this.$message({
+						type: 'info',
+						message: response.data.message
+					});
+				}
+			})
+			.catch(function(error){
+				console.log(error);
+			})
+
+			// let tabs = this.allGroup;
+			// let activeID = targetName;
+			// if (activeID === targetName) {
+			// 	tabs.forEach((tab, index) => {
+			// 		if (tab.id === targetName) {
+			// 			let nextTab = tabs[index + 1] || tabs[index - 1];
+			// 			if (nextTab) {
+			// 				activeID = nextTab.id;
+			// 			}
+			// 		}
+			// 	});
+			// }
+			// this.editableTabsValue = activeID;
+			// this.allGroup = tabs.filter(tab => tab.id !== targetName);
 		},
 		checkDevideList(){
 			this.keyword = document.querySelector('#inputDevideCheck').value;
@@ -251,10 +325,13 @@ export default {
 			})
 			.then(function(response){
 				if(response.data.ret_code==0){
-				_this.deviceListCount = response.data.data.count;
-				_this.deviceList= response.data.data.result;
+					_this.deviceListCount = response.data.data.count;
+					_this.deviceList= response.data.data.result;
 				}else{
-					console.log(response.data.message);
+					_this.$message({
+						type: 'info',
+						message: response.data.message
+					});
 				}
 				console.log(response);
 			})
@@ -266,6 +343,7 @@ export default {
 	//生命周期 - 创建完成（可以访问当前this实例）
 	created() {
 		this.devideSearch();
+		this.getAllGroup();
 	},
 	//生命周期 - 挂载完成（可以访问DOM元素）
 	mounted() {
@@ -359,11 +437,37 @@ export default {
 		padding-top: 0;
 		padding-bottom: 0;
 	}
-	.devideManage .devideInfos .is-active{
+	.devideManage .devideInfos .el-tabs__nav .is-active{
 		font-weight: bold;
+		background-color: #2f8cdb;
+		color: #fff;
+		/* background-color: #ffffff; */
+		/* color: #999; */
+		/* width: 206px;
+		height: 50px;
+		line-height: 50px;
+		text-align: center;
+		letter-spacing: 4px;
+		font-size: 16px; */
+	}
+	.devideManage .devideInfos .el-tabs__nav-wrap{
+		/* border-top-left-radius: 7px; */
+		font-weight: bold;
+		letter-spacing: 4px;
 	}
 	.devideManage .devideInfos .el-tabs__item{
 		font-weight: bold;
+		background-color: #ffffff;
+		color: #999;
+		/* background-color: #2f8cdb; */
+		/* color: #ffffff; */
+		/* width: auto; */
+		/* width: 206px;
+		height: 50px;
+		line-height: 50px;
+		text-align: center;
+		letter-spacing: 4px;
+		font-size: 16px; */
 	}
 	.devideManage .devideInfos .el-table{
 		border-left: 1px solid #E4E7ED;
