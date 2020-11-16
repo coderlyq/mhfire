@@ -12,7 +12,7 @@
 				</div>
 			</el-header>
 			<el-main class="devideInfos">
-				<el-tabs v-model="editableTabsValue" type="card" :closable="closableBoolean" @tab-remove="removeTab">
+				<el-tabs v-model="editableTabsValue" type="card" :closable="closableBoolean" @tab-remove="removeTab" @tab-click="tabClick">
 					<el-tab-pane
 						v-for="item in allGroup"
 						:key="item.id"
@@ -69,7 +69,8 @@
 								title="确定在该组中移除此设备？
 								如需找回，可在所有设备组中找回"
 							>
-								<el-button @click="deleteSingleDevide(scope.row)" type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">删除</el-button>
+								<el-button v-if="scope.row.groupId<=1" @click="deleteSingleDevide(scope.row)" type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">删除</el-button>
+								<el-button v-if="scope.row.groupId>1" @click="removeSingleDevide(scope.row)" type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">移除</el-button>
 							</el-popconfirm>
 							<el-button @click="editSingleDevide(scope.row)" style="text-decoration:underline" type="text" size="small">编辑</el-button>
 						</template>
@@ -151,6 +152,11 @@ export default {
 	methods: {
 		deleteTab(){
 			this.closableBoolean = true;
+		},
+		tabClick(targetName){
+			console.log(targetName.name);
+			this.groupId = targetName.name;
+			this.devideSearch();
 		},
 		getAllGroup(){
 			let _this = this;
