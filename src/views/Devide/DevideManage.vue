@@ -90,21 +90,25 @@
 				<el-dialog class="devEditDialog" title="编辑设备信息" :visible.sync="editSingleDevideDialog">
 					<el-form :model="devForm">
 						<el-form-item label="设备备注" :label-width="formLabelWidth">
-							<el-input v-model="devForm.devName" autocomplete="off"></el-input>
+							<el-input v-model="currentDevideInfos.remark" autocomplete="off"></el-input>
 						</el-form-item>
 						<el-form-item label="设备地址" :label-width="formLabelWidth">
-							<el-input v-model="devForm.devAddress" autocomplete="off"></el-input>
+							<el-input v-model="currentDevideInfos.address" autocomplete="off"></el-input>
 						</el-form-item>
 						<el-form-item label="修改分组" :label-width="formLabelWidth">
-							<el-select v-model="devForm.devGroup" placeholder="默认分组">
-								<el-option label="区域一" value="shanghai"></el-option>
-								<el-option label="区域二" value="beijing"></el-option>
+							<el-select v-model="currentDevideInfos.name" placeholder="默认分组">
+								<el-option
+									v-for="item in allGroup"
+									:key="item.id"
+									:label="item.name"
+									:value="item.id">
+								</el-option>
 							</el-select>
 						</el-form-item>
 					</el-form>
 					<div slot="footer" class="dialog-footer">
 						<el-button @click="editSingleDevideDialog = false">取 消</el-button>
-						<el-button type="primary" @click="editSingleDevideDialog = false">确 定</el-button>
+						<el-button type="primary" @click="editSingleDevidePost">确 定</el-button>
 					</div>
 				</el-dialog>
 			</el-main>
@@ -138,10 +142,11 @@ export default {
 			historyEveCount: 100,
 			formLabelWidth: '75px',
 			devForm: {
-          devName: '',
-          devAddress: '',
-          devGroup: ''
-        },
+				devName: '',
+				devAddress: '',
+				devGroup: ''
+			},
+			currentDevideInfos: {}
 		};
 	},
 	//监听属性 类似于data概念
@@ -156,6 +161,7 @@ export default {
 		tabClick(targetName){
 			console.log(targetName.name);
 			this.groupId = targetName.name;
+			this.page = 1;
 			this.devideSearch();
 		},
 		getAllGroup(){
@@ -287,14 +293,114 @@ export default {
 			// this.keyword = this.inputDevideCheck;
 			this.devideSearch();
 		},
-		deleteSingleDevide(){
-			event.stopPropagation( );
-			console.log(this.editSingleDevideDialog);
+		deleteSingleDevide(row){
+			window.event.cancelBubble = true;
+			let _this = this;
+			let delDeviceData = {
+				token: document.querySelector('#token').innerText,
+				projectId: sessionStorage.getItem('projectId'),
+				id: row.id
+			};
+			axios.post('http://test.mhfire.cn/mhApi/Device/delDevice',Qs.stringify(delDeviceData),{
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+					// 参数1：token(用户token)，string类型，必填
+					// 参数2：projectId（项目id），int类型，必填
+					// 参数3：id(设备id号)，int类型，必填
+			})
+			.then(function(response){
+				if(response.data.ret_code==0){
+					_this.$message({
+						type: 'success',
+						message: '设备删除成功'
+					});
+					_this.getAllGroup();
+					_this.devideSearch();
+				}else{
+					_this.$message({
+						type: 'info',
+						message: response.data.message
+					});
+				}
+				console.log(response);
+			})
+			.catch(function(error){
+				console.log(error);
+			})
 		},
 		editSingleDevide(row){
+			window.event.cancelBubble = true;
 			this.editSingleDevideDialog = true;
-			console.log(this.editSingleDevideDialog);
-			console.log(row);
+			let currentDevideID = row.id;
+			let _this = this;
+			axios.get('http://test.mhfire.cn/mhApi/Device/getDeviceInfo',{
+				// 参数1：token(用户token)，string类型，必填
+				// 参数2：projectId（项目id），int类型，必填
+				// 参数3：id(设备id号)，int类型，必填
+				params: {
+					token: document.querySelector('#token').innerText,
+					projectId: sessionStorage.getItem('projectId'),
+					id: currentDevideID
+				}
+			})
+			.then(function(response){
+				if(response.data.ret_code==0){
+					_this.currentDevideInfos = response.data.data;
+					_this.allGroup.forEach((itemGroup)=>{
+						if(itemGroup.id==_this.groupId){
+							_this.currentDevideInfos.name = itemGroup.name;
+						}
+					});
+				}else{
+					_this.$message({
+						type: 'info',
+						message: response.data.message
+					});
+				}
+				console.log(response);
+			})
+			.catch(function(error){
+				console.log(error);
+			})
+		},
+		editSingleDevidePost(){
+			let _this = this;
+			let updateDeviceData = {
+				token: document.querySelector('#token').innerText,
+				projectId: sessionStorage.getItem('projectId'),
+				remark:this.currentDevideInfos.remark,
+				address:this.currentDevideInfos.address,
+				groupId: this.currentDevideInfos.pid,
+				id:this.currentDevideInfos.id
+			};
+			axios.post('http://test.mhfire.cn/mhApi/Device/updateDevice',Qs.stringify(updateDeviceData),{
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+					// 参数1：token(用户token)，string类型，必填
+					// 参数2：projectId（项目id），int类型，必填
+					// 参数3：remark（设备备注），string，选填
+					// 参数4：address（设备地址），string，必填
+					// 参数5：groupId（分组id），int，必填
+					// 参数6：id（设备id号），int类型，必填
+			})
+			.then(function(response){
+				if(response.data.ret_code==0){
+					_this.$message({
+						type: 'success',
+						message: '设备信息更新成功'
+					});
+					_this.editSingleDevideDialog = false;
+					_this.getAllGroup();
+					_this.devideSearch();
+				}else{
+					_this.$message({
+						type: 'info',
+						message: response.data.message
+					});
+				}
+				console.log(response);
+			})
+			.catch(function(error){
+				console.log(error);
+			})
 		},
 		rowClick(row){
 			this.$router.push({
@@ -333,6 +439,11 @@ export default {
 				if(response.data.ret_code==0){
 					_this.deviceListCount = response.data.data.count;
 					_this.deviceList= response.data.data.result;
+					console.log(_this.deviceListCount);
+					console.log(_this.deviceList);
+				}else if(response.data.ret_code==103){
+					_this.deviceListCount = 0;
+					_this.deviceList= [];
 				}else{
 					_this.$message({
 						type: 'info',
