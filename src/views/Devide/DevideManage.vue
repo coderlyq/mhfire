@@ -28,7 +28,6 @@
 				<el-table
 					:data="deviceList"
 					style="width: 100%;cursor: pointer;"
-					@current-change="rowClick"
 					>
 					<el-table-column
 						prop="typename"
@@ -62,6 +61,17 @@
 						>
 						<template slot-scope="scope">
 							<el-popconfirm
+								@onConfirm="deleteSingleDevide(scope.row)"
+								confirm-button-text='好的'
+								cancel-button-text='不用了'
+								icon="el-icon-info"
+								icon-color="red"
+								title="确定删除此设备？"
+							>
+								<el-button v-if="scope.row.groupId<=1" type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">删除</el-button>
+							</el-popconfirm>
+							<el-popconfirm
+								@onConfirm="removeSingleDevide(scope.row)"
 								confirm-button-text='好的'
 								cancel-button-text='不用了'
 								icon="el-icon-info"
@@ -69,10 +79,10 @@
 								title="确定在该组中移除此设备？
 								如需找回，可在所有设备组中找回"
 							>
-								<el-button v-if="scope.row.groupId<=1" @click="deleteSingleDevide(scope.row)" type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">删除</el-button>
-								<el-button v-if="scope.row.groupId>1" @click="removeSingleDevide(scope.row)" type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">移除</el-button>
+								<el-button v-if="scope.row.groupId>1" type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">移除</el-button>
 							</el-popconfirm>
-							<el-button @click="editSingleDevide(scope.row)" style="text-decoration:underline" type="text" size="small">编辑</el-button>
+							<el-button @click="editSingleDevide(scope.row)" style="text-decoration:underline;margin-right:20px;" type="text" size="small">编辑</el-button>
+							<el-button @click="checkSingleDevide(scope.row)" type="text" size="small" style="color:#2f8cdb;margin-right:20px;text-decoration:underline">查看</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -155,6 +165,9 @@ export default {
 	watch: {},
 	//方法集合
 	methods: {
+		confirm(){
+		alert("confirm");
+		},
 		deleteTab(){
 			this.closableBoolean = true;
 		},
@@ -362,6 +375,15 @@ export default {
 				console.log(error);
 			})
 		},
+		checkSingleDevide(row){
+			this.$router.push({
+				path: '/DevideInfos',
+				name: 'DevideInfos',
+				params: {
+					messageId:row.id,
+				}
+			});
+		},
 		editSingleDevidePost(){
 			let _this = this;
 			let updateDeviceData = {
@@ -402,17 +424,17 @@ export default {
 				console.log(error);
 			})
 		},
-		rowClick(row){
-			this.$router.push({
-				path: '/DevideInfos',
-				name: 'DevideInfos',
-				params: {
-					messageId:row.NBID,
-				}
-			});
-			console.log('rowClick');
-			console.log(row);
-		},
+		// rowClick(row){
+		// 	this.$router.push({
+		// 		path: '/DevideInfos',
+		// 		name: 'DevideInfos',
+		// 		params: {
+		// 			messageId:row.NBID,
+		// 		}
+		// 	});
+		// 	console.log('rowClick');
+		// 	console.log(row);
+		// },
 		handleDevideChange(val){
 			this.page = val;
 			this.devideSearch();

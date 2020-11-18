@@ -103,7 +103,10 @@
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
-
+// 引入axios
+// import axios from 'axios'
+// 引入qs对axios上传数据解析
+// import Qs from 'qs'
 export default {
 //import引入的组件需要注入到对象中才能使用
 components: {},
@@ -123,7 +126,36 @@ methods: {
 },
 //生命周期 - 创建完成（可以访问当前this实例）
 created() {
-
+	// let currentID = this.$route.params.messageId;
+	// let _this = this;
+	// let token = document.querySelector('#token').innerText;
+	// axios.get('http://test.mhfire.cn/mhApi/Device/deviceList',{
+	// 	// 参数1：token(用户token)，string类型，必填
+	// 	// 参数2：keyword(设备名称或者地址或者imei号)，string类型，选填
+	// 	// 参数3：projectId（项目id）,int类型，必填
+	// 	// 参数4：groupId（分组id）,int类型，选填，默认为0
+	// 	// 参数5：page（分页数）,int类型，选填，默认为1
+	// 	params: {
+	// 		token: token,
+	// 		keyword: _this.keyword,
+	// 		projectId: sessionStorage.getItem('projectId'),
+	// 		groupId: _this.groupId,
+	// 		page: _this.page
+	// 	}
+	// })
+	// .then(function(response){
+	// 	if(response.data.ret_code==0){
+	// 	}else{
+	// 		_this.$message({
+	// 			type: 'info',
+	// 			message: response.data.message
+	// 		});
+	// 	}
+	// 	console.log(response);
+	// })
+	// .catch(function(error){
+	// 	console.log(error);
+	// })
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
