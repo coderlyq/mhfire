@@ -16,20 +16,20 @@
 				<div class="devideInfosMainBottom">
 					<div class="devideInfosMainBottomLeft">
 						<div class="devideInfosMainBottomLCont">
+							<h4>设备信息</h4>
 							<div class="devideInfosMainBottomLT">
-								<h4>设备信息</h4>
 								<div class="devideInfosMainBottomLTCont">
 									<dl>
 										<dt></dt>
-										<dd><span>设备类型：</span>NB烟感探测器</dd>
-										<dd><span>系统事件：</span>火警</dd>
-										<dd><span>报警时间：</span>2020年10月22日</dd>
-										<dd><span>设备备注：</span>厨房</dd>
-										<dd><span>设备IMEI：</span>554645321365</dd>
-										<dd><span>拆除状态：</span>拆除</dd>
-										<dd><span>电量状态：</span>正常</dd>
-										<dd><span>信号强度：</span>一般</dd>
-										<dd><span>设备位置：</span>汇聚创新园地下室一层</dd>
+										<dd><span>设备类型：</span>{{deviceInfos.typename}}</dd>
+										<dd><span>系统事件：</span>{{deviceInfos.status}}</dd>
+										<dd><span>报警时间：</span>{{deviceInfos.createTime}}</dd>
+										<dd><span>设备备注：</span>{{deviceInfos.remark}}</dd>
+										<dd><span>设备IMEI：</span>{{deviceInfos.devid}}</dd>
+										<dd><span>拆除状态：</span>{{deviceInfos.removeStatus}}</dd>
+										<dd><span>电量状态：</span>{{deviceInfos.electricStatus}}</dd>
+										<dd><span>信号强度：</span>{{deviceInfos.singleStatus}}</dd>
+										<dd><span>设备位置1：</span>{{deviceInfos.address}}</dd>
 									</dl>
 									<img src="~@/assets/images/DevideManage/devideModel.png" alt="">
 								</div>
@@ -37,7 +37,12 @@
 							<div class="devideInfosMainBottomLB">
 								<h4>绑定人员</h4>
 								<div class="devideInfosMainBottomLBCont">
-									<div class="devideInfosMainBottomLBContSide">
+									<div class="devideInfosMainBottomLBContSide" v-for="(item,index) in deviceUser" :key="index">
+										<img class="devideManagerPhoto" :src="item.Headimgurl" alt="">
+										<span>{{item.Nickname}}</span>
+										<img src="~@/assets/images/DevideManage/devideDelete.png" alt="">
+									</div>
+									<!-- <div class="devideInfosMainBottomLBContSide">
 										<img class="devideManagerPhoto" src="~@/assets/images/DevideManage/devideModel.png" alt="">
 										<span>WCY</span>
 										<img src="~@/assets/images/DevideManage/devideDelete.png" alt="">
@@ -51,34 +56,19 @@
 										<img class="devideManagerPhoto" src="~@/assets/images/DevideManage/devideModel.png" alt="">
 										<span>WCY</span>
 										<img src="~@/assets/images/DevideManage/devideDelete.png" alt="">
-									</div>
-									<div class="devideInfosMainBottomLBContSide">
-										<img class="devideManagerPhoto" src="~@/assets/images/DevideManage/devideModel.png" alt="">
-										<span>WCY</span>
-										<img src="~@/assets/images/DevideManage/devideDelete.png" alt="">
-									</div>
+									</div> -->
 								</div>
 							</div>
 						</div>	
 					</div>
 					<div class="devideInfosMainBottomRight">
 						<div class="devideInfosMainBottomRT">
+							<h4>历史事件</h4>
 							<div class="devideInfosMainBottomRTCont">
-								<h4>历史事件</h4>
-								<ol class="devideInfosMainBottomRTSide">
-									<li><span>设备类型：</span>NB感烟探测器</li>
-									<li><span>系统事件：</span>火警</li>
-									<li><span>报警时间：</span>2020年10月22日</li>
-								</ol>
-								<ol class="devideInfosMainBottomRTSide">
-									<li><span>设备类型：</span>NB感烟探测器</li>
-									<li><span>系统事件：</span>火警</li>
-									<li><span>报警时间：</span>2020年10月22日</li>
-								</ol>
-								<ol class="devideInfosMainBottomRTSide">
-									<li><span>设备类型：</span>NB感烟探测器</li>
-									<li><span>系统事件：</span>火警</li>
-									<li><span>报警时间：</span>2020年10月22日</li>
+								<ol class="devideInfosMainBottomRTSide" v-for="item in deviceEvet" :key="item.CreateTime">
+									<li><span>设备类型：</span>{{item.typename}}</li>
+									<li><span>系统事件：</span>{{item.status}}</li>
+									<li><span>报警时间：</span>{{item.CreateTime}}</li>
 								</ol>
 							</div>
 						</div>
@@ -90,6 +80,7 @@
 									<div class="devideInfosMapTopRight"></div>
 									<div class="devideInfosMapBottomLeft"></div>
 									<div class="devideInfosMapBottomRight"></div>
+									<div class="devideInfosMapCont"></div>
 								</div>
 							</div>
 						</div>
@@ -104,17 +95,22 @@
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
 // 引入axios
-// import axios from 'axios'
+import axios from 'axios'
 // 引入qs对axios上传数据解析
 // import Qs from 'qs'
 export default {
 //import引入的组件需要注入到对象中才能使用
 components: {},
 data() {
-//这里存放数据
-return {
-
-};
+	//这里存放数据
+	return {
+		deviceInfos: {},
+		deviceEvet: [],
+		deviceUser: [],
+		deviceLocation: {},
+		currentID: 0,
+		type: 0
+	};
 },
 //监听属性 类似于data概念
 computed: {},
@@ -122,40 +118,46 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
-
+	getDeviceDetail() {
+		let _this = this;
+		let token = document.querySelector('#token').innerText;
+		axios.get('http://test.mhfire.cn/mhApi/Device/getDeviceDetail',{
+			// 参数1：token(用户token)，string类型，必填
+			// 参数2：projectId（项目id），int类型，必填
+			// 参数3：id(设备id号)，int类型，必填
+			// 参数4：type(展示类型)，0表示当前设备信息，1表示上一条设备信息，2表示下一条设备信，默认为0，选填
+			params: {
+				token: token,
+				projectId: sessionStorage.getItem('projectId'),
+				id: this.currentID,
+				type: this.type
+			}
+		})
+		.then(function(response){
+			if(response.data.ret_code==0){
+				console.log(response);
+				console.log(response.data.data.device);
+				_this.deviceInfos = response.data.data.device;
+				_this.deviceEvet = response.data.data.evet;
+				_this.deviceUser = response.data.data.user;
+				_this.deviceLocation = response.data.data.location;
+				console.log(_this.deviceInfos.typename);
+			}else{
+				_this.$message({
+					type: 'info',
+					message: response.data.message
+				});
+			}
+		})
+		.catch(function(error){
+			console.log(error);
+		})
+	}
 },
-//生命周期 - 创建完成（可以访问当前this实例）
+//生命周期 - 创建完成（可以访问当前this实例
 created() {
-	// let currentID = this.$route.params.messageId;
-	// let _this = this;
-	// let token = document.querySelector('#token').innerText;
-	// axios.get('http://test.mhfire.cn/mhApi/Device/deviceList',{
-	// 	// 参数1：token(用户token)，string类型，必填
-	// 	// 参数2：keyword(设备名称或者地址或者imei号)，string类型，选填
-	// 	// 参数3：projectId（项目id）,int类型，必填
-	// 	// 参数4：groupId（分组id）,int类型，选填，默认为0
-	// 	// 参数5：page（分页数）,int类型，选填，默认为1
-	// 	params: {
-	// 		token: token,
-	// 		keyword: _this.keyword,
-	// 		projectId: sessionStorage.getItem('projectId'),
-	// 		groupId: _this.groupId,
-	// 		page: _this.page
-	// 	}
-	// })
-	// .then(function(response){
-	// 	if(response.data.ret_code==0){
-	// 	}else{
-	// 		_this.$message({
-	// 			type: 'info',
-	// 			message: response.data.message
-	// 		});
-	// 	}
-	// 	console.log(response);
-	// })
-	// .catch(function(error){
-	// 	console.log(error);
-	// })
+	this.currentID = this.$route.params.messageId;
+	this.getDeviceDetail();
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
@@ -287,7 +289,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 	}
 
 	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLB{
-		margin-top: 68px;
+		margin-top: 38px;
 	}
 	.devideInfos .devideInfosMainBottom .devideInfosMainBottomLB h4{
 		height: 60px;
@@ -326,6 +328,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 		width: 72px;
 		height: 72px;
 		margin-right: 10px;
+		border-radius: 36px;
 	}
 	.devideInfos .devideInfosMainBottom .devideInfosMainBottomRight{
 		width: 613px;
@@ -340,15 +343,18 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 	.devideInfos .devideInfosMainBottomRTCont{
 		width: 522px;
 		margin: 0 auto;
+		height: 405px;
+		overflow: auto;
 	}
 	.devideInfos .devideInfosMainBottomRT h4{
 		height: 60px;
+		width: 522px;
 		line-height: 60px;
 		color: #333;
 		font-family: PFc;
 		letter-spacing: 2px;
 		border-bottom: 1px solid #e6e6e6;
-		margin: 0;
+		margin: 0 auto;
 		margin-bottom: 20px;
 	}
 	.devideInfos .devideInfosMainBottomRTSide{
@@ -385,5 +391,41 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 		border-bottom: 1px solid #e6e6e6;
 		margin: 0;
 		margin-bottom: 20px;
+	}
+	.devideInfosMap{
+		position: relative;
+		height: 90px;
+	}
+	.devideInfosMap>div{
+		width: 20px;
+		height: 20px;
+		position: absolute;
+	}
+	.devideInfosMapTopLeft{
+		border-top: 2px solid #2f8cdb;
+		border-left: 2px solid #2f8cdb;
+		top: 0;
+		left: 0;
+	}
+	.devideInfosMapTopRight{
+		border-right: 2px solid #2f8cdb;
+		border-top: 2px solid #2f8cdb;
+		top: 0;
+		right: 0;
+	}
+	.devideInfosMapBottomLeft{
+		border-left: 2px solid #2f8cdb;
+		border-bottom: 2px solid #2f8cdb;
+		bottom: 0;
+		left: 0;
+	}
+	.devideInfosMapBottomRight{
+		border-right: 2px solid #2f8cdb;
+		border-bottom: 2px solid #2f8cdb;
+		bottom: 0;
+		right: 0;
+	}
+	.devideInfosMapCont{
+
 	}
 </style>

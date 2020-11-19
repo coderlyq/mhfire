@@ -82,7 +82,7 @@
 								<el-button v-if="scope.row.groupId>1" type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">移除</el-button>
 							</el-popconfirm>
 							<el-button @click="editSingleDevide(scope.row)" style="text-decoration:underline;margin-right:20px;" type="text" size="small">编辑</el-button>
-							<el-button @click="checkSingleDevide(scope.row)" type="text" size="small" style="color:#2f8cdb;margin-right:20px;text-decoration:underline">查看</el-button>
+							<el-button @click="checkSingleDevide(scope.row)" type="text" size="small" style="margin-left:0;color:#2f8cdb;margin-right:20px;text-decoration:underline">查看</el-button>
 						</template>
 					</el-table-column>
 				</el-table>
