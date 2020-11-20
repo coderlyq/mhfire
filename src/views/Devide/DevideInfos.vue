@@ -65,7 +65,7 @@
 						<div class="devideInfosMainBottomRT">
 							<h4>历史事件</h4>
 							<div class="devideInfosMainBottomRTCont">
-								<ol class="devideInfosMainBottomRTSide" v-for="item in deviceEvet" :key="item.CreateTime">
+								<ol class="devideInfosMainBottomRTSide" v-for="(item,index) in deviceEvet" :key="index">
 									<li><span>设备类型：</span>{{item.typename}}</li>
 									<li><span>系统事件：</span>{{item.status}}</li>
 									<li><span>报警时间：</span>{{item.CreateTime}}</li>
@@ -80,7 +80,10 @@
 									<div class="devideInfosMapTopRight"></div>
 									<div class="devideInfosMapBottomLeft"></div>
 									<div class="devideInfosMapBottomRight"></div>
-									<div class="devideInfosMapCont"></div>
+									<!-- <div class="devideInfosMapCont"> -->
+											<baidu-map class="devideInfosMapCont" id="devicemap">
+											</baidu-map>
+									<!-- </div> -->
 								</div>
 							</div>
 						</div>
@@ -90,7 +93,7 @@
 		</el-container>
 	</div>
 </template>
-
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=bISSwqQz3RZ8jQI6KcMGO4DcUb0zKcjm" ></script>
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
@@ -107,9 +110,12 @@ data() {
 		deviceInfos: {},
 		deviceEvet: [],
 		deviceUser: [],
-		deviceLocation: {},
+		deviceLocation: " ",
 		currentID: 0,
-		type: 0
+		type: 0,
+		lat: 0,
+		lng: 0,
+		address: ""
 	};
 },
 //监听属性 类似于data概念
@@ -118,6 +124,44 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+	baiduMap () {
+		// var map = new BMap.Map('allmap')
+		// var point = new BMap.Point(113.932904,22.589275)
+		// map.centerAndZoom(point, 12)
+		// var marker = new BMap.Marker(point) // 创建标注
+		// map.addOverlay(marker)    // 将标注添加到地图中
+		// 百度地图API功能	
+		setTimeout(() => {
+			let _this = this;
+			var map = new BMap.Map("devicemap");
+			// let _that = this;
+			map.centerAndZoom(new BMap.Point(_this.lng,_this.lat), 15);
+			var opts = {
+				width : 100,     // 信息窗口宽度
+				height: 10,     // 信息窗口高度
+				//title : "信息窗口" , // 信息窗口标题
+				enableMessage:true//设置允许信息窗发送短息
+				};
+			//创建自定义图标
+			var myIcon = new BMap.Icon(require("../../assets/images/Controller/markFire.png"), new BMap.Size(31,47));
+			var marker = new BMap.Marker(new BMap.Point(_this.lng,_this.lat),{icon:myIcon});  // 创建标注
+			var content = _this.address;
+			map.addOverlay(marker);               // 将标注添加到地图中
+			addClickHandler(content,marker);
+			function addClickHandler(content,marker){
+				marker.addEventListener("click",function(e){
+					openInfo(content,e)}
+				);
+			}
+			function openInfo(content,e){
+				var p = e.target;
+				var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+				var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象 
+				map.openInfoWindow(infoWindow,point); //开启信息窗口
+			}
+		}, 800);
+
+	},
 	getDeviceDetail() {
 		let _this = this;
 		let token = document.querySelector('#token').innerText;
@@ -135,13 +179,13 @@ methods: {
 		})
 		.then(function(response){
 			if(response.data.ret_code==0){
-				console.log(response);
-				console.log(response.data.data.device);
 				_this.deviceInfos = response.data.data.device;
 				_this.deviceEvet = response.data.data.evet;
 				_this.deviceUser = response.data.data.user;
 				_this.deviceLocation = response.data.data.location;
-				console.log(_this.deviceInfos.typename);
+				_this.lat = _this.deviceLocation.lat;
+				_this.lng = _this.deviceLocation.lng;
+				_this.address = _this.deviceLocation.address;
 			}else{
 				_this.$message({
 					type: 'info',
@@ -161,7 +205,7 @@ created() {
 },
 //生命周期 - 挂载完成（可以访问DOM元素）
 mounted() {
-
+	this.baiduMap();
 },
 beforeCreate() {}, //生命周期 - 创建之前
 beforeMount() {}, //生命周期 - 挂载之前
@@ -394,7 +438,7 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 	}
 	.devideInfosMap{
 		position: relative;
-		height: 90px;
+		height: 207px;
 	}
 	.devideInfosMap>div{
 		width: 20px;
@@ -425,7 +469,11 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 		bottom: 0;
 		right: 0;
 	}
-	.devideInfosMapCont{
-
+	.devideInfosMap .devideInfosMapCont{
+		width: 480px;
+		height: 187px;
+		position: absolute;
+		left: 20px;
+		top: 10px;
 	}
 </style>
