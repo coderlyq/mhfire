@@ -7,10 +7,10 @@
 			</el-header>
 			<el-main class="devideInfosMain">
 				<div class="devideInfosMainTop">
-					<div class="devideInfosMainTopLeft">返回</div>
+					<div class="devideInfosMainTopLeft" @click="devideBack">返回</div>
 					<div class="devideInfosMainTopRight">
-						<div class="devidePrev">上一条</div>
-						<div class="devideNext">下一条</div>
+						<div class="devidePrev" @click="devidePrev">上一条</div>
+						<div class="devideNext" @click="devideNext">下一条</div>
 					</div>
 				</div>
 				<div class="devideInfosMainBottom">
@@ -38,25 +38,10 @@
 								<h4>绑定人员</h4>
 								<div class="devideInfosMainBottomLBCont">
 									<div class="devideInfosMainBottomLBContSide" v-for="(item,index) in deviceUser" :key="index">
-										<img class="devideManagerPhoto" :src="item.Headimgurl" alt="">
+										<img class="devideManagerPhoto" :src="item.Headimgurl" alt="devid">
 										<span>{{item.Nickname}}</span>
-										<img src="~@/assets/images/DevideManage/devideDelete.png" alt="">
+										<img src="~@/assets/images/DevideManage/devideDelete.png" @click="deleteDeviceManager(item.openid)" alt="" style="cursor:pointer;">
 									</div>
-									<!-- <div class="devideInfosMainBottomLBContSide">
-										<img class="devideManagerPhoto" src="~@/assets/images/DevideManage/devideModel.png" alt="">
-										<span>WCY</span>
-										<img src="~@/assets/images/DevideManage/devideDelete.png" alt="">
-									</div>
-									<div class="devideInfosMainBottomLBContSide">
-										<img class="devideManagerPhoto" src="~@/assets/images/DevideManage/devideModel.png" alt="">
-										<span>WCY</span>
-										<img src="~@/assets/images/DevideManage/devideDelete.png" alt="">
-									</div>
-									<div class="devideInfosMainBottomLBContSide">
-										<img class="devideManagerPhoto" src="~@/assets/images/DevideManage/devideModel.png" alt="">
-										<span>WCY</span>
-										<img src="~@/assets/images/DevideManage/devideDelete.png" alt="">
-									</div> -->
 								</div>
 							</div>
 						</div>	
@@ -100,7 +85,7 @@
 // 引入axios
 import axios from 'axios'
 // 引入qs对axios上传数据解析
-// import Qs from 'qs'
+import Qs from 'qs'
 export default {
 //import引入的组件需要注入到对象中才能使用
 components: {},
@@ -124,6 +109,56 @@ computed: {},
 watch: {},
 //方法集合
 methods: {
+	devideBack() {
+		this.$router.go(-1);
+	},
+	devidePrev() {
+		this.type = 1;
+		this.getDeviceDetail();
+		this.baiduMap();
+	},
+	devideNext() {
+		this.type = 2;
+		this.getDeviceDetail();
+		this.baiduMap();
+	},
+	deleteDeviceManager() {
+		console.log(this.deviceUser);
+		
+		let delDeviceUserData = {
+			token: document.querySelector('#token').innerText,
+			projectId: sessionStorage.getItem('projectId'),
+			imei: this.deviceInfos.devid,
+			openid: this.deviceUser.openid
+		};
+		console.log(delDeviceUserData);
+		let _this = this;
+		axios.post('http://test.mhfire.cn/mhApi/Device/delDeviceUser',Qs.stringify(delDeviceUserData),{
+			headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+			// 参数1：token(用户token)，string类型，必填
+			// 参数2：projectId（项目id），int类型，必填
+			// 参数3：imei(imei号)，string，必填
+			// 参数4：openid(用户微信openid)，string，必填
+		})
+		.then(function(response){
+			if(response.data.ret_code==0){
+				_this.$message({
+					type: 'success',
+					message: '解绑成功'
+				});
+				_this.getDeviceDetail();
+			}else{
+				_this.$message({
+					type: 'info',
+					message: response.data.message
+				});
+			}
+			console.log(response);
+		})
+		.catch(function(error){
+			console.log(error);
+		})
+	},
 	baiduMap () {
 		// var map = new BMap.Map('allmap')
 		// var point = new BMap.Point(113.932904,22.589275)
@@ -134,7 +169,6 @@ methods: {
 		setTimeout(() => {
 			let _this = this;
 			var map = new BMap.Map("devicemap");
-			// let _that = this;
 			map.centerAndZoom(new BMap.Point(_this.lng,_this.lat), 15);
 			var opts = {
 				width : 100,     // 信息窗口宽度
@@ -183,6 +217,7 @@ methods: {
 				_this.deviceEvet = response.data.data.evet;
 				_this.deviceUser = response.data.data.user;
 				_this.deviceLocation = response.data.data.location;
+				_this.currentID = _this.deviceInfos.id;
 				_this.lat = _this.deviceLocation.lat;
 				_this.lng = _this.deviceLocation.lng;
 				_this.address = _this.deviceLocation.address;
