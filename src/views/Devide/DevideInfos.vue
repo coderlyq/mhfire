@@ -3,7 +3,7 @@
 	<div class='devideInfos'>
 		<el-container class="devideInfosCont">
 			<el-header class="devideInfosContTop">
-				<div class="devideInfosLeft">物联设备管理>>设备详情</div>
+				<div class="devideInfosLeft">物联设备管理<span>>></span>设备详情</div>
 			</el-header>
 			<el-main class="devideInfosMain">
 				<div class="devideInfosMainTop">
@@ -40,7 +40,17 @@
 									<div class="devideInfosMainBottomLBContSide" v-for="(item,index) in deviceUser" :key="index">
 										<img class="devideManagerPhoto" :src="item.Headimgurl" alt="devid">
 										<span>{{item.Nickname}}</span>
-										<img src="~@/assets/images/DevideManage/devideDelete.png" @click="deleteDeviceManager(item.openid)" alt="" style="cursor:pointer;">
+										<el-popover
+											placement="top"
+											width="160"
+											v-model="visibleAlign">
+											<p>确定删除<span style="color:#f27978;">{{item.Nickname}}</span>？删除后人员自动解绑该设备</p>
+											<div style="text-align: right; margin: 0">
+												<el-button size="mini" type="text" @click="visibleAlign = false">取消</el-button>
+												<el-button type="primary" size="mini" @click="deleteDeviceManager(item.openid)" >确定</el-button>
+											</div>
+											<img src="~@/assets/images/DevideManage/devideDelete.png" alt="" style="cursor:pointer;" slot="reference">
+										</el-popover>
 									</div>
 								</div>
 							</div>
@@ -92,6 +102,7 @@ components: {},
 data() {
 	//这里存放数据
 	return {
+		visibleAlign: false,
 		deviceInfos: {},
 		deviceEvet: [],
 		deviceUser: [],
@@ -122,14 +133,14 @@ methods: {
 		this.getDeviceDetail();
 		this.baiduMap();
 	},
-	deleteDeviceManager() {
+	deleteDeviceManager(currentOpenID) {
 		console.log(this.deviceUser);
 		
 		let delDeviceUserData = {
 			token: document.querySelector('#token').innerText,
 			projectId: sessionStorage.getItem('projectId'),
 			imei: this.deviceInfos.devid,
-			openid: this.deviceUser.openid
+			openid: currentOpenID
 		};
 		console.log(delDeviceUserData);
 		let _this = this;
@@ -146,6 +157,8 @@ methods: {
 					type: 'success',
 					message: '解绑成功'
 				});
+				_this.visibleAlign = false
+				_this.type = 0;
 				_this.getDeviceDetail();
 			}else{
 				_this.$message({
@@ -269,6 +282,14 @@ activated() {}, //如果页面有keep-alive缓存功能，这个函数会触发
 		flex-direction: row;
 		justify-content: space-between;
 		align-items: stretch;
+		font-family: "PFz";
+		letter-spacing: 2px;
+	}
+	.devideInfos .devideInfosContTop span{
+		font-family: "microsoft yahei";
+		letter-spacing: -5px;
+		margin-right: 8px;
+		color: #666;
 	}
 	.devideInfos .devideInfosMain{
 		margin: 20px 25px 40px 25px;

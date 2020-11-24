@@ -8,7 +8,7 @@
 					<el-input placeholder="通过设备名称/地址/IMEI查找设备" v-model="inputDevideCheck" id="inputDevideCheck">
 						<!-- <el-button slot="append" icon="el-icon-search"></el-button> -->
 					</el-input>
-					<el-button type="primary">新增设备<i class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
+					<el-button type="primary" @click="addIMEI">新增设备<i class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
 				</div>
 			</el-header>
 			<el-main class="devideInfos">
@@ -55,7 +55,6 @@
 						align="center">
 					</el-table-column>
 					<el-table-column
-						prop="NBOperate"
 						label="操作"
 						align="center"
 						>
@@ -121,11 +120,23 @@
 						<el-button type="primary" @click="editSingleDevidePost">确 定</el-button>
 					</div>
 				</el-dialog>
+				<el-dialog class="devImportDialog" title="请输入设备的IMEI码" :visible.sync="devImportDialog">
+					<el-form class="demo-form-inline">
+						<el-form-item>
+							<input class="noBorder" @change="getFile($event)" type="file" placeholder="审批人">
+							<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传文件到服务器</el-button>
+						</el-form-item>
+						<el-form-item>
+							<el-input v-model="devImport.strIMEI" type="text" placeholder="请输入设备IMEI码"></el-input>
+							<el-button style="margin-left:10px;" type="primary" @click="postNewDeviceIMEI">提交输入IMEI</el-button>
+						</el-form-item>
+					</el-form>
+				</el-dialog>
 			</el-main>
 		</el-container>
 	</div>
 </template>
-
+<script src="https://cdn.jsdelivr.net/npm/vue-resource@1.5.1"></script>
 <script>
 //这里可以导入其他文件（比如：组件，工具js，第三方插件js，json文件，图片文件等等）
 //例如：import 《组件名称》 from '《组件路径》';
@@ -141,9 +152,12 @@ export default {
 		return {
 			inputDevideCheck: "",
 			allGroup: [],
+			devImport:{},
+			devImportDialog: false,
+			newDeviceIMEI: '',
 			editSingleDevideDialog: false,
 			closableBoolean: false,
-			editableTabsValue: '1',
+			editableTabsValue: '0',
 			tabIndex: 2,
 			deviceList: [],
 			keyword: " ",
@@ -165,8 +179,61 @@ export default {
 	watch: {},
 	//方法集合
 	methods: {
+		getFile(event, input_file_name) {
+			this.file = event.target.files[0];
+			console.log(this.file);
+		},
+		submitUpload(event) {
+			// let _this = this;
+			let formData = new FormData();
+			formData.append('token', document.querySelector('#token').innerText);
+			formData.append('groupId', 1);
+			formData.append('projectId', sessionStorage.getItem('projectId'));
+			formData.append('imei', " ");
+			formData.append('file', this.file);
+
+			// axios.post('http://test.mhfire.cn/mhApi/Device/addDevice',Qs.stringify(formData),{
+			// 	headers: {'Content-Type': 'multipart/form-data'} //加上这个
+			// 		// 参数1：token(用户token)，string类型，必填
+			// 		// 参数2：projectId（项目id）,int类型，必填
+			// 		// 参数3：name（分组名称），string类型，必填
+			// })
+			// .then(function(response){
+			// 	if(response.data.ret_code==0){
+			// 		_this.$message({
+			// 			type: 'success',
+			// 			message: '您的新分组是: ' + value
+			// 		});
+			// 		_this.getAllGroup();
+			// 	}else{
+			// 		_this.$message({
+			// 			type: 'info',
+			// 			message: response.data.message
+			// 		});
+			// 	}
+			// })
+			// .catch(function(error){
+			// 	console.log(error);
+			// })
+			let config = {
+				headers: {
+					'Content-Type': 'multipart/form-data'
+				}
+			};
+			console.log(formData);
+			this.$http.post('http://test.mhfire.cn/mhApi/Device/addDevice', formData, config).then(function (res) {
+				if (res.status === 200) {
+						console.log(res);
+				}
+			}).catch((error) => {
+					console.log(error);
+			});
+		},
+		addIMEI() {
+			this.devImportDialog = true;
+		},
 		confirm(){
-		alert("confirm");
+			alert("confirm");
 		},
 		deleteTab(){
 			this.closableBoolean = true;
@@ -498,6 +565,13 @@ export default {
 }
 </script>
 <style>
+	.noBorder .el-input__inner{
+		border: none;
+		height: 20px;
+	}
+	.devImportDialog button{
+		margin-top: 15px;
+	}
 	.devideManage{
 		background-color: #f2f4fa;
 		width: 100%;
@@ -589,6 +663,11 @@ export default {
 		letter-spacing: 4px;
 		font-size: 16px; */
 	}
+	.el-tabs--card>.el-tabs__header .el-tabs__nav {
+    border: 1px solid #E4E7ED;
+    border-radius: 4px 4px 0 0;
+    box-sizing: border-box;
+}
 	.devideManage .devideInfos .el-tabs__nav-wrap{
 		/* border-top-left-radius: 7px; */
 		font-weight: bold;
@@ -607,6 +686,9 @@ export default {
 		text-align: center;
 		letter-spacing: 4px;
 		font-size: 16px; */
+	}
+	.devImportDialog .el-dialog{
+		width: 22%;
 	}
 	.devideManage .devideInfos .el-table{
 		border-left: 1px solid #E4E7ED;

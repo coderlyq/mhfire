@@ -16,6 +16,7 @@
     "jquery-form": "^4.3.0",
     "vue": "^2.6.11",
     "vue-baidu-map": "^0.21.22",
+    "vue-resource": "^1.5.1",
     "vue-router": "^3.3.4"
   },
   "devDependencies": {
