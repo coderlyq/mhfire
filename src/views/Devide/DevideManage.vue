@@ -12,7 +12,7 @@
 				</div>
 			</el-header>
 			<el-main class="devideInfos">
-				<el-tabs v-model="editableTabsValue" type="card" :closable="closableBoolean" @tab-remove="removeTab" @tab-click="tabClick">
+				<el-tabs v-model="groupId" type="card" :closable="closableBoolean" @tab-remove="removeTab" @tab-click="tabClick">
 					<el-tab-pane
 						v-for="item in allGroup"
 						:key="item.id"
@@ -59,29 +59,35 @@
 						align="center"
 						>
 						<template slot-scope="scope">
-							<el-popconfirm
-								@onConfirm="deleteSingleDevide(scope.row)"
-								confirm-button-text='好的'
-								cancel-button-text='不用了'
-								icon="el-icon-info"
-								icon-color="red"
-								title="确定删除此设备？"
-							>
-								<el-button v-if="scope.row.groupId<=1" type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">删除</el-button>
-							</el-popconfirm>
-							<el-popconfirm
-								@onConfirm="removeSingleDevide(scope.row)"
-								confirm-button-text='好的'
-								cancel-button-text='不用了'
-								icon="el-icon-info"
-								icon-color="red"
-								title="确定在该组中移除此设备？
-								如需找回，可在所有设备组中找回"
-							>
-								<el-button v-if="scope.row.groupId>1" type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">移除</el-button>
-							</el-popconfirm>
-							<el-button @click="editSingleDevide(scope.row)" style="text-decoration:underline;margin-right:20px;" type="text" size="small">编辑</el-button>
-							<el-button @click="checkSingleDevide(scope.row)" type="text" size="small" style="margin-left:0;color:#2f8cdb;margin-right:20px;text-decoration:underline">查看</el-button>
+							<div v-if="scope.row.groupId<=1">
+								<el-popconfirm
+									@onConfirm="deleteSingleDevide(scope.row)"
+									confirm-button-text='好的'
+									cancel-button-text='不用了'
+									icon="el-icon-info"
+									icon-color="red"
+									title="确定删除此设备？"
+								>
+									<el-button type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">删除</el-button>
+								</el-popconfirm>
+								<el-button @click="editSingleDevide(scope.row)" style="text-decoration:underline;margin-right:20px;" type="text" size="small">编辑</el-button>
+								<el-button @click="checkSingleDevide(scope.row)" type="text" size="small" style="margin-left:0;color:#2f8cdb;margin-right:20px;text-decoration:underline">查看</el-button>
+							</div>
+							<div v-if="scope.row.groupId>1">
+								<el-popconfirm
+									@onConfirm="removeSingleDevide(scope.row)"
+									confirm-button-text='好的'
+									cancel-button-text='不用了'
+									icon="el-icon-info"
+									icon-color="red"
+									title="确定在该组中移除此设备？
+									如需找回，可在所有设备组中找回"
+								>
+									<el-button type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">移除</el-button>
+								</el-popconfirm>
+								<el-button @click="editSingleDevide(scope.row)" style="text-decoration:underline;margin-right:20px;" type="text" size="small">编辑</el-button>
+								<el-button @click="checkSingleDevide(scope.row)" type="text" size="small" style="margin-left:0;color:#2f8cdb;margin-right:20px;text-decoration:underline">查看</el-button>
+							</div>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -128,7 +134,7 @@
 						</el-form-item>
 						<el-form-item>
 							<el-input v-model="devImport.strIMEI" type="text" placeholder="请输入设备IMEI码"></el-input>
-							<el-button style="margin-left:10px;" type="primary" @click="postNewDeviceIMEI">提交输入IMEI</el-button>
+							<!-- <el-button style="margin-left:10px;" type="primary" @click="postNewDeviceIMEI">提交输入IMEI</el-button> -->
 						</el-form-item>
 					</el-form>
 				</el-dialog>
@@ -157,7 +163,6 @@ export default {
 			newDeviceIMEI: '',
 			editSingleDevideDialog: false,
 			closableBoolean: false,
-			editableTabsValue: '0',
 			tabIndex: 2,
 			deviceList: [],
 			keyword: " ",
@@ -241,8 +246,12 @@ export default {
 		tabClick(targetName){
 			console.log(targetName.name);
 			this.groupId = targetName.name;
+			if(targetName.name==0){
+				this.devideSearchAll();
+			}else{
+				this.devideSearch();
+			}
 			this.page = 1;
-			this.devideSearch();
 		},
 		getAllGroup(){
 			let _this = this;
@@ -401,7 +410,42 @@ export default {
 						message: response.data.message
 					});
 				}
-				console.log(response);
+			})
+			.catch(function(error){
+				console.log(error);
+			})
+		},
+		removeSingleDevide(row) {
+			console.log("1234556");
+			window.event.cancelBubble = true;
+			let _this = this;
+			let removeGroupData = {
+				token: document.querySelector('#token').innerText,
+				projectId: sessionStorage.getItem('projectId'),
+				groupId: _this.groupId,
+				id: row.id
+			};
+			axios.post('http://test.mhfire.cn/mhApi/Device/removeGroup',Qs.stringify(removeGroupData),{
+				headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+					// 参数1：token(用户token)，string类型，必填
+					// 参数2：groupId（分组id）,int类型，必填
+					// 参数3：id(设备id号)，int，必填
+					// 参数4：projectId（项目id）,int类型，必填
+			})
+			.then(function(response){
+				if(response.data.ret_code==0){
+					_this.$message({
+						type: 'success',
+						message: '设备移除成功'
+					});
+					_this.getAllGroup();
+					_this.devideSearch();
+				}else{
+					_this.$message({
+						type: 'info',
+						message: response.data.message
+					});
+				}
 			})
 			.catch(function(error){
 				console.log(error);
@@ -506,6 +550,43 @@ export default {
 			this.page = val;
 			this.devideSearch();
 		},
+		devideSearchAll(){
+			console.log(this.keyword+'');
+			let _this = this;
+			let token = document.querySelector('#token').innerText;
+			axios.get('http://test.mhfire.cn/mhApi/Device/deviceList',{
+				// 参数1：token(用户token)，string类型，必填
+				// 参数2：keyword(设备名称或者地址或者imei号)，string类型，选填
+				// 参数3：projectId（项目id）,int类型，必填
+				// 参数4：groupId（分组id）,int类型，选填，默认为0
+				// 参数5：page（分页数）,int类型，选填，默认为1
+				params: {
+					token: token,
+					keyword: _this.keyword,
+					projectId: sessionStorage.getItem('projectId'),
+					groupId: _this.groupId,
+					page: _this.page
+				}
+			})
+			.then(function(response){
+				if(response.data.ret_code==0){
+					_this.deviceListCount = response.data.data.count;
+					_this.deviceList= response.data.data.result;
+				}else if(response.data.ret_code==103){
+					_this.deviceListCount = 0;
+					_this.deviceList= [];
+				}else{
+					_this.$message({
+						type: 'info',
+						message: response.data.message
+					});
+				}
+				console.log(response);
+			})
+			.catch(function(error){
+				console.log(error);
+			})
+		},
 		devideSearch(){
 			console.log(this.keyword+'');
 			let _this = this;
@@ -528,8 +609,10 @@ export default {
 				if(response.data.ret_code==0){
 					_this.deviceListCount = response.data.data.count;
 					_this.deviceList= response.data.data.result;
+					_this.groupId = _this.deviceList[0].groupId;
 					console.log(_this.deviceListCount);
 					console.log(_this.deviceList);
+					console.log(_this.deviceList[0].groupId);
 				}else if(response.data.ret_code==103){
 					_this.deviceListCount = 0;
 					_this.deviceList= [];
