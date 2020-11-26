@@ -551,7 +551,6 @@ export default {
 			this.devideSearch();
 		},
 		devideSearchAll(){
-			console.log(this.keyword+'');
 			let _this = this;
 			let token = document.querySelector('#token').innerText;
 			axios.get('http://test.mhfire.cn/mhApi/Device/deviceList',{
@@ -581,14 +580,12 @@ export default {
 						message: response.data.message
 					});
 				}
-				console.log(response);
 			})
 			.catch(function(error){
 				console.log(error);
 			})
 		},
 		devideSearch(){
-			console.log(this.keyword+'');
 			let _this = this;
 			let token = document.querySelector('#token').innerText;
 			axios.get('http://test.mhfire.cn/mhApi/Device/deviceList',{
@@ -631,7 +628,7 @@ export default {
 	},
 	//生命周期 - 创建完成（可以访问当前this实例）
 	created() {
-		this.devideSearch();
+		this.devideSearchAll();
 		this.getAllGroup();
 	},
 	//生命周期 - 挂载完成（可以访问DOM元素）
