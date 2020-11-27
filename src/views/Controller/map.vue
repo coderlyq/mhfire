@@ -109,12 +109,11 @@ created() {
 			let _that = this;
 			setTimeout(function(){
 				let data_info = [];
-				console.log('%%%%%%%%%%%%%%%%%%');
 				for(var k=0;k<_that.MapCompanyInfos.length;k++){
 					if(_that.MapCompanyInfos[k].Lltude){
 						let currentLltude = _that.MapCompanyInfos[k].Lltude.split(',');
 						console.log(currentLltude);
-						data_info[k] = [currentLltude[0],currentLltude[1],_that.MapCompanyInfos[k].ProjectName];
+						data_info[k] = [currentLltude[0],currentLltude[1],_that.MapCompanyInfos[k].ProjectName,_that.MapCompanyInfos[k].Status];
 					}
 				}
 				map.centerAndZoom(new BMap.Point(113.936543,22.538501), 15);
@@ -130,7 +129,16 @@ created() {
 						};
 			for(var i=0;i<data_info.length;i++){
 				//创建自定义图标
-				var myIcon = new BMap.Icon(require("../../assets/images/Controller/markFire.png"), new BMap.Size(31,47));
+				if(data_info[i][3] == 0) {
+					var myIcon = new BMap.Icon(require("../../assets/images/Controller/markNormal.png"), new BMap.Size(31,47));
+				}
+				if(data_info[i][3] == 1) {
+					var myIcon = new BMap.Icon(require("../../assets/images/Controller/markFire.png"), new BMap.Size(31,47));
+				}
+				if(data_info[i][3] == 2) {
+					var myIcon = new BMap.Icon(require("../../assets/images/Controller/markTrouble.png"), new BMap.Size(31,47));
+				}
+				
 				var marker = new BMap.Marker(new BMap.Point(data_info[i][0],data_info[i][1]),{icon:myIcon});  // 创建标注
 				var content = data_info[i][2];
 				map.addOverlay(marker);               // 将标注添加到地图中
@@ -166,7 +174,6 @@ created() {
 				div.style.maxHeight = "620px";
 				div.style.overflow = 'auto';
 				div.addEventListener('compositionend',function(even){
-					console.log(even.target.value);
 					for(var ii = 0;ii<lent.length;ii++){
 						let currentValue = even.target.value;
 						if(lent[ii].ProjectName.indexOf(currentValue)>=0){
