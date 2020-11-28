@@ -12,7 +12,7 @@ export default {
 		return {
 			listArr:[{
 				id:"1",
-				name:'深圳市奇勤达科技发展有限公司',
+				name:'深圳市奇勤达科技发展有限公司.',
 				fire:{
 					flag:true,
 					fireName:'火灾自动报警系统',

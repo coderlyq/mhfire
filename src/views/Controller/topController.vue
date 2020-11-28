@@ -23,7 +23,7 @@
 		<el-main>
 			<div class="controllerAreaCont">
 				<div class="chartLineArea">
-					<div class="chartLineText">火灾自动报警系统</div>
+					<div class="chartLineText">火灾自动报警系统.</div>
 					<ol>
 						<li v-for="item in chartLineDatas" :key="item.dlname" :style="{backgroundImage:item.liBackImg}">
 							<img :src="item.contImg" alt="">
@@ -281,7 +281,6 @@ let _this = this;
 							}
             }
           ]}
-
 		myCharts.setOption(options);
 		let optionsPie = {
 							title: {
@@ -326,11 +325,8 @@ let _this = this;
 									}
 							]
 					};
-
 		const  myChartsPie = this.$echarts.init(this.$refs.myChartsPie);
 		myChartsPie.setOption(optionsPie);
-
-
 	const  myWaterCharts = this.$echarts.init(this.$refs.myWaterCharts);
   let optionsWater = {
           title: { 
@@ -467,7 +463,6 @@ let _this = this;
 							}
             }
           ]}
-
 			myWaterCharts.setOption(optionsWater);
 		},
 		getProjectEcharsData(){
@@ -512,7 +507,6 @@ let _this = this;
 				_this.feedBackpercent = _this.warningSystem.feedBackpercent;
 				_this.startpercent = _this.warningSystem.startpercent;
 				_this.troublecent = _this.warningSystem.troublecent;
-
 				_this.waterSystem = response.data.data.waterSystem;
 				_this.chartWaterLineDatas[0].dlcount = _this.waterSystem.pressureFireCount
 				_this.chartWaterLineDatas[1].dlcount = _this.waterSystem.pressureTroubleCount;
@@ -582,7 +576,6 @@ let _this = this;
       _this.feedBackpercent = _this.warningSystem.feedBackpercent;
 			_this.startpercent = _this.warningSystem.startpercent;
 			_this.troublecent = _this.warningSystem.troublecent;
-
 			_this.waterSystem = response.data.data.waterSystem;
 			_this.chartWaterLineDatas[0].dlcount = _this.waterSystem.pressureFireCount
 			_this.chartWaterLineDatas[1].dlcount = _this.waterSystem.pressureTroubleCount;
