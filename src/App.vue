@@ -5,8 +5,8 @@
 				<el-header style="height: 6.45vh;line-height: 6.45vh;">
 					<div style="display:none;"><span id="token">{{token}}</span></div>
 					<div id='logotext'>
-						<img src="~@/assets/images/TopBar/accIcon.png" alt="" style="width:41px;">
-						<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;" @click="companyCheck">消防云平台</span><span id="topbarpre"></span>
+						<img src="~@/assets/images/TopBar/logo.png" alt="">
+						<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;" @click="companyCheck">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
 						<span class="logodis" style="display:none;margin-right:25px;"></span>
 						<ol id="logoList" v-show="topBarBoolean">
 							<li v-for="(item,index) in logoList" @click="topclick(index)" :key="item.name" :class="{clickBackColor:index===currendIndex}">
@@ -16,7 +16,7 @@
 					</div>
 					<div class="layinfos">
 						<img class="warnImg" src="~@/assets/images/TopBar/warnImg.png" alt="" style="margin-right:15px;cursor:pointer;" @click="checkWarnInfos" v-show="warnImg">
-						<img style="cursor:pointer" class="personIcon" src="~@/assets/images/Person/personIcon.png" alt="" @click="getPersonInfos"><span style="vertical-align:center;" class="personTel">13455……</span>
+						<img style="cursor:pointer" class="personIcon" src="~@/assets/images/Person/personIcon.png" alt="" @click="getPersonInfos"><span style="vertical-align:center;" class="personTel">{{ruleFormLay.telLay.substr(0,6)}}……</span>
 						<img style="cursor:pointer" class="layout" src="~@/assets/images/Lay/layout.png" alt="" @click="layout">
 					</div>
 				</el-header>

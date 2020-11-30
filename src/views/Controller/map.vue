@@ -6,6 +6,7 @@
 <script>
 // 引入axios
 import axios from 'axios'
+let setI = {};
 export default {
 	name: 'map',
 	data(){
@@ -92,6 +93,9 @@ export default {
 		.catch(function(error){
 				console.log(error);
 		});
+	},
+	destroyed() {
+		clearInterval(setI);
 	},
 	methods: {
 		// 返回
@@ -1169,7 +1173,7 @@ export default {
 			}
 			_that.writeCont(map);
 			},2000);
-			setInterval(function(){
+			setI = setInterval(function(){
 				let data_info = [];
 				for(var k=0;k<_that.MapCompanyInfos.length;k++){
 					if(_that.MapCompanyInfos[k].Lltude){
@@ -1188,7 +1192,7 @@ export default {
 				for(var i=0;i<data_info.length;i++){
 					//创建自定义图标
 					if(data_info[i][3] == 0) {
-						var myIcon = new BMap.Icon(require("../../assets/images/Controller/markFire.png"), new BMap.Size(31,47));
+						var myIcon = new BMap.Icon(require("../../assets/images/Controller/markNormal.png"), new BMap.Size(31,47));
 					}
 					if(data_info[i][3] == 1) {
 						var myIcon = new BMap.Icon(require("../../assets/images/Controller/markFire.png"), new BMap.Size(31,47));

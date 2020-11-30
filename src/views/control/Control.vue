@@ -11,6 +11,11 @@
 				<div class="controllerTopRight">
 					<el-select v-model="projectvalue" placeholder="全部项目"  @change="getProjectEcharsData()">
 							<el-option
+								:key="allProjectItem.ProjectName"
+								:label="allProjectItem.ProjectName"
+								:value="allProjectItem.ID">
+							</el-option>
+							<el-option
 								v-for="item in allProjectList"
 								:key="item.ProjectName"
 								:label="item.ProjectName"
@@ -69,6 +74,10 @@ export default {
 	data() {
 		//这里存放数据
 		return {
+			allProjectItem: {
+				ProjectName: "全部项目",
+				ID: 0
+			},
 			warningSystem: '',
 			waterSystem: '',
 			chartLineDatas:[{

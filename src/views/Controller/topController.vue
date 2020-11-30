@@ -11,6 +11,11 @@
 				<div class="controllerTopRight">
 					<el-select v-model="projectvalue" placeholder="全部项目" @change="getProjectEcharsData()">
 							<el-option
+								:key="allProjectItem.ProjectName"
+								:label="allProjectItem.ProjectName"
+								:value="allProjectItem.ID">
+							</el-option>
+							<el-option
 								v-for="item in allProjectList"
 								:key="item.ProjectName"
 								:label="item.ProjectName"
@@ -69,49 +74,53 @@ export default {
 	data() {
 		//这里存放数据
 		return {
+			allProjectItem: {
+				ProjectName: "全部项目",
+				ID: 0
+			},
 			warningSystem: '',
 			waterSystem: '',
 			chartLineDatas:[{
 				liBackImg:"url("+require("../../assets/images/Controller/supperFire.png")+")",
 				contImg:require("../../assets/images/Controller/fireIcon.png"),
 				dlname:'火警总数',
-				dlcount:5
+				dlcount:"-"
 			},{
 				liBackImg:"url("+require("../../assets/images/Controller/supperTrouble.png")+")",
 				contImg:require("../../assets/images/Controller/troubleIcon.png"),
 				dlname:'故障总数',
-				dlcount:2
+				dlcount:"-"
 			},{
 				liBackImg:"url("+require("../../assets/images/Controller/supperStart.png")+")",
 				contImg:require("../../assets/images/Controller/startIcon.png"),
 				dlname:'启动总数',
-				dlcount:3
+				dlcount:"-"
 			},{
 				liBackImg:"url("+require("../../assets/images/Controller/supperFeback.png")+")",
 				contImg:require("../../assets/images/Controller/febackIcon.png"),
 				dlname:'反馈总数',
-				dlcount:4
+				dlcount:"-"
 			}],
 			chartWaterLineDatas:[{
 				liBackImg:"url("+require("../../assets/images/Controller/supperFire.png")+")",
 				contImg:require("../../assets/images/Controller/fireIcon.png"),
 				dlname:'水压报警数',
-				dlcount:1
+				dlcount:"-"
 			},{
 				liBackImg:"url("+require("../../assets/images/Controller/supperTrouble.png")+")",
 				contImg:require("../../assets/images/Controller/troubleIcon.png"),
 				dlname:'水压故障数',
-				dlcount:2
+				dlcount:"-"
 			},{
 				liBackImg:"url("+require("../../assets/images/Controller/supperStart.png")+")",
 				contImg:require("../../assets/images/Controller/fireIcon.png"),
 				dlname:'水位报警数',
-				dlcount:3
+				dlcount:"-"
 			},{
 				liBackImg:"url("+require("../../assets/images/Controller/supperFeback.png")+")",
 				contImg:require("../../assets/images/Controller/troubleIcon.png"),
 				dlname:'水位故障数',
-				dlcount:4
+				dlcount:"-"
 			}],
 			allProjectList: '',
 			projectvalue: '',
@@ -658,7 +667,10 @@ let _this = this;
 		font-size: 12px;
 		/* color: #666666; */
 	}
-	.controllerTopleft .el-button.is-plain:focus, .el-button.is-plain:hover{
+	.controllerTopleft .el-button.is-plain:focus:hover{
+		background: url('~@/assets/images/Controller/inputiconselect.png') 125px center no-repeat;
+	}
+	.controllerTopleft .el-button.is-plain:focus:focus{
 		background: url('~@/assets/images/Controller/inputiconselect.png') 125px center no-repeat;
 	}
 	.controllerTopRight{

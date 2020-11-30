@@ -25,6 +25,7 @@
 					<el-button type="danger" class="devideTopRightDelete" @click="deleteTab()">删除分组</el-button>
 					<el-button type="primary" class="devideTopRightAdd" @click="addTab()">添加新分组<i class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
 				</div>
+				<el-button type="primary" plain class="allInsertDev" @click="openCheckDev">主要按钮</el-button>
 				<el-table
 					:data="deviceList"
 					style="width: 100%;cursor: pointer;"
@@ -138,6 +139,13 @@
 						</el-form-item>
 					</el-form>
 				</el-dialog>
+				<el-dialog class="devInsertDialog" title="批量加入该分组" :visible.sync="devInsertDialog">
+					<el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
+						<el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
+					</el-checkbox-group>
+					<div style="margin: 15px 0;"></div>
+					<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
+				</el-dialog>
 			</el-main>
 		</el-container>
 	</div>
@@ -156,10 +164,17 @@ export default {
 	data() {
 		//这里存放数据
 		return {
+			checkAll: false,
+			cities:['上海','北京','广州','深圳'],
+			// cities:[{id:1,name:'上海'},{id:1,name:'北京'},{id:1,name:'广州'},{id:1,name:'深圳'}],
+			isIndeterminate: true,
+			checkedCities: ['上海','北京'],
+
 			inputDevideCheck: "",
 			allGroup: [],
 			devImport:{},
 			devImportDialog: false,
+			devInsertDialog: false,
 			newDeviceIMEI: '',
 			editSingleDevideDialog: false,
 			closableBoolean: false,
@@ -184,6 +199,19 @@ export default {
 	watch: {},
 	//方法集合
 	methods: {
+		handleCheckAllChange(val) {
+			alert(val);
+			this.checkedCities = val ? this.cities : [];
+			this.isIndeterminate = false;
+		},
+		handleCheckedCitiesChange(value) {
+			let checkedCount = value.length;
+			this.checkAll = checkedCount === this.cities.length;
+			this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
+		},
+		openCheckDev() {
+			this.devInsertDialog = true;
+		},
 		getFile(event, input_file_name) {
 			this.file = event.target.files[0];
 			console.log(this.file);
@@ -645,6 +673,16 @@ export default {
 }
 </script>
 <style>
+	.allInsertDev{
+		position: absolute;
+		right: 58px;
+		top: 100px;
+		box-sizing: border-box;
+		width: 88px;
+		height: 30px;
+		padding: 0;
+		z-index: 99;
+	}
 	.noBorder .el-input__inner{
 		border: none;
 		height: 20px;
