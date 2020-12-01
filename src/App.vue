@@ -333,7 +333,7 @@ export default {
 							_this.logoList[0].cont = response.data.data.node.company_count;
 							_this.logoList[1].cont = response.data.data.node.fire_count;
 							_this.logoList[2].cont = response.data.data.node.company_auth_count;
-							sessionStorage.setItem('companyId', ' ');
+							sessionStorage.setItem('companyId', 0);
 							sessionStorage.setItem('projectId', ' ');
 							console.log('1');
 							_this.$router.push({
@@ -351,7 +351,7 @@ export default {
 							_this.logoList[1].cont = response.data.data.node.fire_count;
 							_this.logoList[2].isshow = false;
 							_this.logoList[3].isshow = false;
-							sessionStorage.setItem('companyId', ' ');
+							sessionStorage.setItem('companyId', 0);
 							sessionStorage.setItem('projectId', ' ');
 							console.log('2');
 							_this.$router.push({
@@ -377,7 +377,7 @@ export default {
 								path: '/List',
 								name: 'List',
 								params: {
-									
+									asideShow: 'block'
 								}
 							})
 						}

@@ -74,14 +74,13 @@ export default {
 		// 参数2：companyId(公司id)，超级管理员进去，companyId值为0，企业管理员传具体公司id，int类型
 		// 参数3：projectName(项目名称)，string类型，选填
 		// 参数4：page(分页数)，int类型，选填，默认为1
-		let companyId = sessionStorage.getItem('companyId')=='undefined'?sessionStorage.getItem('companyId'):0;
-		console.log(companyId);
+		console.log(sessionStorage.getItem('companyId'));
 		axios.get('http://test.mhfire.cn/mhApi/Project/getMapCompanyInfo',{
 				params: {
 					token: document.querySelector('#token').innerText,
-					companyId: companyId,
-					projectName: '',
-					page: ''
+					companyId: sessionStorage.getItem('companyId'),
+					projectName: " ",
+					page: 1
 				}
 		})
 		.then(function(response){
