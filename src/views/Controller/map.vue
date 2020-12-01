@@ -64,7 +64,7 @@ export default {
 		}
 	},
 	mounted () {
-		// setTimeout(()=>this.baiduMap(),200);
+		// setTimeout(()=>this.baiduMap(),4000);
 		this.baiduMap();
 	},
 	//生命周期 - 创建完成（可以访问当前this实例）
@@ -754,7 +754,7 @@ export default {
 			var lent = _that.MapCompanyInfos;
 			// 自定义控件必须实现自己的initialize方法,并且将控件的DOM元素返回
 			// 在本方法中创建个div元素作为控件的容器,并将其添加到地图容器中
-			// ZoomControl.prototype.initialize = function(map){				
+			// ZoomControl.prototype.initialize = function(map){	
 				// 创建一个DOM  topLeft元素
 				var div = document.getElementById("divLeft");
 				var divChilds = div.childNodes;
@@ -1122,6 +1122,7 @@ export default {
 			// map.addOverlay(marker)    // 将标注添加到地图中
 			// 百度地图API功能	
 			var map = new BMap.Map("allmap");
+			map.centerAndZoom(new BMap.Point(113.936543,22.538501), 15);
 			let _that = this;
 			setTimeout(function(){
 				let data_info = [];
@@ -1132,7 +1133,6 @@ export default {
 						data_info[k] = [currentLltude[0],currentLltude[1],_that.MapCompanyInfos[k].ProjectName,_that.MapCompanyInfos[k].Status];
 					}
 				}
-				map.centerAndZoom(new BMap.Point(113.936543,22.538501), 15);
 			// var data_info = [[113.932904,22.589275,"汇聚创新园"],
 			// 				[113.929872,22.581628,"中粮商务公园"],
 			// 				[113.931625,22.582769,"华测检测大楼"]
@@ -1178,17 +1178,24 @@ export default {
 				for(var k=0;k<_that.MapCompanyInfos.length;k++){
 					if(_that.MapCompanyInfos[k].Lltude){
 						let currentLltude = _that.MapCompanyInfos[k].Lltude.split(',');
-						console.log(currentLltude);
 						data_info[k] = [currentLltude[0],currentLltude[1],_that.MapCompanyInfos[k].ProjectName,_that.MapCompanyInfos[k].Status];
 					}
 				}
-				map.centerAndZoom(new BMap.Point(113.936543,22.538501), 15);
 				var opts = {
 					width : 100,     // 信息窗口宽度
 					height: 10,     // 信息窗口高度
 					//title : "信息窗口" , // 信息窗口标题
 					enableMessage:true//设置允许信息窗发送短息
-				};
+				};console.log(data_info);
+				setTimeout(function(){
+					let allmap = document.getElementById("allmap");
+					var BMap_Markers = document.getElementsByClassName("BMap_Marker");
+					for(var li = BMap_Markers.length - 1; li >= 0; li--) {
+						console.log(BMap_Markers[li]);
+						allmap.removeChild(BMap_Markers[li]);
+					}
+				},200);
+
 				for(var i=0;i<data_info.length;i++){
 					//创建自定义图标
 					if(data_info[i][3] == 0) {
