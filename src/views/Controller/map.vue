@@ -64,8 +64,8 @@ export default {
 		}
 	},
 	mounted () {
-		// setTimeout(()=>this.baiduMap(),4000);
-		this.baiduMap();
+		setTimeout(()=>this.baiduMap(),200);
+		// this.baiduMap();
 	},
 	//生命周期 - 创建完成（可以访问当前this实例）
 	created() {
@@ -74,7 +74,6 @@ export default {
 		// 参数2：companyId(公司id)，超级管理员进去，companyId值为0，企业管理员传具体公司id，int类型
 		// 参数3：projectName(项目名称)，string类型，选填
 		// 参数4：page(分页数)，int类型，选填，默认为1
-		console.log(sessionStorage.getItem('companyId'));
 		axios.get('http://test.mhfire.cn/mhApi/Project/getMapCompanyInfo',{
 				params: {
 					token: document.querySelector('#token').innerText,
@@ -84,8 +83,6 @@ export default {
 				}
 		})
 		.then(function(response){
-				console.log(response);
-				console.log(response.data.data.result);
 				_this.MapCompanyInfos = response.data.data.result;
 				_this.mapCompanyList = response.data.data;
 		})
@@ -102,7 +99,6 @@ export default {
 			this.$router.go(-1)
 		},
 		writeCont(map) {
-			console.log("ljkljljljljljljljljlkjljkljljkljljkl");
 			let _that = this;
 			// 定义一个控件类,即function
 			function ZoomControl(){
@@ -128,17 +124,12 @@ export default {
 						if(lent[ii].ProjectName.indexOf(currentValue)>=0){
 							_that.MapCompanyInfos.unshift(_that.MapCompanyInfos[ii]);
 							_that.MapCompanyInfos.splice(ii+1,1);
-							console.log(_that.MapCompanyInfos);
 							let nodeElesAll = document.querySelectorAll('.nodeEles');
-							console.log(nodeElesAll);
 							for(var nodeEle = 0;nodeEle<nodeElesAll.length;nodeEle++){
-								console.log(nodeElesAll[nodeEle]);
 								nodeElesAll[nodeEle].remove();
 							}
 							let lent = 	_that.MapCompanyInfos;
 							for(var i = 0;i<lent.length;i++){
-								console.log(i);
-								console.log(lent[i].ProjectName);
 								var nodeEles = document.createElement('div');
 								nodeEles.className = 'nodeEles';
 								nodeEles.style.position = 'relative';
@@ -265,7 +256,6 @@ export default {
 									mapSelectIcon.style.top = "12px";
 									mapSelectIcon.dataset.Lltude = lent[i].Lltude;
 									mapSelectIcon.addEventListener('click',function(e){
-										console.log(this.dataset.Lltude);
 										let clickLltude = this.dataset.Lltude.split(',');
 										map.panTo(new BMap.Point(clickLltude[0],clickLltude[1]));
 										map.setZoom(18);
@@ -298,8 +288,6 @@ export default {
 									nodeEles.appendChild(mapunfoldIcon);
 								}
 						}
-						// console.log(i);
-						// console.log(lent[i].ProjectName);
 					}
 				});
 				var inputSearch = document.createElement("input");
@@ -318,8 +306,6 @@ export default {
 				div.appendChild(inputSearch);
 				// nodeEle.innerText = lent[i].name;
 				for(var i = 0;i<lent.length;i++){
-					console.log(i);
-					console.log(lent[i].ProjectName);
 					var nodeEles = document.createElement('div');
 					nodeEles.className = 'nodeEles';
 					nodeEles.style.position = 'relative';
@@ -446,7 +432,6 @@ export default {
 						mapSelectIcon.style.top = "12px";
 						mapSelectIcon.dataset.Lltude = lent[i].Lltude;
 						mapSelectIcon.addEventListener('click',function(e){
-							console.log(this.dataset.Lltude);
 							let clickLltude = this.dataset.Lltude.split(',');
 							map.panTo(new BMap.Point(clickLltude[0],clickLltude[1]));
 							map.setZoom(18);
@@ -750,10 +735,26 @@ export default {
 			// }
 			// 通过JavaScript的prototype属性继承于BMap.Control
 			// ZoomControl.prototype = new BMap.Control();
-			var lent = _that.MapCompanyInfos;
-			// 自定义控件必须实现自己的initialize方法,并且将控件的DOM元素返回
-			// 在本方法中创建个div元素作为控件的容器,并将其添加到地图容器中
-			// ZoomControl.prototype.initialize = function(map){	
+			axios.get('http://test.mhfire.cn/mhApi/Project/getMapCompanyInfo',{
+				params: {
+					token: document.querySelector('#token').innerText,
+					companyId: sessionStorage.getItem('companyId'),
+					projectName: " ",
+					page: 1
+				}
+			})
+			.then(function(response){
+					_that.MapCompanyInfos = response.data.data.result;
+					_that.mapCompanyList = response.data.data;
+			})
+			.catch(function(error){
+					console.log(error);
+			});
+			setTimeout(function(){
+				var lent = _that.MapCompanyInfos;
+				// 自定义控件必须实现自己的initialize方法,并且将控件的DOM元素返回
+				// 在本方法中创建个div元素作为控件的容器,并将其添加到地图容器中
+				// ZoomControl.prototype.initialize = function(map){	
 				// 创建一个DOM  topLeft元素
 				var div = document.getElementById("divLeft");
 				var divChilds = div.childNodes;
@@ -780,17 +781,12 @@ export default {
 					if(lent[ii].ProjectName.indexOf(currentValue)>=0){
 						_that.MapCompanyInfos.unshift(_that.MapCompanyInfos[ii]);
 						_that.MapCompanyInfos.splice(ii+1,1);
-						console.log(_that.MapCompanyInfos);
 						let nodeElesAll = document.querySelectorAll('.nodeEles');
-						console.log(nodeElesAll);
 						for(var nodeEle = 0;nodeEle<nodeElesAll.length;nodeEle++){
-							console.log(nodeElesAll[nodeEle]);
 							nodeElesAll[nodeEle].remove();
 						}
 						let lent = 	_that.MapCompanyInfos;
 						for(var i = 0;i<lent.length;i++){
-							console.log(i);
-							console.log(lent[i].ProjectName);
 							var nodeEles = document.createElement('div');
 							nodeEles.className = 'nodeEles';
 							nodeEles.style.position = 'relative';
@@ -917,7 +913,6 @@ export default {
 								mapSelectIcon.style.top = "12px";
 								mapSelectIcon.dataset.Lltude = lent[i].Lltude;
 								mapSelectIcon.addEventListener('click',function(e){
-									console.log(this.dataset.Lltude);
 									let clickLltude = this.dataset.Lltude.split(',');
 									map.panTo(new BMap.Point(clickLltude[0],clickLltude[1]));
 									map.setZoom(18);
@@ -950,8 +945,6 @@ export default {
 								nodeEles.appendChild(mapunfoldIcon);
 							}
 					}
-						// console.log(i);
-						// console.log(lent[i].ProjectName);
 				}
 				map.enableScrollWheelZoom(true);
 				map.addEventListener("click",function(e){
@@ -960,158 +953,158 @@ export default {
 				//map topRight 
 				
 				var topRightDiv = document.getElementById("topRightDiv");
-				topRightDiv.parentNode.removeNode(topRightDiv);
-//增加总数显示
-				// var topRightNavConts = document.createElement('div');
-				// topRightNavConts.style.margin = "0 auto";
-				// topRightNavConts.style.width = "318px";
-				// topRightNavConts.style.height = "40px";
-				// topRightNavConts.style.textAlign = "center";
-				// topRightNavConts.style.lineHeight = "40px";
-				// topRightNavConts.style.marginTop = "20px";
-				// topRightNavConts.style.marginBottom = "20px";
-				// topRightNavConts.style.backgroundColor = "#ffffff";
-				// topRightNavConts.style.fontSize = "14px";
-				// topRightNavConts.style.color = "#333";
-				// topRightNavConts.style.fontFamily = 'PFz';
-				// topRightNavConts.innerHTML = "火警故障事件1<span id='navContsNum'>"+_that.mapCompanyList.totalNum+"</span>条";
-				// //增加公司事件列表
-				// var topRightDivOl = document.createElement('ol');
-				// topRightDivOl.style.paddingLeft = 0;
-				// topRightDivOl.style.cursor = "pointer";
-				// topRightDivOl.style.maxHeight = "300px";
-				// topRightDivOl.style.overflow = "auto";
-				// topRightDivOl.style.width = "318px";
-				// topRightDivOl.style.margin = "0 auto";
-				// for(var oli=0;oli<lent.length;oli++){
-				// 	for(var oliwarn in lent[oli].warningSystem){
-				// 		if(lent[oli].warningSystem[oliwarn]>0){
-				// 			var clickEventType = 0;
-				// 			var topRightDivOlli = document.createElement("li");
-				// 			topRightDivOlli.style.listStyleType = "none";
-				// 			if(oliwarn=='fireCount'){
-				// 				clickEventType = 1;
-				// 				topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerFire.png')+"'  style='margin-right:10px;margin-left:10px;'/>报警系统："+lent[oli].ProjectName+"有火警"+lent[oli].warningSystem[oliwarn]+"条";
-				// 			}
-				// 			if(oliwarn=='feedBackCount'){
-				// 				clickEventType = 3;
-				// 				topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"'  style='margin-right:10px;margin-left:10px;'/>报警系统："+lent[oli].ProjectName+"有反馈"+lent[oli].warningSystem[oliwarn]+"条";
-				// 			}
-				// 			if(oliwarn=='startCount'){
-				// 				clickEventType = 4;
-				// 				topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"'  style='margin-right:10px;margin-left:10px;'/>报警系统："+lent[oli].ProjectName+"有启动"+lent[oli].warningSystem[oliwarn]+"条";
-				// 			}
-				// 			if(oliwarn=='troubleCount'){
-				// 				clickEventType = 2;
-				// 				topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"'  style='margin-right:10px;margin-left:10px;'/>报警系统："+lent[oli].ProjectName+"有火警"+lent[oli].warningSystem[oliwarn]+"条";
-				// 			}
-				// 			topRightDivOlli.style.color = "#666";
-				// 			topRightDivOlli.style.fontFamily = "PFz";
-				// 			topRightDivOlli.style.fontSize = "12px";
-				// 			topRightDivOlli.style.height = "40px";
-				// 			topRightDivOlli.style.lineHeight = "40px";
-				// 			topRightDivOlli.style.backgroundColor = "#fff";
-				// 			topRightDivOlli.style.borderRadius = "5px";
-				// 			topRightDivOlli.style.marginBottom = '20px';
-				// 			topRightDivOlli.dataset.eventID = lent[oli].ID;
-				// 			topRightDivOlli.dataset.clickEventType = clickEventType;
-				// 			topRightDivOlli.dataset.eventCount = lent[oli].warningSystem[oliwarn];
-				// 			topRightDivOlli.addEventListener('click',function(even){
-				// 				let _this = this;
-				// 				let companyId = sessionStorage.getItem('companyId');
-				// 				let projectId = even.target.dataset.eventID;
-				// 				let type = even.target.dataset.clickEventType;
-				// 				let eventCount = even.target.dataset.eventCount;
-				// 				axios.get('http://test.mhfire.cn/mhApi/Project/getMapEventDetail',{
-				// 				// 参数1：token(用户登录token)，string类型，必填
-				// 				// 参数2：companyId(公司ID)，int类型，必填
-				// 				// 参数3：projectId(项目ID)，int类型，必填
-				// 				// 参数3：type(事件类型)1火警，2故障，3反馈，4启动，int类型，必填
-				// 					params: {
-				// 						token: document.querySelector('#token').innerText,
-				// 						companyId: companyId,
-				// 						projectId: projectId,
-				// 						type: type
-				// 					}
-				// 				})
-				// 				.then(function(response){
-				// 					_that.mapEventDetail = response.data.data;
-				// 					document.querySelector('#alertCurrentNum').innerText = 1;
-				// 					document.querySelector('#topRightAlertTopRightContRight').innerText = _that.mapEventDetail.eventInfo.length;
-				// 					document.getElementById('devideName').innerText = _that.mapEventDetail.eventInfo[0].Order;
-				// 					document.querySelector('#projectMember').innerText = _that.mapEventDetail.UserName;
-				// 					document.querySelector('#projectTel').innerText = _that.mapEventDetail.UserPhone;
-				// 					document.querySelector('#projectAddress').innerText = _that.mapEventDetail.AddressDetail;
-				// 				})
-				// 				.catch(function(error){
-				// 						console.log(error);
-				// 				})
-				// 				document.querySelector('#topRightAlert').style.display = 'block';
-				// 			});
-				// 			topRightDivOl.appendChild(topRightDivOlli);
-				// 		}
-				// 	}
-				// 	for(var oliwater in lent[oli].waterSystem){
-				// 		if(lent[oli].waterSystem[oliwater]>0){
-				// 			var clickEventType = 0;
-				// 			var topRightDivOlli = document.createElement("li");
-				// 			topRightDivOlli.style.listStyleType = "none";
-				// 			if(oliwater=='waterFireCount'){
-				// 				topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"'  style='margin-right:10px;margin-left:10px;'/>水系统："+lent[oli].ProjectName+"有水压/水位报警"+lent[oli].warningSystem[oliwater].fireCount+"条";
-				// 			}
-				// 			if(oliwater=='waterTroubleCount'){
-				// 				topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"' style='margin-right:10px;margin-left:10px;'/>水系统："+lent[oli].ProjectName+"有水压/水位故障"+lent[oli].warningSystem[oliwater].fireCount+"条";
-				// 			}
-				// 			topRightDivOlli.style.color = "#666";
-				// 			topRightDivOlli.style.fontFamily = "PFz";
-				// 			topRightDivOlli.style.fontSize = "12px";
-				// 			topRightDivOlli.style.height = "40px";
-				// 			topRightDivOlli.style.lineHeight = "40px";
-				// 			topRightDivOlli.style.backgroundColor = "#fff";
-				// 			topRightDivOlli.style.borderRadius = "5px";
-				// 			topRightDivOlli.dataset.eventID = lent[oli].ID;
-				// 			topRightDivOlli.dataset.clickEventType = clickEventType;
-				// 			topRightDivOlli.addEventListener('click',function(even){
-				// 				let companyId = sessionStorage.getItem('companyId');
-				// 				let projectId = even.target.dataset.eventID;
-				// 				let type = even.target.dataset.clickEventType;
-				// 				let eventCount = even.target.dataset.eventCount;
-				// 				axios.get('http://test.mhfire.cn/mhApi/Project/getMapEventDetail',{
-				// 				// 参数1：token(用户登录token)，string类型，必填
-				// 				// 参数2：companyId(公司ID)，int类型，必填
-				// 				// 参数3：projectId(项目ID)，int类型，必填
-				// 				// 参数3：type(事件类型)1火警，2故障，3反馈，4启动，int类型，必填
-				// 					params: {
-				// 						token: document.querySelector('#token').innerText,
-				// 						companyId: companyId,
-				// 						projectId: projectId,
-				// 						type: type
-				// 					}
-				// 				})
-				// 				.then(function(response){
-				// 					_that.mapEventDetail = response.data.data;
-				// 					document.querySelector('#alertCurrentNum').innerText = 1;
-				// 					document.querySelector('#topRightAlertTopRightContRight').innerText = _that.mapEventDetail.eventInfo.length;
-				// 					document.getElementById('devideName').innerText = _that.mapEventDetail.eventInfo[0].Order;
-				// 					document.querySelector('#projectMember').innerText = _that.mapEventDetail.UserName;
-				// 					document.querySelector('#projectTel').innerText = _that.mapEventDetail.UserPhone;
-				// 					document.querySelector('#projectAddress').innerText = _that.mapEventDetail.AddressDetail;
-				// 				})
-				// 				.catch(function(error){
-				// 						console.log(error);
-				// 				})
-				// 				document.querySelector('#topRightAlert').style.display = 'block';
-				// 			});
-				// 			topRightDivOl.appendChild(topRightDivOlli);
-				// 		}
-				// 	}
-				// }
-				// topRightDiv.appendChild(topRightNavConts);
-				// topRightDiv.appendChild(topRightDivOl);
-				// 将DOM元素返回
-				// return div;
-				//单击获取点击的经纬度
-			// }
+				var topRightDivChilds = topRightDiv.childNodes;
+				for(var l = topRightDivChilds .length - 1; l >= 0; l--) {
+					topRightDiv.removeChild(topRightDivChilds[l]);
+				}
+				//增加总数显示
+				var topRightNavConts = document.createElement('div');
+				topRightNavConts.style.margin = "0 auto";
+				topRightNavConts.style.width = "318px";
+				topRightNavConts.style.height = "40px";
+				topRightNavConts.style.textAlign = "center";
+				topRightNavConts.style.lineHeight = "40px";
+				topRightNavConts.style.marginTop = "20px";
+				topRightNavConts.style.marginBottom = "20px";
+				topRightNavConts.style.backgroundColor = "#ffffff";
+				topRightNavConts.style.fontSize = "14px";
+				topRightNavConts.style.color = "#333";
+				topRightNavConts.style.fontFamily = 'PFz';
+				topRightNavConts.innerHTML = "火警故障事件<span id='navContsNum'>"+_that.mapCompanyList.totalNum+"</span>条";
+				//增加公司事件列表
+				var topRightDivOl = document.createElement('ol');
+				topRightDivOl.style.paddingLeft = 0;
+				topRightDivOl.style.cursor = "pointer";
+				topRightDivOl.style.maxHeight = "300px";
+				topRightDivOl.style.overflow = "auto";
+				topRightDivOl.style.width = "318px";
+				topRightDivOl.style.margin = "0 auto";
+				for(var oli=0;oli<lent.length;oli++){
+					for(var oliwarn in lent[oli].warningSystem){
+						if(lent[oli].warningSystem[oliwarn]>0){
+							var clickEventType = 0;
+							var topRightDivOlli = document.createElement("li");
+							topRightDivOlli.style.listStyleType = "none";
+							if(oliwarn=='fireCount'){
+								clickEventType = 1;
+								topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerFire.png')+"'  style='margin-right:10px;margin-left:10px;'/>报警系统："+lent[oli].ProjectName+"有火警"+lent[oli].warningSystem[oliwarn]+"条";
+							}
+							if(oliwarn=='feedBackCount'){
+								clickEventType = 3;
+								topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"'  style='margin-right:10px;margin-left:10px;'/>报警系统："+lent[oli].ProjectName+"有反馈"+lent[oli].warningSystem[oliwarn]+"条";
+							}
+							if(oliwarn=='startCount'){
+								clickEventType = 4;
+								topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"'  style='margin-right:10px;margin-left:10px;'/>报警系统："+lent[oli].ProjectName+"有启动"+lent[oli].warningSystem[oliwarn]+"条";
+							}
+							if(oliwarn=='troubleCount'){
+								clickEventType = 2;
+								topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"'  style='margin-right:10px;margin-left:10px;'/>报警系统："+lent[oli].ProjectName+"有故障"+lent[oli].warningSystem[oliwarn]+"条";
+							}
+							topRightDivOlli.style.color = "#666";
+							topRightDivOlli.style.fontFamily = "PFz";
+							topRightDivOlli.style.fontSize = "12px";
+							topRightDivOlli.style.height = "40px";
+							topRightDivOlli.style.lineHeight = "40px";
+							topRightDivOlli.style.backgroundColor = "#fff";
+							topRightDivOlli.style.borderRadius = "5px";
+							topRightDivOlli.style.marginBottom = '20px';
+							topRightDivOlli.dataset.eventID = lent[oli].ID;
+							topRightDivOlli.dataset.clickEventType = clickEventType;
+							topRightDivOlli.dataset.eventCount = lent[oli].warningSystem[oliwarn];
+							topRightDivOlli.addEventListener('click',function(even){
+								let _this = this;
+								let companyId = sessionStorage.getItem('companyId');
+								let projectId = even.target.dataset.eventID;
+								let type = even.target.dataset.clickEventType;
+								let eventCount = even.target.dataset.eventCount;
+								axios.get('http://test.mhfire.cn/mhApi/Project/getMapEventDetail',{
+								// 参数1：token(用户登录token)，string类型，必填
+								// 参数2：companyId(公司ID)，int类型，必填
+								// 参数3：projectId(项目ID)，int类型，必填
+								// 参数3：type(事件类型)1火警，2故障，3反馈，4启动，int类型，必填
+									params: {
+										token: document.querySelector('#token').innerText,
+										companyId: companyId,
+										projectId: projectId,
+										type: type
+									}
+								})
+								.then(function(response){
+									_that.mapEventDetail = response.data.data;
+									document.querySelector('#alertCurrentNum').innerText = 1;
+									document.querySelector('#topRightAlertTopRightContRight').innerText = _that.mapEventDetail.eventInfo.length;
+									document.getElementById('devideName').innerText = _that.mapEventDetail.eventInfo[0].Order;
+									document.querySelector('#projectMember').innerText = _that.mapEventDetail.UserName;
+									document.querySelector('#projectTel').innerText = _that.mapEventDetail.UserPhone;
+									document.querySelector('#projectAddress').innerText = _that.mapEventDetail.AddressDetail;
+								})
+								.catch(function(error){
+										console.log(error);
+								})
+								document.querySelector('#topRightAlert').style.display = 'block';
+							});
+							topRightDivOl.appendChild(topRightDivOlli);
+						}
+					}
+					for(var oliwater in lent[oli].waterSystem){
+						if(lent[oli].waterSystem[oliwater]>0){
+							var clickEventType = 0;
+							var topRightDivOlli = document.createElement("li");
+							topRightDivOlli.style.listStyleType = "none";
+							if(oliwater=='waterFireCount'){
+								topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerFire.png')+"'  style='margin-right:10px;margin-left:10px;'/>水系统："+lent[oli].ProjectName+"有水压/水位报警"+lent[oli].warningSystem[oliwater].fireCount+"条";
+							}
+							if(oliwater=='waterTroubleCount'){
+								topRightDivOlli.innerHTML = "<img src='"+require('../../assets/images/Controller/controllerTrouble.png')+"' style='margin-right:10px;margin-left:10px;'/>水系统："+lent[oli].ProjectName+"有水压/水位故障"+lent[oli].warningSystem[oliwater].fireCount+"条";
+							}
+							topRightDivOlli.style.color = "#666";
+							topRightDivOlli.style.fontFamily = "PFz";
+							topRightDivOlli.style.fontSize = "12px";
+							topRightDivOlli.style.height = "40px";
+							topRightDivOlli.style.lineHeight = "40px";
+							topRightDivOlli.style.backgroundColor = "#fff";
+							topRightDivOlli.style.borderRadius = "5px";
+							topRightDivOlli.dataset.eventID = lent[oli].ID;
+							topRightDivOlli.dataset.clickEventType = clickEventType;
+							topRightDivOlli.addEventListener('click',function(even){
+								let companyId = sessionStorage.getItem('companyId');
+								let projectId = even.target.dataset.eventID;
+								let type = even.target.dataset.clickEventType;
+								let eventCount = even.target.dataset.eventCount;
+								axios.get('http://test.mhfire.cn/mhApi/Project/getMapEventDetail',{
+								// 参数1：token(用户登录token)，string类型，必填
+								// 参数2：companyId(公司ID)，int类型，必填
+								// 参数3：projectId(项目ID)，int类型，必填
+								// 参数3：type(事件类型)1火警，2故障，3反馈，4启动，int类型，必填
+									params: {
+										token: document.querySelector('#token').innerText,
+										companyId: companyId,
+										projectId: projectId,
+										type: type
+									}
+								})
+								.then(function(response){
+									_that.mapEventDetail = response.data.data;
+									document.querySelector('#alertCurrentNum').innerText = 1;
+									document.querySelector('#topRightAlertTopRightContRight').innerText = _that.mapEventDetail.eventInfo.length;
+									document.getElementById('devideName').innerText = _that.mapEventDetail.eventInfo[0].Order;
+									document.querySelector('#projectMember').innerText = _that.mapEventDetail.UserName;
+									document.querySelector('#projectTel').innerText = _that.mapEventDetail.UserPhone;
+									document.querySelector('#projectAddress').innerText = _that.mapEventDetail.AddressDetail;
+								})
+								.catch(function(error){
+										console.log(error);
+								})
+								document.querySelector('#topRightAlert').style.display = 'block';
+							});
+							topRightDivOl.appendChild(topRightDivOlli);
+						}
+					}
+				}
+				topRightDiv.appendChild(topRightNavConts);
+				topRightDiv.appendChild(topRightDivOl);
+			},2000);
 		},
 		baiduMap () {
 			// var map = new BMap.Map('allmap')
@@ -1128,7 +1121,6 @@ export default {
 				for(var k=0;k<_that.MapCompanyInfos.length;k++){
 					if(_that.MapCompanyInfos[k].Lltude){
 						let currentLltude = _that.MapCompanyInfos[k].Lltude.split(',');
-						console.log(currentLltude);
 						data_info[k] = [currentLltude[0],currentLltude[1],_that.MapCompanyInfos[k].ProjectName,_that.MapCompanyInfos[k].Status];
 					}
 				}
@@ -1173,58 +1165,71 @@ export default {
 			_that.writeCont(map);
 			},2000);
 			setI = setInterval(function(){
-				let data_info = [];
-				for(var k=0;k<_that.MapCompanyInfos.length;k++){
-					if(_that.MapCompanyInfos[k].Lltude){
-						let currentLltude = _that.MapCompanyInfos[k].Lltude.split(',');
-						data_info[k] = [currentLltude[0],currentLltude[1],_that.MapCompanyInfos[k].ProjectName,_that.MapCompanyInfos[k].Status];
+				axios.get('http://test.mhfire.cn/mhApi/Project/getMapCompanyInfo',{
+					params: {
+						token: document.querySelector('#token').innerText,
+						companyId: sessionStorage.getItem('companyId'),
+						projectName: " ",
+						page: 1
 					}
-				}
-				var opts = {
-					width : 100,     // 信息窗口宽度
-					height: 10,     // 信息窗口高度
-					//title : "信息窗口" , // 信息窗口标题
-					enableMessage:true//设置允许信息窗发送短息
-				};console.log(data_info);
+				})
+				.then(function(response){
+						_that.MapCompanyInfos = response.data.data.result;
+						_that.mapCompanyList = response.data.data;
+				})
+				.catch(function(error){
+						console.log(error);
+				});
 				setTimeout(function(){
-					let allmap = document.getElementById("allmap");
+					let data_info = [];
+					for(var k=0;k<_that.MapCompanyInfos.length;k++){
+						if(_that.MapCompanyInfos[k].Lltude){
+							let currentLltude = _that.MapCompanyInfos[k].Lltude.split(',');
+							data_info[k] = [currentLltude[0],currentLltude[1],_that.MapCompanyInfos[k].ProjectName,_that.MapCompanyInfos[k].Status];
+						}
+					}
+					var opts = {
+						width : 100,     // 信息窗口宽度
+						height: 10,     // 信息窗口高度
+						//title : "信息窗口" , // 信息窗口标题
+						enableMessage:true//设置允许信息窗发送短息
+					};
+					let allmapNode = document.getElementById("allmap");
 					var BMap_Markers = document.getElementsByClassName("BMap_Marker");
 					for(var li = BMap_Markers.length - 1; li >= 0; li--) {
-						console.log(BMap_Markers[li]);
-						allmap.removeChild(BMap_Markers[li]);
+						BMap_Markers[li].parentElement.removeChild(BMap_Markers[li]);
 					}
-				},200);
-
-				for(var i=0;i<data_info.length;i++){
-					//创建自定义图标
-					if(data_info[i][3] == 0) {
-						var myIcon = new BMap.Icon(require("../../assets/images/Controller/markNormal.png"), new BMap.Size(31,47));
+					for(var i=0;i<data_info.length;i++){
+						//创建自定义图标
+						if(data_info[i][3] == 0) {
+							var myIcon = new BMap.Icon(require("../../assets/images/Controller/markNormal.png"), new BMap.Size(31,47));
+						}
+						if(data_info[i][3] == 1) {
+							var myIcon = new BMap.Icon(require("../../assets/images/Controller/markFire.png"), new BMap.Size(31,47));
+						}
+						if(data_info[i][3] == 2) {
+							var myIcon = new BMap.Icon(require("../../assets/images/Controller/markTrouble.png"), new BMap.Size(31,47));
+						}
+						
+						var marker = new BMap.Marker(new BMap.Point(data_info[i][0],data_info[i][1]),{icon:myIcon});  // 创建标注
+						var content = data_info[i][2];
+						map.addOverlay(marker);               // 将标注添加到地图中
+						addClickHandler(content,marker);
 					}
-					if(data_info[i][3] == 1) {
-						var myIcon = new BMap.Icon(require("../../assets/images/Controller/markFire.png"), new BMap.Size(31,47));
+					function addClickHandler(content,marker){
+						marker.addEventListener("click",function(e){
+							openInfo(content,e)}
+						);
 					}
-					if(data_info[i][3] == 2) {
-						var myIcon = new BMap.Icon(require("../../assets/images/Controller/markTrouble.png"), new BMap.Size(31,47));
+					function openInfo(content,e){
+						var p = e.target;
+						var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
+						var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象 
+						map.openInfoWindow(infoWindow,point); //开启信息窗口
+						_that.replayCont(map,content);
 					}
-					
-					var marker = new BMap.Marker(new BMap.Point(data_info[i][0],data_info[i][1]),{icon:myIcon});  // 创建标注
-					var content = data_info[i][2];
-					map.addOverlay(marker);               // 将标注添加到地图中
-					addClickHandler(content,marker);
-				}
-				function addClickHandler(content,marker){
-					marker.addEventListener("click",function(e){
-						openInfo(content,e)}
-					);
-				}
-				function openInfo(content,e){
-					var p = e.target;
-					var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
-					var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象 
-					map.openInfoWindow(infoWindow,point); //开启信息窗口
-					_that.replayCont(map,content);
-				}
-			},3000);
+				},2000);	
+			},2500);
 		}
 	}
 }

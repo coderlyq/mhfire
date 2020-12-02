@@ -82,7 +82,7 @@
 					:page-size="10"
 					:hide-on-single-page="true"
 					layout="prev, pager, next, jumper"
-					:total="historyEveCount">
+					:total="historyTotalPage">
 				</el-pagination>
 			</div>
 		</el-main>
@@ -166,7 +166,7 @@ import axios from 'axios'
 						token: document.querySelector('#token').innerText,
 						companyId: sessionStorage.getItem('companyId'),
 						projectId: projectId,
-						systemInfo: '',
+						systemInfo: 0,
 						type: type,
 						startTime: startTime,
 						endTime: endTime,
@@ -174,6 +174,8 @@ import axios from 'axios'
 					}
 			})
 			.then(function(response){
+				_this.historyCount = response.data.data.count;
+				_this.historyTotalPage = response.data.data.totalPage;
 				_this.historyEvent = response.data.data.result;
 				console.log(response);
 			})
@@ -222,7 +224,7 @@ import axios from 'axios'
 						token: document.querySelector('#token').innerText,
 						companyId: sessionStorage.getItem('companyId'),
 						projectId: projectId,
-						systemInfo: '',
+						systemInfo: 0,
 						type: type,
 						startTime: startTime,
 						endTime: endTime,
@@ -231,6 +233,8 @@ import axios from 'axios'
 				})
 				.then(function(response){
 					_this.historyEvent = response.data.data.result;
+					_this.historyCount = response.data.data.count;
+					_this.historyTotalPage = response.data.data.totalPage;
 					console.log(response);
 				})
 				.catch(function(error){
@@ -254,7 +258,7 @@ import axios from 'axios'
 							token: token,
 							companyId: sessionStorage.getItem('companyId'),
 							projectId: projectId,
-							systemInfo: '',
+							systemInfo: 0,
 							type: 0,
 							startTime: '',
 							endTime: '',
@@ -263,7 +267,8 @@ import axios from 'axios'
 				})
 				.then(function(response){
 					_this.historyEvent = response.data.data.result;
-					_this.historyEveCount = response.data.data.count;
+					_this.historyCount = response.data.data.count;
+					_this.historyTotalPage = response.data.data.totalPage;
 					console.log(response);
 					console.log(_this.historyEveCount);
 				})
