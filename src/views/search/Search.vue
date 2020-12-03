@@ -76,13 +76,12 @@
 			<div></div>
 			<div class="navblock">
 				<el-pagination
-					@size-change="handleSizeChange"
 					@current-change="handleCurrentChange"
 					:current-page.sync="currentPage3"
 					:page-size="10"
 					:hide-on-single-page="true"
 					layout="prev, pager, next, jumper"
-					:total="historyTotalPage">
+					:total="historyTotal">
 				</el-pagination>
 			</div>
 		</el-main>
@@ -129,14 +128,10 @@ import axios from 'axios'
         value1: '',
 				eventType: '',
 				eventTime: '',
-				currentPage1: 5,
-        currentPage2: 5,
-        currentPage3: 5,
-				currentPage4: 4,
 				historyEvent: '',
+				historyTotal: 0,
 				allProjectList: '',
-				eventTypeList: '',
-				historyEveCount: 0
+				eventTypeList: ''
       };
 		},
 		methods: {
@@ -174,8 +169,7 @@ import axios from 'axios'
 					}
 			})
 			.then(function(response){
-				_this.historyCount = response.data.data.count;
-				_this.historyTotalPage = response.data.data.totalPage;
+				_this.historyTotal = response.data.data.count;
 				_this.historyEvent = response.data.data.result;
 				console.log(response);
 			})
@@ -233,8 +227,7 @@ import axios from 'axios'
 				})
 				.then(function(response){
 					_this.historyEvent = response.data.data.result;
-					_this.historyCount = response.data.data.count;
-					_this.historyTotalPage = response.data.data.totalPage;
+					_this.historyTotal = response.data.data.count;
 					console.log(response);
 				})
 				.catch(function(error){
@@ -267,10 +260,7 @@ import axios from 'axios'
 				})
 				.then(function(response){
 					_this.historyEvent = response.data.data.result;
-					_this.historyCount = response.data.data.count;
-					_this.historyTotalPage = response.data.data.totalPage;
-					console.log(response);
-					console.log(_this.historyEveCount);
+					_this.historyTotal = response.data.data.count;
 				})
 				.catch(function(error){
 						console.log(error);

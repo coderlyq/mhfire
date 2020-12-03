@@ -67,7 +67,7 @@
 					<el-container style="margin-top:20px;" v-show="true">
 						<el-header class="personContMainTop">
 							<span class="personContMainTopText">作为员工隶属的项目</span>
-							<el-button type="primary" icon="el-icon-circle-plus-outline" @click="addMemberProject('fllow')">添加负责项目</el-button>
+							<el-button type="primary" icon="el-icon-circle-plus-outline" @click="addMemberProject('fllow')">添加隶属项目</el-button>
 						</el-header>
 						<el-main>
 							<ol class="elmainOl">
@@ -78,7 +78,7 @@
 									</div>
 									<div class="elmainRight">
 										<el-button type="primary" style="margin-right:45px;" plain @click="setMemberProject(index)">去设置项目内功能权限</el-button>
-										<el-button type="primary" plain @click="removeMemberProject(index)">从负责项目中移除</el-button>
+										<el-button type="primary" plain @click="removeMemberProject(index)">从隶属项目中移除</el-button>
 									</div>
 								</li>
 							</ol>
@@ -158,13 +158,11 @@ import Qs from 'qs'
 				})
 			},
 			handleClick(clickData){
-				console.log(clickData);
-				console.log(this.allMemberList[this.selectIndex].isResponseFlag);
 				let selectType = '';
-				if(this.allMemberList[this.selectIndex].isResponseFlag==1){
+				if(this.currenRole=='own'){
 					selectType = 1;
 				}
-				if(this.allMemberList[this.selectIndex].isResponseFlag==0){
+				if(this.currenRole=='fllow'){
 					selectType = 2;
 				}
 				let _this = this;
@@ -186,6 +184,7 @@ import Qs from 'qs'
 				.then(function(response){
 						_this.dialogTableVisible = false;
 						_this.selectMember(_this.selectIndex);
+						_this.selectAllMemberList();
 						console.log(response);
 				})
 				.catch(function(error){
@@ -207,8 +206,6 @@ import Qs from 'qs'
 				})
 				.then(function(response){
 					_this.allProjectList = response.data.data;
-					console.log("?????????????????????????????");
-					console.log(response);
 				})
 				.catch(function(error){
 						console.log(error);
@@ -238,8 +235,9 @@ import Qs from 'qs'
 						if(_this.levelvalue==2){
 							level = 0;
 						}
-						console.log(level);
 						_this.allMemberList[_this.selectIndex].isResponseFlag = level;
+						_this.selectAllMemberList();
+						_this.selectMember(_this.selectIndex);
 					}else{
 						switch(response.data.ret_code){
 							case 106:
@@ -268,15 +266,12 @@ import Qs from 'qs'
 								break;
 						}
 					}
-					
-					console.log(response);
 				})
 				.catch(function(error){
 						console.log(error);
 				});
 			},
 			deleteMember(){
-				console.log('jljkl;jkl;jl;');
 				let _this = this;
 				// 参数1：token(用户登录token)，string类型，必填
 				// 参数2：uid(项目负责人用户ID)，int类型，必填
@@ -334,39 +329,40 @@ import Qs from 'qs'
 				})
 				.then(function(response){
 					_this.memberProjectList = response.data.data;
-					console.log(response);
 				})
 				.catch(function(error){
 						console.log(error);
 				})
 			},
-    handleClose(done) {
-        this.$confirm('确认关闭？')
-          .then(_ => {
-            done(_);
-          })
-          .catch(_ => {_});
-      }
+		handleClose(done) {
+			this.$confirm('确认关闭？')
+			.then(_ => {
+				done(_);
+			})
+			.catch(_ => {_});
+		},
+			selectAllMemberList() {
+				let _this = this;
+				let token = document.querySelector('#token').innerText;
+				let companyId = sessionStorage.getItem('companyId');
+				axios.get('http://test.mhfire.cn/mhApi/Member/allMemberList',{
+					// 参数1：token(用户登录token)，string类型，必填
+					// 参数2：companyId(公司ID)，int类型，必填
+						params: {
+							token: token,
+							companyId: companyId
+						}
+				})
+				.then(function(response){
+					_this.allMemberList = response.data.data;
+				})
+				.catch(function(error){
+						console.log(error);
+				})
+			}
 		},
 		created(){
-			let _this = this;
-			let token = document.querySelector('#token').innerText;
-			let companyId = sessionStorage.getItem('companyId');
-			axios.get('http://test.mhfire.cn/mhApi/Member/allMemberList',{
-				// 参数1：token(用户登录token)，string类型，必填
-				// 参数2：companyId(公司ID)，int类型，必填
-					params: {
-						token: token,
-						companyId: companyId
-					}
-			})
-			.then(function(response){
-				_this.allMemberList = response.data.data;
-				console.log(response);
-			})
-			.catch(function(error){
-					console.log(error);
-			})
+			this.selectAllMemberList();
 		}
   }
 </script>

@@ -15,6 +15,9 @@
 						</ol>
 					</div>
 					<div class="layinfos">
+						<a href="http://zj.mhfire.cn/screen/Screen/index" target="_blank" style="margin-right:15px;cursor:pointer;" >
+							<img src="~@/assets/images/TopBar/screen.png" alt="screen show">
+						</a>
 						<img class="warnImg" src="~@/assets/images/TopBar/warnImg.png" alt="" style="margin-right:15px;cursor:pointer;" @click="checkWarnInfos" v-show="warnImg">
 						<img style="cursor:pointer" class="personIcon" src="~@/assets/images/Person/personIcon.png" alt="" @click="getPersonInfos"><span style="vertical-align:center;" class="personTel">{{ruleFormLay.telLay.substr(0,6)}}……</span>
 						<img style="cursor:pointer" class="layout" src="~@/assets/images/Lay/layout.png" alt="" @click="layout">

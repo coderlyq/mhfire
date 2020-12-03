@@ -1114,7 +1114,7 @@ export default {
 			// map.addOverlay(marker)    // 将标注添加到地图中
 			// 百度地图API功能	
 			var map = new BMap.Map("allmap");
-			map.centerAndZoom(new BMap.Point(113.936543,22.538501), 15);
+			map.centerAndZoom(new BMap.Point(113.934323,22.58804), 15);
 			let _that = this;
 			setTimeout(function(){
 				let data_info = [];
