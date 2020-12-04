@@ -196,6 +196,22 @@ export default {
 		};
 	},
 	methods: {
+		onKeyDown(e) {	
+			e = window.event || e;
+			var k = e.keyCode;
+			//屏蔽ctrl+R，F5键，ctrl+F5键  F3键！验证
+			if ((e.ctrlKey == true && k == 82) || (k == 116) || (e.ctrlKey == true && k == 116)||k==114) {
+				// e.keyCode = 0;
+				e.returnValue = false;
+				e.cancelBubble = true;
+				return false;
+			}
+			if (k == 8) {
+				// e.keyCode = 0;
+				e.returnValue = false;
+				return false;
+			}
+		},
 		checkWarnInfos(){
 			this.$router.push({
 				path: '/warnSearch',
@@ -501,7 +517,11 @@ export default {
 				});
 			}
 		},3000);
-	}
+	},
+	//生命周期 - 挂载完成（可以访问DOM元素）
+	mounted() {
+		window.addEventListener('keydown',this.onKeyDown,false);
+	},
 }
 </script>
 

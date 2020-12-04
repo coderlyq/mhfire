@@ -148,6 +148,78 @@ import Qs from 'qs'
       }
     },
 		methods: {
+			delProject(indexCurrent) {
+				let _this = this;
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：companyId(公司ID),int类型，必填
+				// 参数3：projectId(项目ID)，int类型，必填
+				// 参数4：uid(项目负责人用户ID)，int类型，必填
+				// 参数5：type(项目所属类型，1作为项目的负责人，2作为项目的普通员工)，int类型，必填
+				let delProjectData = {
+					token: document.querySelector('#token').innerText,
+					companyId: sessionStorage.getItem('companyId'),
+					projectId: this.selectMemeberProject[indexCurrent].ID,
+					uid: this.selectUID,
+					type: 1
+				};
+				axios.post('http://test.mhfire.cn/mhApi/Project/removeResponseProject',Qs.stringify(delProjectData),{
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+				})
+				.then(function(response){
+					_this.selectMember(_this.selectIndex);
+					_this.selectAllMemberList();
+					if(response.data.ret_code == 0) {
+						_this.$message({
+							type: 'success',
+							message: response.data.message
+						});
+					}else{
+						_this.$message({
+							type: 'info',
+							message: response.data.message
+						});
+					}
+				})
+				.catch(function(error){
+					console.log(error);
+				});
+			},
+			removeMemberProject(indexCurrent) {
+				let _this = this;
+				// 参数1：token(用户登录token)，string类型，必填
+				// 参数2：companyId(公司ID),int类型，必填
+				// 参数3：projectId(项目ID)，int类型，必填
+				// 参数4：uid(项目负责人用户ID)，int类型，必填
+				// 参数5：type(项目所属类型，1作为项目的负责人，2作为项目的普通员工)，int类型，必填
+				let removeMemberProjectData = {
+					token: document.querySelector('#token').innerText,
+					companyId: sessionStorage.getItem('companyId'),
+					projectId: this.memberProjectList[indexCurrent].ID,
+					uid: this.selectUID,
+					type: 2
+				};
+				axios.post('http://test.mhfire.cn/mhApi/Project/removeResponseProject',Qs.stringify(removeMemberProjectData),{
+					headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
+				})
+				.then(function(response){
+					_this.selectMember(_this.selectIndex);
+					_this.selectAllMemberList();
+					if(response.data.ret_code == 0) {
+						_this.$message({
+							type: 'success',
+							message: response.data.message
+						});
+					}else{
+						_this.$message({
+							type: 'info',
+							message: response.data.message
+						});
+					}
+				})
+				.catch(function(error){
+					console.log(error);
+				});
+			},
 			setMemberProject(index){
 				sessionStorage.setItem('projectId',this.memberProjectList[index].ID);
 				this.$router.push({
