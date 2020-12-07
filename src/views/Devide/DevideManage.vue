@@ -25,7 +25,7 @@
 					<el-button type="danger" class="devideTopRightDelete" @click="deleteTab()">删除分组</el-button>
 					<el-button type="primary" class="devideTopRightAdd" @click="addTab()">添加新分组<i class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
 				</div>
-				<el-button type="primary" plain class="allInsertDev" @click="openCheckDev">主要按钮</el-button>
+				<!-- <el-button type="primary" plain class="allInsertDev" @click="openCheckDev">加入设备</el-button> -->
 				<el-table
 					:data="deviceList"
 					style="width: 100%;cursor: pointer;"

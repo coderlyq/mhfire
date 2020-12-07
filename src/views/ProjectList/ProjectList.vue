@@ -65,7 +65,7 @@
 				<div class="ProjectElementTop">项目下的员工</div>
 				<ol class="ProjectElementItem">
 					<li v-for="(item,index) in memberList" :key="item.UserName">
-						<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
+						<img :src="item.FaceImg" alt="" class="ProjectElementImg" height="60" width="60">
 						<dl>
 							<dt></dt>
 							<dd>姓名：<span>{{item.UserName}}</span></dd>
@@ -186,7 +186,7 @@
 				<div class="ProjectElementTop">项目下的员工</div>
 				<ol class="ProjectElementItem">
 					<li v-for="(item,index) in memberList" :key="item.UserName">
-						<img src="~@/assets/images/List/default.jpg" alt="" class="ProjectElementImg">
+						<img :src="item.FaceImg" alt="" class="ProjectElementImg" height="60" width="60">
 						<dl>
 							<dt></dt>
 							<dd>姓名：<span>{{item.UserName}}</span></dd>

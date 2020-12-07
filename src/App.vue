@@ -6,7 +6,7 @@
 					<div style="display:none;"><span id="token">{{token}}</span></div>
 					<div id='logotext'>
 						<img src="~@/assets/images/TopBar/logo.png" alt="">
-						<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;" @click="companyCheck">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
+						<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
 						<span class="logodis" style="display:none;margin-right:25px;"></span>
 						<ol id="logoList" v-show="topBarBoolean">
 							<li v-for="(item,index) in logoList" @click="topclick(index)" :key="item.name" :class="{clickBackColor:index===currendIndex}">
@@ -204,11 +204,6 @@ export default {
 				// e.keyCode = 0;
 				e.returnValue = false;
 				e.cancelBubble = true;
-				return false;
-			}
-			if (k == 8) {
-				// e.keyCode = 0;
-				e.returnValue = false;
 				return false;
 			}
 		},

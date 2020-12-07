@@ -8,7 +8,7 @@
 			<ul>
 				<li v-for="(item,index) in projectLists" :key="item.ProjectName">
 					<div class="listLiLeft">
-						<img src="~@/assets/images/List/logoDefault.png" alt="">
+						<img :src="item.ProjectImg" alt="" height="60" width="60" >
 						<dl>
 							<dt>{{item.ProjectName}}</dt>
 							<dd><img src="~@/assets/images/List/person.png" alt="">公司联系人：{{item.ProLinkMan}}</dd>
@@ -69,7 +69,6 @@ import axios from 'axios'
 					}
 			})
 			.then(function(response){
-				console.log(response.data.data.result);
 				_this.projectLists = response.data.data.result;
 				_this.listCount = response.data.data.count;
 			})

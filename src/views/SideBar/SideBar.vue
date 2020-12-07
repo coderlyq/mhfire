@@ -25,7 +25,7 @@
 			<el-menu-item path="/Check">
 				<img slot="item-icon" src="~@/assets/images/TopBar/check.png" alt="">
 				<img slot="item-icon-active" src="~@/assets/images/TopBar/checked.png" alt="">
-				<span slot="item-text">员工申请审核 (<span></span>)</span>
+				<span slot="item-text">员工申请审核 <span v-if="checkCount!=0">({{checkCount}})</span></span>
 			</el-menu-item>
 		</div>
 		<div class="siderBarBottom" style="display:none;">
@@ -73,13 +73,15 @@ export default {
 	data() {
 		//这里存放数据
 		return {
-			isProject: false
+			isProject: false,
+			checkCount: 0
 		};
 	},
 	//方法集合
 	methods: {
 	},
 	created(){
+		let _this = this;
 		let token = document.querySelector('#token').innerText;
 		axios.get('http://test.mhfire.cn/mhApi/Member/checkMemberNum',{
 			// 参数1：token(用户登录token)，string类型，必填
@@ -90,8 +92,18 @@ export default {
 			}
 		})
 		.then(function(response){
-			console.log('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~');
-			console.log(response);
+			if(response.data.ret_code==0){
+				_this.$message({
+					type: 'success',
+					message: '解绑成功'
+				});
+				_this.checkCount = response.data.data.count;
+			}else{
+				_this.$message({
+					type: 'info',
+					message: response.data.message
+				});
+			}
 		})
 		.catch(function(error){
 				console.log(error);

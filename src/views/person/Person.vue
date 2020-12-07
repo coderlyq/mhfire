@@ -2,7 +2,7 @@
 	<el-container id="person" style="height: 93.55vh;">
 		<el-aside style="width:374px;padding:0;background-color:#ffffff;">
 			<div class='personImg' v-for="(item,index) in allMemberList" :key="item.UserName" @click="selectMember(index)" :class="{activeStyle:isActiveIndex==index}">
-				<img src="~@/assets/images/Person/bigicon.png" slot="personitemImg">
+				<img :src="item.FaceImg" slot="personitemImg" height="60" width="60" >
 				<dl>
 					<dt></dt>
 					<dd><span slot="personitemName">姓名：{{item.UserName}}</span></dd>
