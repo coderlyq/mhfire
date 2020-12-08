@@ -39,7 +39,7 @@
 								<div class="ProjectControlFlag">
 									<!-- <span>{{selectResult.contents[0]}}</span> -->
 									<ol>
-										<li v-for="selcont in selectitem.contents" :key="selcont">{{selcont}}{{selectitem.status}}</li>
+										<li v-for="selcont in selectitem.contents" :key="selcont">{{selcont}}</li>
 									</ol>
 								</div>
 								<el-switch
