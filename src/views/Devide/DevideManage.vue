@@ -104,7 +104,7 @@
 				</div>
 <!-- 弹框 -->
 				<el-dialog class="devEditDialog" title="编辑设备信息" :visible.sync="editSingleDevideDialog">
-					<el-form :model="devForm">
+					<el-form>
 						<el-form-item label="设备备注" :label-width="formLabelWidth">
 							<el-input v-model="currentDevideInfos.remark" autocomplete="off"></el-input>
 						</el-form-item>
@@ -112,7 +112,7 @@
 							<el-input v-model="currentDevideInfos.address" autocomplete="off"></el-input>
 						</el-form-item>
 						<el-form-item label="修改分组" :label-width="formLabelWidth">
-							<el-select v-model="currentDevideInfos.name" placeholder="默认分组">
+							<el-select v-model="itemName" placeholder="默认分组">
 								<el-option
 									v-for="item in allGroup"
 									:key="item.id"
@@ -141,7 +141,14 @@
 				</el-dialog>
 				<el-dialog class="devInsertDialog" title="批量加入该分组" :visible.sync="devInsertDialog">
 					<el-checkbox-group v-model="checkedCities" @change="handleCheckedCitiesChange">
-						<el-checkbox v-for="city in cities" :label="city" :key="city">{{city}}</el-checkbox>
+						<el-checkbox v-for="city in groupDeviceList" :label="city" :key="city">
+							<span class="devTypeName" style="margin-left:30px;">{{city.typename}}</span>
+							<span class="devRemark" style="margin-left:52px;">{{city.remark}}</span>
+							<span class="devStatus" v-if="city.status=='正常'" style="color:#40d96e;margin-left:45px;">{{city.status}}</span>
+							<span class="devStatus" v-else style="color:red;margin-left:45px;">{{city.status}}</span>
+							<span class="devID" style="margin-left:61px;">{{city.devid}}</span>
+							<span class="devAddress" style="margin-left:48px;">{{city.address}}</span>	
+						</el-checkbox>
 					</el-checkbox-group>
 					<div style="margin: 15px 0;"></div>
 					<el-checkbox :indeterminate="isIndeterminate" v-model="checkAll" @change="handleCheckAllChange">全选</el-checkbox>
@@ -165,11 +172,12 @@ export default {
 		//这里存放数据
 		return {
 			checkAll: false,
-			cities:['上海','北京','广州','深圳'],
-			// cities:[{id:1,name:'上海'},{id:1,name:'北京'},{id:1,name:'广州'},{id:1,name:'深圳'}],
+			// cities:['上海','北京','广州','深圳'],
+			cities:[{id:1,name:'上海'},{id:1,name:'北京'},{id:1,name:'广州'},{id:1,name:'深圳'}],
 			isIndeterminate: true,
-			checkedCities: ['上海','北京'],
-
+			checkedCities: [],
+			itemName:'默认分组',
+			currentDevideID: 0,
 			inputDevideCheck: "",
 			allGroup: [],
 			devImport:{},
@@ -182,14 +190,10 @@ export default {
 			deviceList: [],
 			keyword: " ",
 			groupId: 0,
+			groupDeviceList: [],
 			page: 1,
 			historyEveCount: 100,
 			formLabelWidth: '75px',
-			devForm: {
-				devName: '',
-				devAddress: '',
-				devGroup: ''
-			},
 			currentDevideInfos: {}
 		};
 	},
@@ -200,17 +204,44 @@ export default {
 	//方法集合
 	methods: {
 		handleCheckAllChange(val) {
-			alert(val);
-			this.checkedCities = val ? this.cities : [];
+			// alert(val);
+			this.checkedCities = val ? this.groupDeviceList : [];
 			this.isIndeterminate = false;
 		},
 		handleCheckedCitiesChange(value) {
 			let checkedCount = value.length;
-			this.checkAll = checkedCount === this.cities.length;
-			this.isIndeterminate = checkedCount > 0 && checkedCount < this.cities.length;
+			this.checkAll = checkedCount === this.groupDeviceList.length;
+			this.isIndeterminate = checkedCount > 0 && checkedCount < this.groupDeviceList.length;
 		},
 		openCheckDev() {
 			this.devInsertDialog = true;
+			let _this = this;
+			axios.get('http://test.mhfire.cn/mhApi/Device/getGroupDeviceList',{
+				// 参数1：token(用户token)，string类型，必填
+				// 参数2：projectId（项目id），int类型，必填
+				// 参数3：groupId（分组id），int类型，必填
+				// 参数4：page（分页数），int类型，默认为1，选填
+				params: {
+					token: document.querySelector('#token').innerText,
+					projectId: sessionStorage.getItem('projectId'),
+					groupId: _this.groupId,
+					page: 1
+				}
+			})
+			.then(function(response){
+				if(response.data.ret_code==0){
+					_this.groupDeviceList = response.data.data.result;
+				}else{
+					_this.$message({
+						type: 'info',
+						message: response.data.message
+					});
+				}
+				console.log(response);
+			})
+			.catch(function(error){
+				console.log(error);
+			})
 		},
 		getFile(event, input_file_name) {
 			this.file = event.target.files[0];
@@ -482,7 +513,7 @@ export default {
 		editSingleDevide(row){
 			window.event.cancelBubble = true;
 			this.editSingleDevideDialog = true;
-			let currentDevideID = row.id;
+			this.currentDevideID = row.id;
 			let _this = this;
 			axios.get('http://test.mhfire.cn/mhApi/Device/getDeviceInfo',{
 				// 参数1：token(用户token)，string类型，必填
@@ -491,7 +522,7 @@ export default {
 				params: {
 					token: document.querySelector('#token').innerText,
 					projectId: sessionStorage.getItem('projectId'),
-					id: currentDevideID
+					id: this.currentDevideID
 				}
 			})
 			.then(function(response){
@@ -499,7 +530,7 @@ export default {
 					_this.currentDevideInfos = response.data.data;
 					_this.allGroup.forEach((itemGroup)=>{
 						if(itemGroup.id==_this.groupId){
-							_this.currentDevideInfos.name = itemGroup.name;
+							_this.itemName = itemGroup.name;
 						}
 					});
 				}else{
@@ -530,8 +561,8 @@ export default {
 				projectId: sessionStorage.getItem('projectId'),
 				remark:this.currentDevideInfos.remark,
 				address:this.currentDevideInfos.address,
-				groupId: this.currentDevideInfos.pid,
-				id:this.currentDevideInfos.id
+				groupId: this.itemName,
+				id:this.currentDevideID
 			};
 			axios.post('http://test.mhfire.cn/mhApi/Device/updateDevice',Qs.stringify(updateDeviceData),{
 				headers: {'Content-Type': 'application/x-www-form-urlencoded'} //加上这个
@@ -673,6 +704,28 @@ export default {
 }
 </script>
 <style>
+	/* .devInsertDialog .el-checkbox-group {
+
+	} */
+	/* .devInsertDialog .el-dialog {
+
+	} */
+	.devInsertDialog .el-dialog__body{
+		background-color: #fafafa;
+		width: 814px;
+		margin:0 auto;
+		border-radius: 5px;
+	}
+	.devInsertDialog .el-checkbox {
+		display: flex;
+		flex-direction: row;
+		justify-content: flex-start;
+		align-items: stretch;
+		color: #666;
+    font-family: "PFxi";
+    font-size: 18px;
+		margin-bottom: 20px;
+	}
 	.allInsertDev{
 		position: absolute;
 		right: 58px;
