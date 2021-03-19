@@ -12,6 +12,12 @@
 				style="width: 100%">
 				<el-table-column
 					fixed
+					prop="ProjectName"
+					label="项目"
+					width="310">
+				</el-table-column>
+				<el-table-column
+					fixed
 					prop="Order"
 					label="事件"
 					width="410">
@@ -19,7 +25,7 @@
 				<el-table-column
 					prop="Tag"
 					label="设备类型"
-					width="410">
+					width="210">
 				</el-table-column>
 				<el-table-column
 					prop="HappenedTime"
@@ -29,7 +35,7 @@
 				<el-table-column
 					fixed="right"
 					label="操作"
-					width="310">
+					width="210">
 					<template slot-scope="scope">
 						<el-button @click="historyClick(scope.row)" type="text" size="small">查看</el-button>
 					</template>

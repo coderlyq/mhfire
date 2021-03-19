@@ -5,7 +5,7 @@
 			<el-menu-item path="/List">
 				<img slot="item-icon" src="~@/assets/images/TopBar/list.png" alt="">
 				<img slot="item-icon-active" src="~@/assets/images/TopBar/listed.png" alt="">
-				<span slot="item-text">项目列表</span>
+				<span slot="item-text">项目管理</span>
 			</el-menu-item>
 			<el-menu-item path="/Control">
 				<img slot="item-icon" src="~@/assets/images/TopBar/control.png" alt="">

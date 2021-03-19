@@ -20,6 +20,7 @@
 					<dl>
 						<dd><span>所属系统：{{eventDetail.SystemID}}</span></dd>
 						<dd><span>报警设备：{{eventDetail.SlewDevice}}</span></dd>
+						<dd><span>所属项目：{{eventDetail.ProjectName}}</span></dd>
 						<dd><span>设备地址：{{eventDetail.DsNum}}</span></dd>
 						<dd><span>安装位置：{{eventDetail.Tag}}</span></dd>
 						<dd><span>事件描述：{{eventDetail.Order_o}}</span></dd>

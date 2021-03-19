@@ -7,6 +7,8 @@
 // 引入axios
 import axios from 'axios'
 let setI = {};
+let clickBoolean = false;
+let currentProjectName = null;
 export default {
 	name: 'map',
 	data(){
@@ -778,6 +780,16 @@ export default {
 				// nodeEle.innerText = lent[i].name;
 				for(var ii = 0;ii<lent.length;ii++){
 					let currentValue = cont;
+					if(clickBoolean){
+						if(currentProjectName){
+							for(var jj = 0;jj<lent.length;jj++){
+								if(lent[jj].ProjectName.indexOf(currentProjectName)>=0){console.log(lent[jj].ProjectName,'kkkkkkkkkkkkkkkkkkkkkk');
+									_that.MapCompanyInfos.unshift(_that.MapCompanyInfos[jj]);
+									_that.MapCompanyInfos.splice(jj+1,1);
+								}
+							}
+						}
+					}
 					if(lent[ii].ProjectName.indexOf(currentValue)>=0){
 						_that.MapCompanyInfos.unshift(_that.MapCompanyInfos[ii]);
 						_that.MapCompanyInfos.splice(ii+1,1);
@@ -786,6 +798,7 @@ export default {
 							nodeElesAll[nodeEle].remove();
 						}
 						let lent = 	_that.MapCompanyInfos;
+						console.log(lent);
 						for(var i = 0;i<lent.length;i++){
 							var nodeEles = document.createElement('div');
 							nodeEles.className = 'nodeEles';
@@ -1203,12 +1216,16 @@ export default {
 						//创建自定义图标
 						if(data_info[i][3] == 0) {
 							var myIcon = new BMap.Icon(require("../../assets/images/Controller/markNormal.png"), new BMap.Size(31,47));
+							currentProjectName = null;
 						}
 						if(data_info[i][3] == 1) {
 							var myIcon = new BMap.Icon(require("../../assets/images/Controller/markFire.png"), new BMap.Size(31,47));
+							currentProjectName = content;
+							_that.replayCont(map,content);
 						}
 						if(data_info[i][3] == 2) {
 							var myIcon = new BMap.Icon(require("../../assets/images/Controller/markTrouble.png"), new BMap.Size(31,47));
+							currentProjectName = null;
 						}
 						
 						var marker = new BMap.Marker(new BMap.Point(data_info[i][0],data_info[i][1]),{icon:myIcon});  // 创建标注
@@ -1226,6 +1243,7 @@ export default {
 						var point = new BMap.Point(p.getPosition().lng, p.getPosition().lat);
 						var infoWindow = new BMap.InfoWindow(content,opts);  // 创建信息窗口对象 
 						map.openInfoWindow(infoWindow,point); //开启信息窗口
+						clickBoolean = content;
 						_that.replayCont(map,content);
 					}
 				},2000);	

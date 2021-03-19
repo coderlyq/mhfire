@@ -1,8 +1,8 @@
 <template>
   <el-container class="eleList">
 		<el-header class="eleListTop">
-			项目列表
-			<el-button type="primary" icon="el-icon-circle-plus-outline" @click="toCreateProject" style="display:none;">创建新项目</el-button>
+			项目管理
+			<el-button type="primary" icon="el-icon-circle-plus-outline" @click="toCreateProject">创建新项目</el-button>
 		</el-header>
 		<el-main>
 			<ul>
@@ -47,6 +47,8 @@ import axios from 'axios'
 		},
 		//生命周期 - 创建完成（可以访问当前this实例）
 		created() {
+			// 隐藏项目名称
+			document.getElementById('projectName').style.display = 'none';
 			document.querySelector('.logodis').style.display = 'block';
 			// 二级菜单返回上一级时调用
 			document.querySelector('.siderBarTop').style.display = 'block';
@@ -104,6 +106,8 @@ import axios from 'axios'
 				})
 			},
 			clickProject(index){
+				document.getElementById('projectName').style.display = 'block';
+				document.getElementById('projectName').innerText = "( "+this.projectLists[index].ProjectName+" )";
 				let projectId = this.projectLists[index].ID;
 				document.querySelector('.siderBarTop').style.display = 'none';
 				document.querySelector('.siderBarBottom').style.display = 'block';
@@ -117,7 +121,7 @@ import axios from 'axios'
 				})
 			},
 			toCreateProject(){
-				document.querySelector('.leftSideBar').style.display = 'none';
+				// document.querySelector('.leftSideBar').style.display = 'none';
 				this.$router.push({
 					path: '/ProjectCreate',
 					name: 'ProjectCreate',

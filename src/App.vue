@@ -6,8 +6,9 @@
 					<div style="display:none;"><span id="token">{{token}}</span></div>
 					<div id='logotext'>
 						<img src="~@/assets/images/TopBar/logo.png" alt="">
-						<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
-						<span class="logodis" style="display:none;margin-right:25px;"></span>
+						<span style="font-size:18px;font-weight:bold;margin-left:15px;padding-right:24px;cursor:pointer;" @click="toIndex()">FCLOUD门海消防云平台</span><span id="topbarpre"></span>
+						<span class="logodis" style="display:none;margin-right:25px;cursor:pointer;" @click="toIndex()"></span>
+						<span id="projectName" style="display:none;font-size:14px;margin-right:25px;margin-top:10px;"></span>
 						<ol id="logoList" v-show="topBarBoolean">
 							<li v-for="(item,index) in logoList" @click="topclick(index)" :key="item.name" :class="{clickBackColor:index===currendIndex}">
 								{{item.name}} <span v-show="item.isshow">({{item.cont}})</span>
@@ -34,6 +35,8 @@
 		<div class='lay' v-show="isshowLay">
 			<!-- <img src="~@/assets/images/Lay/bottomRight.png" alt="" class="bottomRight">
 			<img src="~@/assets/images/Lay/topRightImg.png" alt="" class="topRightImg"> -->
+			<img src="~@/assets/images/TopBar/logo.png" alt="" style="display:inline-block;padding-top:40px;padding-left:41px;box-sizing:content-box;">
+			<span style="font-size:24px;font-weight:bold;margin-left:15px;padding-right:24px;display:inline-block;height:36px;line-height:36px;color:#fff;">FCLOUD门海消防云平台</span>
 			<div class="layConts">
 				<div class="layContsCenter">
 					<ol class="layContsOl"><li @click="lay" :class="{checkTopBar:isLay}">登录</li><li :class="{checkTopBar:!isLay}" @click="layIn">注册</li></ol>
@@ -196,6 +199,9 @@ export default {
 		};
 	},
 	methods: {
+		toIndex(){
+			this.$router.push('/List');
+		},
 		onKeyDown(e) {	
 			e = window.event || e;
 			var k = e.keyCode;

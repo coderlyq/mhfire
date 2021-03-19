@@ -3,7 +3,10 @@
 	<div class='devideManage'>
 		<el-container class="devideCont">
 			<el-header class="devideContTop">
-				<div class="devideLeft">物联设备管理</div>
+				<div class="devideLeft">
+					<span id="goback" style="color:#333;" @click="toIndex()">返回上层 > </span>
+					<span>物联设备管理</span>	
+				</div>
 				<div class="devideRight" @input="checkDevideList" @compositionend="checkDevideList">
 					<el-input placeholder="通过设备名称/地址/IMEI查找设备" v-model="inputDevideCheck" id="inputDevideCheck">
 						<!-- <el-button slot="append" icon="el-icon-search"></el-button> -->
@@ -22,6 +25,7 @@
 					</el-tab-pane>
 				</el-tabs>
 				<div class="devideTopRight">
+					<el-button type="primary" class="devideTopRightOutput" plain @click="output()">导出设备表</el-button>
 					<el-button type="danger" class="devideTopRightDelete" @click="deleteTab()">删除分组</el-button>
 					<el-button type="primary" class="devideTopRightAdd" @click="addTab()">添加新分组<i class="el-icon-circle-plus-outline el-icon--right"></i></el-button>
 				</div>
@@ -29,9 +33,16 @@
 				<el-table
 					:data="deviceList"
 					style="width: 100%;cursor: pointer;"
+					:default-sort = "{prop: 'typename', order: 'descending'}"
 					>
 					<el-table-column
+						prop="groupID"
+						label="序列号"
+						align="center">
+					</el-table-column>
+					<el-table-column
 						prop="typename"
+						sortable
 						label="NB感烟探测器"
 						align="center">
 					</el-table-column>
@@ -58,6 +69,7 @@
 					<el-table-column
 						label="操作"
 						align="center"
+						width="250"
 						>
 						<template slot-scope="scope">
 							<div v-if="scope.row.groupId<=1">
@@ -72,13 +84,14 @@
 									<el-button type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">删除</el-button>
 								</el-popconfirm>
 								<el-button @click="editSingleDevide(scope.row)" style="text-decoration:underline;margin-right:20px;" type="text" size="small">编辑</el-button>
+								<el-button @click="closeSingleDevide(scope.row,scope.$index)" class="closeAlerm" style="text-decoration:underline;margin-right:20px;" type="text" size="small">关闭响铃</el-button>
 								<el-button @click="checkSingleDevide(scope.row)" type="text" size="small" style="margin-left:0;color:#2f8cdb;margin-right:20px;text-decoration:underline">查看</el-button>
 							</div>
 							<div v-if="scope.row.groupId>1">
 								<el-popconfirm
 									@onConfirm="removeSingleDevide(scope.row)"
-									confirm-button-text='好的'
-									cancel-button-text='不用了'
+									confirm-button-text='确定'
+									cancel-button-text='取消'
 									icon="el-icon-info"
 									icon-color="red"
 									title="确定在该组中移除此设备？
@@ -87,6 +100,7 @@
 									<el-button type="text" size="small" style="color:#f27978;margin-right:20px;text-decoration:underline" slot="reference">移除</el-button>
 								</el-popconfirm>
 								<el-button @click="editSingleDevide(scope.row)" style="text-decoration:underline;margin-right:20px;" type="text" size="small">编辑</el-button>
+								<el-button @click="closeSingleDevide(scope.row,scope.$index)" class="closeAlerm" style="text-decoration:underline;margin-right:20px;" type="text" size="small">关闭响铃</el-button>
 								<el-button @click="checkSingleDevide(scope.row)" type="text" size="small" style="margin-left:0;color:#2f8cdb;margin-right:20px;text-decoration:underline">查看</el-button>
 							</div>
 						</template>
@@ -127,16 +141,24 @@
 						<el-button type="primary" @click="editSingleDevidePost">确 定</el-button>
 					</div>
 				</el-dialog>
-				<el-dialog class="devImportDialog" title="请输入设备的IMEI码" :visible.sync="devImportDialog">
-					<el-form class="demo-form-inline">
-						<el-form-item>
-							<input class="noBorder" @change="getFile($event)" type="file" placeholder="审批人">
-							<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">上传文件到服务器</el-button>
-						</el-form-item>
-						<el-form-item>
-							<el-input v-model="devImport.strIMEI" type="text" placeholder="请输入设备IMEI码"></el-input>
-							<!-- <el-button style="margin-left:10px;" type="primary" @click="postNewDeviceIMEI">提交输入IMEI</el-button> -->
-						</el-form-item>
+				<el-dialog class="devImportDialog" title="请输入设备的IMEI码" id="devImportDialog" :visible.sync="devImportDialog">
+					<el-form class="demo-form-inline" id="excelUpload">
+						<el-input v-model="devImport.strIMEI" type="text" placeholder="请输入设备IMEI码"></el-input>
+						<input class="noBorder" @change="getFile($event)" type="file" placeholder="审批人" id="uploadFile" style="display:none;" v-if="ishowFile">
+						<el-button style="margin-left: 10px;" size="small" type="success" @click="submitUpload">通过EXCLE批量导入</el-button>
+						<div>
+							<el-popover
+								placement="right"
+								width="737"
+								trigger="click">
+								<img src="~@/assets/images/DevideManage/uploadDemo.png" alt="">
+								<p slot="reference">批量导入格式预览</p>
+							</el-popover>
+						</div>
+						<el-row>
+							<el-button @click="insertDevCancle">取消</el-button>
+							<el-button @click="insertDevSubmit" type="primary">确认</el-button>
+						</el-row>
 					</el-form>
 				</el-dialog>
 				<el-dialog class="devInsertDialog" title="批量加入该分组" :visible.sync="devInsertDialog">
@@ -180,7 +202,9 @@ export default {
 			currentDevideID: 0,
 			inputDevideCheck: "",
 			allGroup: [],
-			devImport:{},
+			devImport:{
+				strIMEI:""
+			},
 			devImportDialog: false,
 			devInsertDialog: false,
 			newDeviceIMEI: '',
@@ -194,7 +218,10 @@ export default {
 			page: 1,
 			historyEveCount: 100,
 			formLabelWidth: '75px',
-			currentDevideInfos: {}
+			currentDevideInfos: {},
+			ishowFile: true,
+			file: {},
+			imei: " "
 		};
 	},
 	//监听属性 类似于data概念
@@ -203,6 +230,44 @@ export default {
 	watch: {},
 	//方法集合
 	methods: {
+		insertDevCancle(){
+			this.devImportDialog = false;
+		},
+		insertDevSubmit(){
+			this.addDeviceM();
+		},
+		output(){
+			let _this = this;
+			let this_url = 'http://test.mhfire.cn/mhApi/Device/exportDevice?token='+document.querySelector('#token').innerText+'&projectId='+sessionStorage.getItem('projectId')+'&groupId='+_this.groupId;
+			window.open(this_url); 
+			// axios.get(this_url,{
+			// 	// 参数1：token(用户token)，string类型，必填
+			// 	// 参数2：projectId（项目id）,int类型，必填
+			// 	// 参数3：groupId（分组id），int类型，必填
+			// 	// params: {
+			// 	// 	token: document.querySelector('#token').innerText,
+			// 	// 	projectId: sessionStorage.getItem('projectId'),
+			// 	// 	groupId: _this.groupId
+			// 	// }
+			// })
+			// .then(function(response){
+			// 	console.log(response);
+			// 	console.log('11111111111');
+			// 	if(response.data.ret_code==101||response.data.ret_code==102||response.data.ret_code==201||response.data.ret_code==202){
+			// 		console.log('22222');
+			// 		_this.$message({
+			// 			type: 'info',
+			// 			message: response.data.message
+			// 		});
+			// 	}
+			// })
+			// .catch(function(error){
+			// 	console.log(error);
+			// })
+		},
+		toIndex(){
+			this.$router.push('/List');
+		},
 		handleCheckAllChange(val) {
 			// alert(val);
 			this.checkedCities = val ? this.groupDeviceList : [];
@@ -237,61 +302,77 @@ export default {
 						message: response.data.message
 					});
 				}
-				console.log(response);
 			})
 			.catch(function(error){
 				console.log(error);
 			})
 		},
-		getFile(event, input_file_name) {
-			this.file = event.target.files[0];
-			console.log(this.file);
+		submitUpload(){
+			this.ishowFile = true;
+			// IE浏览器
+			if(document.all) {
+				document.getElementById("uploadFile").click();
+			}
+			// 其它浏览器
+			else {
+				var e = document.createEvent("MouseEvents");
+				e.initEvent("click", true, true);
+				document.getElementById("uploadFile").dispatchEvent(e);
+			}
 		},
-		submitUpload(event) {
-			// let _this = this;
+		getFile(event, input_file_name){
+			this.file = event.target.files[0];
+			this.devImport.strIMEI = event.target.files[0].name;
+			this.openUploadAligo();
+		},
+		openUploadAligo(){
+			let booleanUp = /\.xl(s[xmb]|t[xm]|am)$/.exec(this.devImport.strIMEI);
+			if(!booleanUp){
+				this.$message.error('文件格式不正确，请上传*.xls;*.xl*;*.xla;*.xlt;*.xlm;*.xlc;*.xlw格式文件');
+			}
+		},
+		addDeviceM() {
+			if(!this.devImport.strIMEI){
+				this.$message.error('新增设备不能为空，请输入相关设备号或上传文件');
+				return false;
+			}else{
+				this.devImportDialog = false;
+			};
+			if(/\.xl(s[xmb]|t[xm]|am)$/.exec(this.devImport.strIMEI)){
+				this.devImport.strIMEI = "";
+			}
+			let _this = this;
 			let formData = new FormData();
 			formData.append('token', document.querySelector('#token').innerText);
 			formData.append('groupId', 1);
 			formData.append('projectId', sessionStorage.getItem('projectId'));
-			formData.append('imei', " ");
+			formData.append('imei', this.devImport.strIMEI);
 			formData.append('file', this.file);
-
-			// axios.post('http://test.mhfire.cn/mhApi/Device/addDevice',Qs.stringify(formData),{
-			// 	headers: {'Content-Type': 'multipart/form-data'} //加上这个
-			// 		// 参数1：token(用户token)，string类型，必填
-			// 		// 参数2：projectId（项目id）,int类型，必填
-			// 		// 参数3：name（分组名称），string类型，必填
-			// })
-			// .then(function(response){
-			// 	if(response.data.ret_code==0){
-			// 		_this.$message({
-			// 			type: 'success',
-			// 			message: '您的新分组是: ' + value
-			// 		});
-			// 		_this.getAllGroup();
-			// 	}else{
-			// 		_this.$message({
-			// 			type: 'info',
-			// 			message: response.data.message
-			// 		});
-			// 	}
-			// })
-			// .catch(function(error){
-			// 	console.log(error);
-			// })
 			let config = {
 				headers: {
 					'Content-Type': 'multipart/form-data'
 				}
 			};
-			console.log(formData);
 			this.$http.post('http://test.mhfire.cn/mhApi/Device/addDevice', formData, config).then(function (res) {
-				if (res.status === 200) {
-						console.log(res);
+				if (res.body.ret_code === 0) {
+					_this.$message({
+						type: 'success',
+						message: res.body.message
+					});
+					_this.devideSearchAll();
+					_this.ishowFile = true;
+				}else{
+					_this.$message({
+						type: 'info',
+						message: res.body.message
+					});
+					_this.ishowFile = true;
 				}
 			}).catch((error) => {
 					console.log(error);
 			});
+			this.ishowFile = false;
+			this.devImport.strIMEI = "";
 		},
 		addIMEI() {
 			this.devImportDialog = true;
@@ -303,7 +384,6 @@ export default {
 			this.closableBoolean = true;
 		},
 		tabClick(targetName){
-			console.log(targetName.name);
 			this.groupId = targetName.name;
 			if(targetName.name==0){
 				this.devideSearchAll();
@@ -324,7 +404,6 @@ export default {
 			})
 			.then(function(response){
 				if(response.data.ret_code==0){
-					console.log(response.data.data);
 					_this.allGroup = response.data.data;
 				}else{
 					_this.$message({
@@ -332,7 +411,6 @@ export default {
 						message: response.data.message
 					});
 				}
-				console.log(response);
 			})
 			.catch(function(error){
 				console.log(error);
@@ -475,7 +553,6 @@ export default {
 			})
 		},
 		removeSingleDevide(row) {
-			console.log("1234556");
 			window.event.cancelBubble = true;
 			let _this = this;
 			let removeGroupData = {
@@ -510,6 +587,54 @@ export default {
 				console.log(error);
 			})
 		},
+		openSingleDevide(row){
+			let _this = this;
+			let openSingleDevide = {
+				"deviceId": row.relation_dev[0].relation_devideQR,
+				"cmd": "OUTPUT_CTL",
+				"para": "1"
+			};
+			axios.post('http://39.108.157.254:8080/alarm',JSON.stringify(openSingleDevide))
+			.then(function(response){
+				console.log(response);
+			})
+			.catch(function(error){
+				console.log(error);
+			})
+		},
+		closeSingleDevide(row,index){
+			let closeAlerm = document.getElementsByClassName('closeAlerm')[index];
+			let closeAlermSpan = closeAlerm.getElementsByTagName('span')[0];
+			let closeNum = 10;
+			let closeInter = setInterval(function(){
+				closeAlermSpan.style.color = "#999999";
+				closeAlerm.style.textDecorationColor = "#999999";
+				closeAlermSpan.innerText = --closeNum+"s";
+				closeAlerm.setAttribute("disabled", "disabled");
+				closeAlerm.style.cursor = "not-allowed";
+				if(closeNum === 0){
+					clearInterval(closeInter);
+					closeAlermSpan.innerText = "关闭响铃";
+					closeAlermSpan.style.color = "#409EFF";
+					closeAlerm.style.textDecorationColor = "#409EFF";
+					closeAlerm.removeAttribute("disabled");
+					closeAlerm.style.cursor = "pointer";
+				}
+			},1000);
+			let _this = this;
+			let closeSingleDevide = {
+				"deviceId": row.relation_dev[0].relation_devideQR,
+				"cmd": "OUTPUT_CTL",
+				"para": "0"
+			};
+			axios.post('http://39.108.157.254:8080/alarm',JSON.stringify(closeSingleDevide))
+			.then(function(response){
+				console.log(response);
+			})
+			.catch(function(error){
+				console.log(error);
+			})
+		},
 		editSingleDevide(row){
 			window.event.cancelBubble = true;
 			this.editSingleDevideDialog = true;
@@ -539,7 +664,6 @@ export default {
 						message: response.data.message
 					});
 				}
-				console.log(response);
 			})
 			.catch(function(error){
 				console.log(error);
@@ -588,7 +712,6 @@ export default {
 						message: response.data.message
 					});
 				}
-				console.log(response);
 			})
 			.catch(function(error){
 				console.log(error);
@@ -630,6 +753,15 @@ export default {
 				if(response.data.ret_code==0){
 					_this.deviceListCount = response.data.data.count;
 					_this.deviceList= response.data.data.result;
+					if(_this.page>1){
+						for(var ii = 0;ii<_this.deviceList.length;ii++){
+							_this.deviceList[ii].groupID = _this.page*10+ii+1;
+						}
+					}else{
+						for(var ii = 0;ii<_this.deviceList.length;ii++){
+							_this.deviceList[ii].groupID = ii+1;
+						}
+					}
 				}else if(response.data.ret_code==103){
 					_this.deviceListCount = 0;
 					_this.deviceList= [];
@@ -666,9 +798,15 @@ export default {
 					_this.deviceListCount = response.data.data.count;
 					_this.deviceList= response.data.data.result;
 					_this.groupId = _this.deviceList[0].groupId;
-					console.log(_this.deviceListCount);
-					console.log(_this.deviceList);
-					console.log(_this.deviceList[0].groupId);
+					if(_this.page>1){
+						for(var ii = 0;ii<_this.deviceList.length;ii++){
+							_this.deviceList[ii].groupID = _this.page*10+ii+1;
+						}
+					}else{
+						for(var ii = 0;ii<_this.deviceList.length;ii++){
+							_this.deviceList[ii].groupID = ii+1;
+						}
+					}
 				}else if(response.data.ret_code==103){
 					_this.deviceListCount = 0;
 					_this.deviceList= [];
@@ -678,7 +816,6 @@ export default {
 						message: response.data.message
 					});
 				}
-				console.log(response);
 			})
 			.catch(function(error){
 				console.log(error);
@@ -710,6 +847,36 @@ export default {
 	/* .devInsertDialog .el-dialog {
 
 	} */
+	#excelUpload .el-input{
+		width: 296px;
+		height: 40px;
+		box-sizing: border-box;
+	}
+	#excelUpload>button{
+		width: 160px;
+		height: 40px;
+		box-sizing: border-box;
+		padding: 0;
+		border: 0;
+		margin: 0;
+		background-color: #2f8cdb;
+	}
+	#excelUpload p{
+		font-family: "PFxi";
+    font-size: 12px;
+		color: #2f8cdb;
+		text-decoration: underline;
+		text-decoration-color: #2f8cdb;
+		cursor:pointer
+	}
+	#devImportDialog .el-row button{
+		width: 115px;
+		height: 40px;
+		box-sizing: border-box;
+	}
+	#devImportDialog .el-dialog__body{
+		margin-left: 30px;
+	}
 	.devInsertDialog .el-dialog__body{
 		background-color: #fafafa;
 		width: 814px;
@@ -762,9 +929,15 @@ export default {
 		align-items: stretch;
 	}
 	.devideManage .devideLeft{
-		color: #333;
+		color: #606266;
     font-family: "PFxi";
     font-size: 18px;
+	}
+	#goback{
+		display:inline-block;
+		margin:0 10px;
+		font-weight:bolder;
+		font-family: "PFz";
 	}
 	.devideManage .el-tabs__header{
 		margin-bottom: 0;
@@ -808,6 +981,12 @@ export default {
 		position: absolute;
 		top: 50px;
 		right: 60px;
+	}
+	.devideManage .devideTopRight .devideTopRightOutput{
+		height: 30px;
+		/* line-height: 30px; */
+		padding-top: 0;
+		padding-bottom: 0;
 	}
 	.devideManage .devideTopRight .devideTopRightDelete{
 		height: 30px;
@@ -860,6 +1039,10 @@ export default {
 	}
 	.devImportDialog .el-dialog{
 		width: 22%;
+	}
+	#devImportDialog .el-dialog{
+		width: 569px;
+		height: 256px;
 	}
 	.devideManage .devideInfos .el-table{
 		border-left: 1px solid #E4E7ED;
